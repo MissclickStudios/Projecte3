@@ -13,6 +13,7 @@
 #include "C_RigidBody.h"
 
 #include "ExplosiveBarrel.h"
+#include "BarrelExplosion.h"
 
 ExplosiveBarrel::ExplosiveBarrel() : Object()
 {
@@ -27,52 +28,79 @@ void ExplosiveBarrel::Start()
 {
 	explosion = new C_AudioSource(gameObject);
 
-	gameManager = App->scene->GetGameObjectByName(gameManagerName.c_str());
-	barrelObject = gameObject->FindChild(barrelObjectName.c_str());
-
 	explosionParticles = gameObject->GetComponent<C_ParticleSystem>();
+	GameObject* particleGameObject = gameObject->FindChild(particleName.c_str());
+	if (particleGameObject != nullptr)
+		activeParticles = particleGameObject->GetComponent<C_ParticleSystem>();
 
 	explosionParticles->StopSpawn();
+	
+	GameObject* explosionGameObject = gameObject->FindChild(explosionName.c_str());
+	if (explosionGameObject != nullptr)
+	{
+		explosionCollider = explosionGameObject->GetComponent<C_BoxCollider>();
+		if (explosionCollider != nullptr)
+			explosionCollider->SetIsActive(false);
+	}
 
-	barrelCollider = gameObject->GetComponent<C_BoxCollider>();
+	explosionMarker = gameObject->FindChild(markerName.c_str());
+	if (explosionMarker != nullptr)
+		explosionMarker->SetIsActive(false);
 
+	cooldownTimer.Stop();
 }
 
 void ExplosiveBarrel::Update()
 {
-	if (exploded)
-	{
-		//deactivate mesh, trigger
-		barrelCollider->SetIsActive(false);
-		barrelCollider->SetSize(barrelColliderSize);
+	if (paused)
+		return;
 
-		//play particles
-		if (particleTimer < particleEmitttingTime)
-		{
-			particleTimer += MC_Time::Game::GetDT();
-		}
-		else
-		{
-			//deactivate everything
-			explosionParticles->StopSpawn();
-			exploded = false;
-			gameObject->SetIsActive(false);
-		}
+	if (cooldownTimer.IsActive() && cooldownTimer.ReadSec() > cooldown)
+	{
+		cooldownTimer.Stop();
+		if (activeParticles != nullptr)
+			activeParticles->ResumeSpawn();
 	}
+
 
 	if (toExplode)
 	{
-		explosion->SetEvent("item_barrel_explosion");
-		explosion->SetVolume(5.0f);
- 		explosion->PlayFx(explosion->GetEventId());
-		barrelObject->SetIsActive(false);
+		toExplode = false;
 
+		explosionCollider->SetIsActive(true);
 		explosionParticles->ResumeSpawn();
+		particleTimer.Start();
+		if (activeParticles != nullptr)
+			activeParticles->StopSpawn();
+
+		if (explosionMarker != nullptr)
+			explosionMarker->SetIsActive(true);
+
+		explosion->SetEvent(explosionAudio.c_str());
+		explosion->SetVolume(5.0f);
+		explosion->PlayFx(explosion->GetEventId());
 
 		exploded = true;
-		toExplode = false;
-	}
+	} 
+	else if (exploded)
+	{
+		if (particleTimer.ReadSec() > particleEmitttingTime)
+		{
+			exploded = false;
 
+			explosionCollider->SetIsActive(false);
+			explosionParticles->StopSpawn();
+			particleTimer.Stop();
+
+			if (explosionMarker != nullptr)
+				explosionMarker->SetIsActive(false);
+
+			if (!reload)
+				Deactivate();
+			else
+				cooldownTimer.Start();
+		}
+	}
 }
 
 void ExplosiveBarrel::CleanUp()
@@ -82,45 +110,38 @@ void ExplosiveBarrel::CleanUp()
 
 void ExplosiveBarrel::OnCollisionEnter(GameObject* object)
 {
-	if (GetObjectScript(object, ObjectType::BULLET) != nullptr)
+	if (GetObjectScript(object, ObjectType::BULLET) != nullptr && !cooldownTimer.IsActive())
 	{
 		toExplode = true;
-		barrelCollider->SetTrigger(true);
+		GameObject* explosionGameObject = gameObject->FindChild(explosionName.c_str());
 	}
 }
 
-void ExplosiveBarrel::OnTriggerRepeat(GameObject* object)
+void ExplosiveBarrel::OnPause()
 {
-	Entity* entity = (Entity*)GetObjectScript(object, ObjectType::ENTITY);
-	if (!entity)
-		return;
+	paused = true;
 
-	float2 entityPosition, position;
-	entityPosition.x = entity->transform->GetWorldPosition().x;
-	entityPosition.y = entity->transform->GetWorldPosition().z;
-	position.x = gameObject->transform->GetWorldPosition().x;
-	position.y = gameObject->transform->GetWorldPosition().z;
-	float2 direction = entityPosition - position;
-
-	float distance = direction.Length();
-	if (distance < 1.0f)
-		distance = 1.0f;
-
-	float currentPower = power / distance;
-
-	direction.Normalize();
-	direction *= currentPower;
-
-	entity->gameObject->GetComponent<C_RigidBody>()->FreezePositionY(true);
-	entity->AddEffect(EffectType::KNOCKBACK, 0.75f, false, 0.0f, 0.0f, float3(direction.x, 0.0f, direction.y));
-	entity->TakeDamage(damage);
+	cooldownTimer.Pause();
 }
 
-void ExplosiveBarrel::OnTriggerExit(GameObject* object)
+void ExplosiveBarrel::OnResume()
 {
-	Entity* entity = (Entity*)GetObjectScript(object, ObjectType::ENTITY);
-	if (!entity)
-		return;
+	paused = false;
 
-	entity->gameObject->GetComponent<C_RigidBody>()->FreezePositionY(false);
+	cooldownTimer.Resume();
+}
+
+ExplosiveBarrel* CreateExplosiveBarrel()
+{
+	ExplosiveBarrel* script = new ExplosiveBarrel();
+
+	INSPECTOR_INPUT_FLOAT(script->particleEmitttingTime);
+	INSPECTOR_STRING(script->explosionName);
+	INSPECTOR_STRING(script->explosionAudio);
+	INSPECTOR_STRING(script->markerName);
+	INSPECTOR_STRING(script->particleName);
+	INSPECTOR_CHECKBOX_BOOL(script->reload);
+	INSPECTOR_INPUT_FLOAT(script->cooldown);
+	
+	return script;
 }

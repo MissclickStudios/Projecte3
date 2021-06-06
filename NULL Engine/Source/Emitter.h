@@ -38,6 +38,8 @@ public:
 	std::string name = "Particle Emitter";
 	R_Texture* emitterTexture = nullptr;
 
+	std::string path = "None";
+
 	int maxParticleCount = 10;
 
 	bool toDelete = false;

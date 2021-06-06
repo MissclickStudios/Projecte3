@@ -59,9 +59,16 @@ public:
 	void SetHSpaceBetween(const uint hSpaceBetween);
 	void SetVSpaceBetween(const float vSpaceBetween);
 	
+	int nextWordLetters;
+	
+	bool nextWord;
 private:
 
-	std::string text; 
+	float rectWidth;
+	float currentWidth;
+
+	std::string text;
+
 
 	unsigned char image[640][480];
 

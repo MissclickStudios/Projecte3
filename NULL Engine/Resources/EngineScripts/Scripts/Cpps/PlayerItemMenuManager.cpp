@@ -43,6 +43,8 @@ void PlayerItemMenuManager::Start()
 
 void PlayerItemMenuManager::Update()
 {
+	if (!strcmp(App->scene->GetCurrentScene(), "HUB"))
+		return;
 	if (itemFramePrefab.uid == NULL)
 		return;
 	if (player == nullptr)
@@ -108,16 +110,16 @@ void PlayerItemMenuManager::Update()
 					switch ((*items)[i].second->rarity)
 					{
 					case ItemRarity::COMMON:
-						rarityDisplay->SetColor(102, 255, 102, 200);
+						rarityDisplay->SetColor(50, 255, 50, 200);
 						break;
 					case ItemRarity::RARE:
-						rarityDisplay->SetColor(102, 255, 255, 200);
+						rarityDisplay->SetColor(50, 255, 255, 200);
 						break;
 					case ItemRarity::EPIC:
-						rarityDisplay->SetColor(255, 102, 255, 200);
+						rarityDisplay->SetColor(255, 50, 255, 200);
 						break;
 					case ItemRarity::UNIQUE:
-						rarityDisplay->SetColor(255, 255, 102, 200);
+						rarityDisplay->SetColor(255, 255, 50, 200);
 						break;
 					}
 

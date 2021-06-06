@@ -117,6 +117,7 @@ private:
 	std::vector<DialogLine*>::iterator currentLineIterator;
 
 	uint currentLineLetter = 0; //Holds the current letter position in string that has to be added in the line
+	uint wordIt = 0;
 
 	float textSpeed = 0.1f;
 	float nextLetterTimer = 0.f;

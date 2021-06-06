@@ -98,6 +98,9 @@ IG12* CreateIG12()
 	INSPECTOR_GAMEOBJECT(script->healthBarCanvasObject);
 	INSPECTOR_STRING(script->lifeBarImageStr);
 
+	//Beskar
+	INSPECTOR_INPUT_INT(script->beskarValue);
+
 	return script;
 }
 
@@ -371,6 +374,7 @@ void IG12::ManageMovement()
 		if(!hitTimer.IsActive())
 			hitParticles->StopSpawn();
 	
+	Player* tmp = nullptr;
 
 	switch (moveState)
 	{
@@ -642,6 +646,10 @@ void IG12::ManageMovement()
 		moveState = IG12State::DEAD;
 		if (healthBarCanvas)
 			App->uiSystem->RemoveActiveCanvas(healthBarCanvas);
+
+		tmp = (Player*)player->GetScript("Player");
+		if (tmp)
+			tmp->GiveBeskar(beskarValue);
 
 	case IG12State::DEAD:
 		if (deathTimer.ReadSec() >= deathDuration)

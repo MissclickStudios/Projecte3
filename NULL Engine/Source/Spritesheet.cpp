@@ -1,4 +1,7 @@
 #include "Spritesheet.h"
+#include "R_Texture.h"
+#include "Application.h"
+#include "M_ResourceManager.h"
 
 
 Spritesheet::Spritesheet(R_Texture* spritesheet)
@@ -19,6 +22,11 @@ Spritesheet::Spritesheet(R_Texture* spritesheet)
 
 Spritesheet::~Spritesheet()
 {
+	if (spriteSheet) 
+	{
+		App->resourceManager->FreeResource(spriteSheet->GetUID());
+		spriteSheet = nullptr;
+	}
 }
 
 void Spritesheet::SetSpritesheetSize(int s_rows, int s_columns, int s_pisxelHeight, int s_pixelLenght)

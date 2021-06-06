@@ -85,6 +85,7 @@ public:
     void Resume();
 
     std::vector<ItemData*> GetChestItemPool() const { return chestItemPool; };
+    std::vector<ItemData*> GetShopItemPool() const { return shopItemPool; };
     std::vector<ItemData*> GetHubItemPool() const { return hubItemPool; };
 
     //Dialog & Story funtions
@@ -111,6 +112,8 @@ private:
 
     void BackTrackUpdate();
     void GateUpdate();
+
+    void HandleBackgroundMusic();
 
 public:
     std::vector<std::string> level1;
@@ -185,6 +188,7 @@ private:
     // Items
     void LoadItemPool(std::vector<ItemData*>& pool, std::string path);
     std::vector<ItemData*> chestItemPool;
+    std::vector<ItemData*> shopItemPool;
     std::vector<ItemData*> hubItemPool;
 
     // Chest

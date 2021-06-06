@@ -132,7 +132,7 @@ void DebugMenuManager::Update()
 			if (mando != nullptr)
 			{
 				Player* gameManagerScript = (Player*)mando->GetScript("Player");
-				gameManagerScript->currency += creditsToAdd;
+				gameManagerScript->GiveCredits(creditsToAdd);
 			}
 		}
 
@@ -142,7 +142,7 @@ void DebugMenuManager::Update()
 			if (mando != nullptr)
 			{
 				Player* gameManagerScript = (Player*)mando->GetScript("Player");
-				gameManagerScript->hubCurrency += beskarToAdd;
+				gameManagerScript->GiveBeskar(beskarToAdd);
 			}
 		}
 

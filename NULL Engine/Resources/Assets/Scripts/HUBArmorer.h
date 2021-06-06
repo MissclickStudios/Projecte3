@@ -4,11 +4,14 @@
 #include "ScriptMacros.h"
 
 class Player;
+class C_Animator;
 class C_Canvas;
 class C_UI_Button;
 class C_UI_Slider;
 class C_UI_Text;
 class GameManager;
+
+class ItemData;
 
 enum class HUBArmorerState: char {
 	ACTIVE,
@@ -21,6 +24,8 @@ public:
 	~HUBArmorer();
 	void Start() override;
 	void Update() override;
+
+	void UpdateMenu();
 
 	std::string mandoName = "Mandalorian"; 
 	std::string hubShopCanvasName = "HUBShopCanvas";
@@ -41,6 +46,7 @@ public:
 	GameObject* bootsTextObject = nullptr;
 	GameObject* ticketTextObject = nullptr;
 	GameObject* bottleTextObject = nullptr;
+	GameObject* titleTextObject = nullptr;
 	GameObject* descriptionTextObject = nullptr;
 	GameObject* creditTextObject = nullptr;
 	GameObject* beskarTextObject = nullptr;
@@ -50,6 +56,8 @@ private:
 	Player* mando = nullptr;
 	GameManager* gameManager = nullptr;
 	HUBArmorerState state = HUBArmorerState::INACTIVE;
+
+	C_Animator* armorerAnimator = nullptr;
 
 	C_UI_Button* armorButton = nullptr;
 	C_UI_Button* bootsButton = nullptr;
@@ -63,10 +71,12 @@ private:
 	C_UI_Text* bootsPriceText = nullptr;
 	C_UI_Text* ticketPriceText = nullptr;
 	C_UI_Text* bottlePriceText = nullptr;
+	C_UI_Text* titleText = nullptr;
 	C_UI_Text* descriptionText = nullptr;
 	C_UI_Text* creditsText = nullptr;
 	C_UI_Text* beskarText = nullptr;
 
+	std::vector<ItemData*> hubItems;
 };
 
 SCRIPTS_FUNCTION HUBArmorer* CreateHUBArmorer();

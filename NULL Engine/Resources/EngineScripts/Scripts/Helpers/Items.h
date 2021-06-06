@@ -398,7 +398,7 @@ public:
 		if (player == nullptr)
 			return;
 
-		//player->AddEffect(EffectType::ABILITY_COOLDOWN_MODIFY, true, cooldownReduction);
+		player->AddEffect(EffectType::COOLDOWN_MODIFY, 0.0f, true, cooldownReduction);
 	}
 
 	float cooldownReduction;
@@ -420,7 +420,7 @@ public:
 		if (player == nullptr)
 			return;
 
-		player->hubCurrency += ingots;
+		player->beskar += ingots;
 	}
 
 	int ingots;
@@ -442,7 +442,7 @@ public:
 		if (player == nullptr)
 			return;
 
-		player->currency += credits;
+		player->GiveCredits(credits);
 	}
 
 	int credits;

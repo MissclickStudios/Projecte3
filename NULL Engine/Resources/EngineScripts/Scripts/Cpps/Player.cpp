@@ -26,8 +26,8 @@
 
 #define MAX_INPUT			32767.0f
 #define WALK_THRESHOLD		16384.0f
-#define AIM_THRESHOLD		8000.0f
-#define KEYBOARD_THRESHOLD	4000.0f
+#define AIM_THRESHOLD		8192.0f
+#define JOYSTICK_THRESHOLD	4096.0f
 #define WALKING_FACTOR		0.5f
 
 Player* CreatePlayer()
@@ -62,8 +62,8 @@ Player* CreatePlayer()
 	INSPECTOR_DRAGABLE_FLOAT(script->aimingSpeed);
 
 	// Currency
-	INSPECTOR_DRAGABLE_INT(script->currency);
-	INSPECTOR_DRAGABLE_INT(script->hubCurrency);
+	INSPECTOR_DRAGABLE_INT(script->credits);
+	INSPECTOR_DRAGABLE_INT(script->beskar);
 
 	// Dash
 	INSPECTOR_DRAGABLE_FLOAT(script->dashSpeed);
@@ -133,6 +133,15 @@ Player::~Player()
 
 void Player::SetUp()
 {
+	// --- TIMERS
+	dashTimer.Stop();
+	dashCooldownTimer.Stop();
+	invincibilityTimer.Stop();
+	intermitentMeshTimer.Stop();
+	changeTimer.Stop();
+	interactionTimer.Stop();
+
+	// --- GAME OBJECTS
 	rightHand		= gameObject->FindChild(rightHandName.c_str());
 	leftHand		= gameObject->FindChild(leftHandName.c_str());
 	idleAimPlane	= gameObject->FindChild(idleAimPlaneName.c_str());
@@ -141,50 +150,19 @@ void Player::SetUp()
 	torso			= gameObject->FindChild(torsoName.c_str());
 	legs			= gameObject->FindChild(legsName.c_str());
 
-	if (rightHand == nullptr)		{ LOG("MISSING RIGHT HAND"); }
-	if (leftHand == nullptr)		{ LOG("MISSING LEFT HAND"); }
-	if (idleAimPlane == nullptr)	{ LOG("MISSING IDLE AIM PLANE"); }
-	if (aimingAimPlane == nullptr)	{ LOG("MISSING AIMING AIM PLANE"); }
-	if (hip == nullptr)				{ LOG("MISSING HIP"); }
-	if (torso == nullptr)			{ LOG("MISSING TORSO"); }
-	if (legs == nullptr)			{ LOG("MISSING LEGS"); }
-
-	dashTimer.Stop();
-	dashCooldownTimer.Stop();
-	invincibilityTimer.Stop();
-	intermitentMeshTimer.Stop();
-	changeTimer.Stop();
-	interactionTimer.Stop();
+	if (rightHand == nullptr)		{ LOG("[ERROR] Player Script: Could not retrieve { %s }! Error: GameObject* FindChild() failed.", rightHandName.c_str()); }
+	if (leftHand == nullptr)		{ LOG("[ERROR] Player Script: Could not retrieve { %s }! Error: GameObject* FindChild() failed.", leftHandName.c_str()); }
+	if (idleAimPlane == nullptr)	{ LOG("[ERROR] Player Script: Could not retrieve { %s }! Error: GameObject* FindChild() failed.", idleAimPlaneName.c_str()); }
+	if (aimingAimPlane == nullptr)	{ LOG("[ERROR] Player Script: Could not retrieve { %s }! Error: GameObject* FindChild() failed.", aimingAimPlaneName.c_str()); }
+	if (hip == nullptr)				{ LOG("[ERROR] Player Script: Could not retrieve { %s }! Error: GameObject* FindChild() failed.", hipName.c_str()); }
+	if (torso == nullptr)			{ LOG("[ERROR] Player Script: Could not retrieve { %s }! Error: GameObject* FindChild() failed.", torsoName.c_str()); }
+	if (legs == nullptr)			{ LOG("[ERROR] Player Script: Could not retrieve { %s }! Error: GameObject* FindChild() failed.", legsName.c_str()); }
 
 	// --- ANIMATIONS
 	if (animator != nullptr)
 	{
 		torsoTrack	= animator->GetTrackAsPtr("Torso");
 		legsTrack	= animator->GetTrackAsPtr("Legs");
-
-		if (torsoTrack == nullptr)
-			LOG("[ERROR] Player Script: Could not retrieve { TORSO } Animator Track! Error: C_Animator's GetTrackAsPtr() failed.");
-
-		if (legsTrack == nullptr)
-			LOG("[ERROR] Player Script: Could not retrieve { LEGS } Animator Track! Error: C_Animator's GetTrackAsPtr() failed.");
-
-		
-		/*torso	= torsoTrack->GetRootBone();								// At this point in execution both the tracks and the animator do not have the Root Bone set.
-		legs	= legsTrack->GetRootBone();
-		hip		= animator->GetRootBone();*/
-
-		//torso	= App->scene->GetGameObjectByName("Torso");					// Hence, a more hamfisted approach is needed to be able to Set Up the Player properly.
-		//legs	= App->scene->GetGameObjectByName("Legs");
-		//hip		= App->scene->GetGameObjectByName("mixamorig:Hips");
-
-		if (torso == nullptr)
-			LOG("[ERROR] Player Script: Could not retrieve { TORSO } Root Bone! Error: C_AnimatorTrack's GetRootBone() failed.");
-
-		if (legs == nullptr)
-			LOG("[ERROR] Player Script: Could not retrieve { LEGS } Root Bone! Error: C_AnimatorTrack's GetRootBone() failed.");
-
-		if (hip == nullptr)
-			LOG("[ERROR] Player Script: Could not retrieve { HIP } Root Bone! Error: C_Animator's GetRootBone() failed.");
 	}
 
 	SetUpLegsMatrix();
@@ -220,9 +198,6 @@ void Player::SetUp()
 	}
 
 	// UI ELEMENTS
-	/*idleAimPlane	= App->scene->GetGameObjectByName("IdlePlane");
-	aimingAimPlane	= App->scene->GetGameObjectByName("AimingPlane");*/
-
 	(idleAimPlane != nullptr)	? idleAimPlane->SetIsActive(true)		: LOG("COULD NOT RETRIEVE IDLE PLANE");
 	(aimingAimPlane != nullptr) ? aimingAimPlane->SetIsActive(false)	: LOG("COULD NOT RETRIEVE AIMING PLANE");
 
@@ -270,7 +245,9 @@ void Player::Behavior()
 			doDieCutscene = false;
 		}
 		else
+		{
 			doDieCutscene = true;
+		}
 	}
 }
 
@@ -317,8 +294,8 @@ void Player::EntityResume()
 
 void Player::SaveState(ParsonNode& playerNode)
 {
-	playerNode.SetInteger("Currency", currency);
-	playerNode.SetInteger("Hub Currency", hubCurrency);
+	playerNode.SetInteger("Currency", credits);
+	playerNode.SetInteger("Hub Currency", beskar);
 
 	playerNode.SetNumber("Health", health);
 
@@ -364,8 +341,8 @@ void Player::SaveState(ParsonNode& playerNode)
 
 void Player::LoadState(ParsonNode& playerNode)
 {
-	currency = playerNode.GetInteger("Currency");
-	hubCurrency = playerNode.GetInteger("Hub Currency");
+	credits = playerNode.GetInteger("Currency");
+	beskar = playerNode.GetInteger("Hub Currency");
 
 	health = (float)playerNode.GetNumber("Health");
 
@@ -497,7 +474,7 @@ void Player::LoadState(ParsonNode& playerNode)
 
 void Player::Reset()
 {
-	currency = 0;
+	credits = 0;
 
 	health = MaxHealth();
 
@@ -538,25 +515,37 @@ void Player::Reset()
 			{
 				ItemData* const itemData = Item::FindItem(hubItems, "Durasteel Reinforcement", (ItemRarity)manager->armorLvl);
 				if (itemData != nullptr)
-					AddItem(itemData);
+				{
+					Item::CreateItem(itemData)->PickUp(this);
+					AddItem(itemData); // yes you have to manually add the item after picking it up, I KNOW... its kinda wack
+				}
 			}
 			if (manager->bootsLvl)
 			{
 				ItemData* const itemData = Item::FindItem(hubItems, "Propulsed Boots", (ItemRarity)manager->bootsLvl);
 				if (itemData != nullptr)
+				{
+					Item::CreateItem(itemData)->PickUp(this);
 					AddItem(itemData);
+				}
 			}
 			if (manager->ticketLvl)
 			{
 				ItemData* const itemData = Item::FindItem(hubItems, "Premium Ticket", (ItemRarity)manager->ticketLvl);
 				if (itemData != nullptr)
+				{
+					Item::CreateItem(itemData)->PickUp(this);
 					AddItem(itemData);
+				}
 			}
 			if (manager->bottleLvl)
 			{
 				ItemData* const itemData = Item::FindItem(hubItems, "Refrigeration Liquid", (ItemRarity)manager->bottleLvl);
 				if (itemData != nullptr)
+				{
+					Item::CreateItem(itemData)->PickUp(this);
 					AddItem(itemData);
+				}
 			}
 		}
 	}
@@ -578,7 +567,7 @@ void Player::TakeDamage(float damage)
 	{
 		float damageDealt = 0.0f;
 		if(Defense())
-		 damageDealt = damage / Defense();
+		 damageDealt = 1.0f; // heehee
 		health -= damageDealt;
 
 		if (health < 0.0f)
@@ -637,6 +626,34 @@ void Player::EquipWeapon(Prefab weapon)
 	}
 }
 
+void Player::GiveCredits(int _credits)
+{
+	credits += _credits;
+	//play HUD credits animation
+	creditsImage->PlayAnimation(false, 1);
+}
+
+void Player::GiveBeskar(int _beskar)
+{
+	beskar += _beskar;
+	//play HUD beskar animation
+	beskarImage->PlayAnimation(false, 1);
+}
+
+void Player::SubtractCredits(int _credits)
+{
+	credits -= _credits;
+	//play HUD credits animation
+	creditsImage->PlayAnimation(false, 1);
+}
+
+void Player::SubtractBeskar(int _beskar)
+{
+	beskar -= _beskar;
+	//play HUD credits animation
+	beskarImage->PlayAnimation(false, 1);
+}
+
 void Player::SetPlayerInteraction(InteractionType type, float duration)
 {	
 	currentInteraction	= type;
@@ -649,12 +666,11 @@ void Player::SetPlayerInteraction(InteractionType type, float duration)
 		return;
 	}
 
-	moveState = PlayerState::IDLE;
+	moveState	= PlayerState::IDLE;
+	aimState	= AimState::IDLE;
 	
 	if (rigidBody != nullptr)
 		rigidBody->StopInertia();
-
-	aimState = AimState::IDLE;
 
 	switch (currentInteraction)
 	{
@@ -930,6 +946,9 @@ void Player::ManageInteractions()
 {
 	GatherInteractionInputs();
 
+	if (currentInteraction == InteractionType::TALK)													// If the interaction is TALK, then it will be ended when the dialog system says so.
+		return;
+
 	if (currentInteraction != InteractionType::NONE && !interactionTimer.IsActive())					// If there is an interaction and the timer is not active.
 	{
 		interactionTimer.Start();
@@ -940,13 +959,10 @@ void Player::ManageInteractions()
 		interactionDuration = 0.0f;
 	}
 
-	if (currentInteraction != InteractionType::TALK)													// If the interaction is TALK, then it will be ended when the dialog system says so.
+	if (interactionTimer.ReadSec() > interactionDuration)
 	{
-		if (interactionTimer.ReadSec() > interactionDuration)
-		{
-			interactionTimer.Stop();
-			SetPlayerInteraction(InteractionType::NONE);
-		}
+		interactionTimer.Stop();
+		SetPlayerInteraction(InteractionType::NONE);
 	}
 }
 
@@ -1093,14 +1109,10 @@ void Player::MoveIdle()
 		rigidBody->Set2DVelocity(float2::zero);
 }
 
-void Player::Interact()
-{
-
-}
-
 void Player::Walk()
 {
 	currentAnimation = &walkAnimation;
+	
 	Movement();
 
 	if (runParticles != nullptr)
@@ -1110,6 +1122,7 @@ void Player::Walk()
 void Player::Run()
 {
 	currentAnimation = &runForwardsAnimation;
+	
 	Movement();
 
 	if (runParticles != nullptr)
@@ -1184,12 +1197,6 @@ void Player::Dead()
 // --- AIM STATE METHODS
 void Player::AimIdle()
 {
-	/*if (idleAimPlane != nullptr)
-		idleAimPlane->SetIsActive(true);*/
-
-	if (aimingAimPlane != nullptr)
-		aimingAimPlane->SetIsActive(false);
-
 	if (currentWeapon != nullptr)
 	{
 		currentWeapon->defPosition = currentWeapon->position;
@@ -1204,12 +1211,8 @@ void Player::OnGuard()
 
 void Player::Aiming()
 {
-	/*if (idleAimPlane != nullptr)
-		idleAimPlane->SetIsActive(false);*/
-
-	if (aimingAimPlane != nullptr)
-		aimingAimPlane->SetIsActive(true);
-
+	currentAnimation = GetAimAnimation();
+	
 	if (currentWeapon != nullptr)
 	{
 		currentWeapon->defPosition = currentWeapon->modifiedPosition;
@@ -1229,11 +1232,11 @@ void Player::Shoot()
 	if (currentWeapon == nullptr)
 		return;
 	
-	currentAnimation = GetShootAnimation();
+	//currentAnimation = GetShootAnimation();
 
 	switch (currentWeapon->Shoot(aimVector))
 	{
-	case ShootState::NO_FULLAUTO:		{ currentAnimation = nullptr; aimState = AimState::IDLE; }		break;
+	case ShootState::NO_FULLAUTO:		{ currentAnimation = nullptr; aimState = AimState::IDLE; }			break;
 	case ShootState::WAITING_FOR_NEXT:	{ /* DO NOTHING */ }												break;
 	case ShootState::FIRED_PROJECTILE:	
 	{ 
@@ -1247,14 +1250,18 @@ void Player::Shoot()
 			currentWeapon->defPosition = currentWeapon->modifiedPosition;
 			currentWeapon->defRotation = currentWeapon->modifiedRotation;
 		}
-	}		break;
-	case ShootState::RATE_FINISHED:		{ currentAnimation = nullptr; aimState = AimState::IDLE; }		break;
+	}	break;
+	case ShootState::RATE_FINISHED:		{ currentAnimation = nullptr; aimState = AimState::IDLE; }			break;
 	case ShootState::NO_AMMO:			{ /*currentAnimation = nullptr;*/ aimState = AimState::RELOAD_IN; }	break;
 	}
 }
 
 void Player::ReloadIn()
 {
+	LOG("RELOADIN");
+	
+	currentAnimation = GetReloadAnimation();
+
 	aimState = AimState::RELOAD;
 	primaryWeaponImage->PlayAnimation(false, 3);
 }
@@ -1269,6 +1276,8 @@ void Player::ChangeIn()
 {
 	changeTimer.Start();
 	
+	currentAnimation = &changeWeaponAnimation;
+
 	if (changeWeaponAudio != nullptr)
 		changeWeaponAudio->PlayFx(changeWeaponAudio->GetEventId());
 
@@ -1277,6 +1286,8 @@ void Player::ChangeIn()
 
 void Player::Change()
 {
+	LOG("Change Weapon Time %.3f", ChangeTime());
+	
 	if (changeTimer.ReadSec() < ChangeTime())
 		return;
 	
@@ -1334,21 +1345,28 @@ void Player::GatherMoveInputs()
 	// Keyboard movement
 	if (usingKeyboard && !usingGameController)								// If there was keyboard input and no controller input
 	{	
-		if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT) { moveInput.y = -MAX_INPUT; moveState = PlayerState::RUN; }
-		if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT) { moveInput.y = MAX_INPUT;	moveState = PlayerState::RUN; }
-		if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT) { moveInput.x = MAX_INPUT;	moveState = PlayerState::RUN; }
-		if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT) { moveInput.x = -MAX_INPUT; moveState = PlayerState::RUN; }
+		if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT)	{ moveInput.y = -MAX_INPUT; }
+		if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT)	{ moveInput.y = MAX_INPUT; }
+		if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT)	{ moveInput.x = MAX_INPUT; }
+		if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)	{ moveInput.x = -MAX_INPUT; }
+
+		moveState = (abs(moveInput.x) >= MAX_INPUT || abs(moveInput.y) >= MAX_INPUT) ? PlayerState::RUN : PlayerState::IDLE;
 	}
 	else if (usingGameController)
 	{	
-		if (abs(moveInput.x) > 4000.0f || abs(moveInput.y) > 4000.0f)
+		if (abs(moveInput.x) > JOYSTICK_THRESHOLD || abs(moveInput.y) > JOYSTICK_THRESHOLD)
+		{
 			moveState = (abs(moveInput.x) > WALK_THRESHOLD || abs(moveInput.y) > WALK_THRESHOLD) ? PlayerState::RUN : PlayerState::WALK;
+		}
 		else
+		{
 			moveState = PlayerState::IDLE;
+		}
 	}
 	else
 	{
-		moveState = PlayerState::IDLE;
+		if (moveState != PlayerState::DASH && moveState != PlayerState::DEAD)
+			moveState = PlayerState::IDLE;
 	}
 
 	//LOG("[X: %.3f]::[Y: %.3f]::[State: %u]", moveInput.x, moveInput.y, (uint)moveState);
@@ -1359,37 +1377,58 @@ void Player::GatherMoveInputs()
 void Player::GatherAimInputs()
 {
 	// Controller aim
-	aimInput.x = (float)App->input->GetGameControllerAxisRaw(2); // x right joystick
-	aimInput.y = (float)App->input->GetGameControllerAxisRaw(3); // y right joystick
+	aimInput.x = (float)App->input->GetGameControllerAxisRaw(2);				// x right joystick
+	aimInput.y = (float)App->input->GetGameControllerAxisRaw(3);				// y right joystick
 
-	aimInputThreshold.x = (float)App->input->GetGameControllerAxisValue(2); // x right joystick with threshhold
-	aimInputThreshold.y = (float)App->input->GetGameControllerAxisValue(3); // x right joystick with threshhold
+	aimInputThreshold.x = (float)App->input->GetGameControllerAxisValue(2);		// x right joystick with threshhold
+	aimInputThreshold.y = (float)App->input->GetGameControllerAxisValue(3);		// y right joystick with threshhold
 
 	//LOG("AIM INPUT		--> [%.3f]::[%.3f]", aimInput.x, aimInput.y);
 	//LOG("AIM THRESHOLD	--> [%.3f]::[%.3f]", aimInputThreshold.x, aimInputThreshold.y);
 
 	// Keyboard aim
-	if (/*abs(aimInputThreshold.x) <= KEYBOARD_THRESHOLD && abs(aimInputThreshold.y) <= KEYBOARD_THRESHOLD*/ usingKeyboard && !usingGameController)						// If there was no controller input
+	if (usingKeyboard && !usingGameController)																											// If there was no controller input
 	{
-		if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT)	{ aimInput.y = -MAX_INPUT;	if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
-		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT)	{ aimInput.y = MAX_INPUT;	if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
-		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT)	{ aimInput.x = MAX_INPUT;	if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
-		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT)	{ aimInput.x = -MAX_INPUT;	if (aimState == AimState::IDLE) aimState = AimState::AIMING; }
-
-		if (abs(aimInput.x) != MAX_INPUT && abs(aimInput.y) != MAX_INPUT)
+		if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT)	{ aimInput.y = -MAX_INPUT; }
+		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT)	{ aimInput.y = MAX_INPUT; }
+		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT)	{ aimInput.x = MAX_INPUT; }
+		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT)	{ aimInput.x = -MAX_INPUT; }
+		
+		if (abs(aimInput.x) < MAX_INPUT && abs(aimInput.y) < MAX_INPUT)
+		{
 			aimState = AimState::IDLE;
+		}
+		else
+		{
+			if (aimState == AimState::IDLE)
+				aimState = AimState::AIMING;
+		}
 
 	}
 	else if (usingGameController)																														//There is input above the threshold
 	{
-		aimState = (abs(aimInputThreshold.x) <= AIM_THRESHOLD && abs(aimInputThreshold.y) <= AIM_THRESHOLD) ? AimState::IDLE : AimState::AIMING;
+		if (abs(aimInputThreshold.x) <= AIM_THRESHOLD && abs(aimInputThreshold.y) <= AIM_THRESHOLD)
+		{
+			aimState = AimState::IDLE;
+		}
+		else
+		{
+			if (aimState == AimState::IDLE)
+				aimState = AimState::AIMING;
+		}
+		
+		//aimState = (abs(aimInputThreshold.x) <= AIM_THRESHOLD && abs(aimInputThreshold.y) <= AIM_THRESHOLD) ? AimState::IDLE : AimState::AIMING;
 	}
-	
-	SetAimDirection();
-
-	if (aimState != AimState::IDLE && aimState != AimState::AIMING && aimState != AimState::CHANGE && aimState != AimState::RELOAD && aimState != AimState::SHOOT) // If the player is not on this states, ignore action inputs (shoot, reload, etc.)
+	else
 	{
 		aimState = AimState::IDLE;
+	}
+
+	SetAimDirection();
+
+	if (aimState == AimState::CHANGE_IN || aimState == AimState::RELOAD_IN || aimState == AimState::SHOOT_IN)											// If the player is in this states, ignore action inputs (shoot, reload, etc.)
+	{
+		// aimState = AimState::IDLE;
 		return;
 	}
 
@@ -1407,7 +1446,9 @@ void Player::GatherAimInputs()
 
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_REPEAT || App->input->GetGameControllerTrigger(RIGHT_TRIGGER) == ButtonState::BUTTON_REPEAT)
 	{
-		aimState = AimState::SHOOT_IN;
+		if (aimState != AimState::CHANGE && aimState != AimState::RELOAD)
+			aimState = AimState::SHOOT_IN;
+
 		return;
 	}
 }
@@ -1420,20 +1461,18 @@ void Player::GatherInteractionInputs()
 		return;
 	}
 	
-	if (currentInteraction == InteractionType::NONE)
+	if (currentInteraction == InteractionType::NONE)																					// For debug purposes.
 	{
-		/*if (App->input->GetKey(SDL_SCANCODE_E) == KeyState::KEY_DOWN)
+		if (App->input->GetKey(SDL_SCANCODE_RCTRL) == KeyState::KEY_REPEAT)
 		{
-			SetPlayerInteraction(InteractionType::USE);
+			if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_DOWN) { SetPlayerInteraction(InteractionType::TALK); }
+			if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_DOWN) { SetPlayerInteraction(InteractionType::USE); }
+			if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_DOWN) { SetPlayerInteraction(InteractionType::OPEN_CHEST); }
+			if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_DOWN) { SetPlayerInteraction(InteractionType::SIGNAL_GROGU); }
 		}
-
-		if (App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN)
-		{
-			SetPlayerInteraction(InteractionType::OPEN_CHEST);
-		}*/
 	}
 	
-	if (currentInteraction == InteractionType::TALK)
+	if (currentInteraction == InteractionType::TALK)																					// Bring the controller TALK finisher here too.
 	{
 		if (App->input->GetKey(SDL_SCANCODE_BACKSPACE) == KeyState::KEY_DOWN)
 		{
@@ -1503,21 +1542,41 @@ void Player::Aim()
 {
 	float2 oldAim = aimVector;
 
-	if (aimState == AimState::IDLE || moveState == PlayerState::DASH) // AimState::IDLE means not aiming
+	if (aimState == AimState::IDLE || moveState == PlayerState::DASH)												// AimState::IDLE means not aiming
 	{	
 		aimVector = (!moveVector.IsZero()) ? moveVector : oldAim;
 	}
 	else
 	{
-		aimVector = aimInput;
+		aimVector = (abs(aimInput.x) < AIM_THRESHOLD && abs( aimInput.y) < AIM_THRESHOLD) ? moveVector : aimInput;
+
+		//if (abs(aimInput.x) < AIM_THRESHOLD && abs(aimInput.y) < AIM_THRESHOLD)
+		//	LOG("USING MOVE VECTOR: moveVector --> { %.3f, %.3f } || aimInput --> { %.3f, %.3f }", moveVector.x, moveVector.y, aimInput.x, aimInput.y);
 	}
 
-	//LOG("Aim vector x = %f , y = %f", aimVector.x, aimVector.y);
+	if (abs(aimInput.x) < WALK_THRESHOLD && abs(aimInput.y) < WALK_THRESHOLD)										// Only works with this specific threshold. If it works it works.
+	{
+		if (aimingAimPlane != nullptr)
+			aimingAimPlane->SetIsActive(false);
+	}
+	else
+	{
+		if (aimingAimPlane != nullptr)
+			aimingAimPlane->SetIsActive(true);
+	}
 
 	float rad = aimVector.AimedAngle();
-	
+
 	if (skeleton != nullptr)
 		skeleton->transform->SetLocalRotation(float3(0, -rad + DegToRad(90), 0));
+	
+	/*if (abs(aimVector.x) >= JOYSTICK_THRESHOLD || abs(aimVector.y) >= JOYSTICK_THRESHOLD)					// In case the rotation has to be locked under the JOYSTICK_THRESHOLD.
+	{
+		if (skeleton != nullptr)
+			skeleton->transform->SetLocalRotation(float3(0, -rad + DegToRad(90), 0));
+	}*/
+
+	//LOG("Aim vector x = %f , y = %f", aimVector.x, aimVector.y);
 }
 
 void Player::ApplyDash()
