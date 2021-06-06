@@ -205,12 +205,13 @@ void C_UI_Text::Draw2D( )
 	bool rowHead = true;
 	float nextWordSize = 0;
 	std::string::const_iterator c;
+	std::string::const_iterator m;
 	for (c = text.begin(); c != text.end(); ++c)
 	{
 		Character ch = Characters[*c];
 		
 		//Calculate next word size
-		std::string::const_iterator m = c;
+		 m = c;
 		if (text.at(it) == *" ")
 			for (uint currCh = 0; currCh <= nextWordLetters; ++currCh)
 			{
@@ -246,7 +247,7 @@ void C_UI_Text::Draw2D( )
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
 
-		if (xpos + (nextWordSize) >= rect.w * 15000)
+		if ((xpos + nextWordSize) >= rect.w * 15000)
 		{
 			rowHead = true;
 			x = 0;
