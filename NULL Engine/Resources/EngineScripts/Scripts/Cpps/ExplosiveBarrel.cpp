@@ -110,6 +110,9 @@ void ExplosiveBarrel::CleanUp()
 
 void ExplosiveBarrel::OnCollisionEnter(GameObject* object)
 {
+	if (toExplode || exploded)
+		return;
+
 	if (GetObjectScript(object, ObjectType::BULLET) != nullptr && !cooldownTimer.IsActive())
 	{
 		toExplode = true;
