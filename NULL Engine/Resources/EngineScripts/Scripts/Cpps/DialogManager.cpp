@@ -179,25 +179,35 @@ void DialogManager::StartNewLine()
 
 	//set speaker image
 	
-	if (strcmp(currentLine->speakerName.c_str(), "Mando"))
+	if (strcmp(currentLine->speakerName.c_str(), "Mando") == 0)
 	{
 		//Set image to mando's portrait
+		speakerImage->SetTextureCoordinates(3620, 1499, 320, 320);
 	}
-	if (strcmp(currentLine->speakerName.c_str(), "IG-11"))
+	if (strcmp(currentLine->speakerName.c_str(), "IG-11") == 0)
 	{
 		//Set image to mando's portrait
+		speakerImage->SetTextureCoordinates(-2000, -1830, 320, 320);
 	}
-	if (strcmp(currentLine->speakerName.c_str(), "IG-12"))
+	if (strcmp(currentLine->speakerName.c_str(), "IG-12") == 0)
 	{
 		//Set image to mando's portrait
+		speakerImage->SetTextureCoordinates(2660, 1499, 320, 320);
 	}
-	if (strcmp(currentLine->speakerName.c_str(), "Grogu"))
+	if (strcmp(currentLine->speakerName.c_str(), "Grogu") == 0)
 	{
 		//Set image to mando's portrait
+		speakerImage->SetTextureCoordinates(3300, 1499, 320, 320);
 	}
-	if (strcmp(currentLine->speakerName.c_str(), "Greef Jawa"))
+	if (strcmp(currentLine->speakerName.c_str(), "Greef Karga") == 0)
 	{
 		//Set image to mando's portrait
+		speakerImage->SetTextureCoordinates(2980, 1499, 320, 320);
+	}
+	if (strcmp(currentLine->speakerName.c_str(), "Armorer") == 0)
+	{
+		//Set image to mando's portrait
+		speakerImage->SetTextureCoordinates(2020, 1499, 320, 320);
 	}
 
 	dialogText->SetText("");
