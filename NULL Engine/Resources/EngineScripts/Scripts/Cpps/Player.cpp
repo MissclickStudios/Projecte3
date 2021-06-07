@@ -24,11 +24,11 @@
 
 #include "Player.h"
 
-#define MAX_INPUT			32767.0f
-#define WALK_THRESHOLD		16384.0f
-#define AIM_THRESHOLD		8192.0f
-#define JOYSTICK_THRESHOLD	4096.0f
-#define WALKING_FACTOR		0.5f
+#define MAX_INPUT				32767.0f
+#define WALK_THRESHOLD			16384.0f
+#define AIM_THRESHOLD			8192.0f
+#define P_JOYSTICK_THRESHOLD	4096.0f
+#define WALKING_FACTOR			0.5f
 
 Player* CreatePlayer()
 {
@@ -141,6 +141,11 @@ void Player::SetUp()
 	changeTimer.Stop();
 	interactionTimer.Stop();
 
+	// --- SCENES
+	inHub = !strcmp(App->scene->GetCurrentScene(), "HUB");
+
+	LOG("IN HUB: { %s }", (inHub) ? "TRUE" : "FALSE");
+
 	// --- GAME OBJECTS
 	rightHand		= gameObject->FindChild(rightHandName.c_str());
 	leftHand		= gameObject->FindChild(leftHandName.c_str());
@@ -229,10 +234,8 @@ void Player::Behavior()
 	usingGameController = App->input->GameControllerReceivedInputs();
 
 	ManageInteractions();
-	
-	//LOG("[%d]::[%d]::[%d]", (int)moveState, (int)aimState, (int)currentInteraction);
 
-	if (currentInteraction == InteractionType::NONE)
+	if (currentInteraction == InteractionType::NONE)																			// All inputs will be ignored while the player is interacting.
 	{
 		ManageMovement();
 
@@ -664,10 +667,10 @@ void Player::SetPlayerInteraction(InteractionType type, float duration)
 		interactionTimer.Stop();
 		interactionDuration = 0.0f;
 
-		if (rigidBody != nullptr)
+		if (rigidBody != nullptr)																				// Making the player dynamic again once the interaction has finished.
 			rigidBody->MakeDynamic();
 
-		if (dashTimer.IsActive())
+		if (dashTimer.IsActive())																				// In case the interaction was set while the player was dashing.
 			moveState = PlayerState::DASH;
 
 		return;
@@ -676,7 +679,7 @@ void Player::SetPlayerInteraction(InteractionType type, float duration)
 	moveState	= PlayerState::IDLE;
 	aimState	= AimState::IDLE;
 	
-	if (rigidBody != nullptr)
+	if (rigidBody != nullptr)																					// Making sure that the player will remain still while interacting.
 		rigidBody->MakeStatic();
 
 	switch (currentInteraction)
@@ -957,14 +960,14 @@ void Player::ManageInteractions()
 {
 	GatherInteractionInputs();
 
-	if (currentInteraction == InteractionType::TALK)													// If the interaction is TALK, then it will be ended when the dialog system says so.
+	if (currentInteraction == InteractionType::TALK)															// If the interaction is TALK, then it'll be ended through the dialog system.
 		return;
 
-	if (currentInteraction != InteractionType::NONE && !interactionTimer.IsActive())					// If there is an interaction and the timer is not active.
+	if (currentInteraction != InteractionType::NONE && !interactionTimer.IsActive())							// If there is an interaction and the timer is not active.
 	{
 		interactionTimer.Start();
 	}
-	else if (currentInteraction == InteractionType::NONE && interactionTimer.IsActive())				// If there is no interaction and the timer is active.
+	else if (currentInteraction == InteractionType::NONE && interactionTimer.IsActive())						// If there is no interaction and the timer is active.
 	{
 		interactionTimer.Stop();
 		interactionDuration = 0.0f;
@@ -988,31 +991,28 @@ void Player::ManageMovement()
 		}
 		else
 		{
-			if (currentInteraction == InteractionType::NONE)
-			{
-				if (moveState != PlayerState::DASH)
-					GatherMoveInputs();
-			}
+			if (moveState != PlayerState::DASH)
+				GatherMoveInputs();
 		}
 	}
 
 	if (runParticles != nullptr)
 		runParticles->StopSpawn();
 
-	if (rigidBody == nullptr)														// Ending early in case there is no rigidBody associated with the player.
+	if (rigidBody == nullptr)																					// Ending early in case there is no rigidBody associated with the player.
 		return;
 
 	switch (moveState)
 	{
-	case PlayerState::IDLE:		{ MoveIdle(); } break;
-	case PlayerState::WALK:		{ Walk(); }		break;
-	case PlayerState::RUN:		{ Run(); }		break;
+	case PlayerState::IDLE:		{ MovementIdle(); } break;
+	case PlayerState::WALK:		{ Walk(); }			break;
+	case PlayerState::RUN:		{ Run(); }			break;
 
-	case PlayerState::DASH_IN:	{ DashIn(); }
-	case PlayerState::DASH:		{ Dash(); }		break;
+	case PlayerState::DASH_IN:	{ DashIn(); }																	// All "_IN" states will be used to Start their main counterparts.
+	case PlayerState::DASH:		{ Dash(); }			break;
 
 	case PlayerState::DEAD_IN:	{ DeadIn(); }
-	case PlayerState::DEAD:		{ Dead(); }		break;
+	case PlayerState::DEAD:		{ Dead(); }			break;
 	}
 }
 
@@ -1112,7 +1112,7 @@ void Player::SignalGrogu()
 }
 
 // --- MOVEMENT STATE METHODS
-void Player::MoveIdle()
+void Player::MovementIdle()
 {
 	currentAnimation = &idleAnimation;
 
@@ -1126,7 +1126,7 @@ void Player::Walk()
 	
 	Movement();
 
-	if (runParticles != nullptr)
+	if (!inHub && runParticles != nullptr)
 		runParticles->ResumeSpawn();
 }
 
@@ -1136,7 +1136,7 @@ void Player::Run()
 	
 	Movement();
 
-	if (runParticles != nullptr)
+	if (!inHub && runParticles != nullptr)
 		runParticles->ResumeSpawn();
 
 }
@@ -1365,7 +1365,7 @@ void Player::GatherMoveInputs()
 	}
 	else if (usingGameController)
 	{	
-		if (abs(moveInput.x) > JOYSTICK_THRESHOLD || abs(moveInput.y) > JOYSTICK_THRESHOLD)
+		if (abs(moveInput.x) > P_JOYSTICK_THRESHOLD || abs(moveInput.y) > P_JOYSTICK_THRESHOLD)
 		{
 			moveState = (abs(moveInput.x) > WALK_THRESHOLD || abs(moveInput.y) > WALK_THRESHOLD) ? PlayerState::RUN : PlayerState::WALK;
 		}
@@ -1581,7 +1581,7 @@ void Player::Aim()
 	if (skeleton != nullptr)
 		skeleton->transform->SetLocalRotation(float3(0, -rad + DegToRad(90), 0));
 	
-	/*if (abs(aimVector.x) >= JOYSTICK_THRESHOLD || abs(aimVector.y) >= JOYSTICK_THRESHOLD)					// In case the rotation has to be locked under the JOYSTICK_THRESHOLD.
+	/*if (abs(aimVector.x) >= P_JOYSTICK_THRESHOLD || abs(aimVector.y) >= P_JOYSTICK_THRESHOLD)					// In case the rotation has to be locked under the JOYSTICK_THRESHOLD.
 	{
 		if (skeleton != nullptr)
 			skeleton->transform->SetLocalRotation(float3(0, -rad + DegToRad(90), 0));
