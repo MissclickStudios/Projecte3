@@ -110,7 +110,7 @@ void DialogManager::Update()
 					state = DialogState::TALKED;
 					currentLineLetter = 0;
 				}
-				else if (currentLine->lineText.at(currentLineLetter) == *" ")
+				/*else if (currentLine->lineText.at(currentLineLetter) == *" ")
 				{
 					dialogText->nextWordLetters = 0;
 					wordIt = 1;
@@ -121,7 +121,7 @@ void DialogManager::Update()
 						wordIt++;
 						dialogText->nextWordLetters++;
 					}
-				}
+				}*/
 					
 			}
 

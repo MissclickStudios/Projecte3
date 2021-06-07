@@ -239,6 +239,9 @@ public:
 	//Die cutscene
 	bool doDieCutscene = false;
 
+	// Utils
+	bool inHub = false;
+
 	// Debug
 	void SetGodMode(bool enable);
 	bool GetGodMode()const;
@@ -270,7 +273,7 @@ private:
 	float interactionDuration = 0.0f;
 
 	// Movement Methods
-	void MoveIdle();
+	void MovementIdle();
 	void Walk();
 	void Run();
 	void DashIn();

@@ -812,7 +812,7 @@ void GameManager::AddFixedRoom(std::string name, int level, int position)
 
 void GameManager::HandleRoomGeneration()
 {
-	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_REPEAT)
+	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_REPEAT)																// ATTENTION: Could collide with other LCTRL uses.
 	{
 		if (App->input->GetKey(SDL_SCANCODE_KP_6) == KeyState::KEY_DOWN)
 		{
@@ -829,7 +829,6 @@ void GameManager::HandleRoomGeneration()
 			else if (currentLevel == 2)
 			{
 				(roomNum < level2.size() - 1) ? GoNextRoom() : LOG("[SCENE] Level Generator: End of the Game Reached!");
-<<<<<<< Updated upstream
 			}*/
 
 		}
@@ -982,7 +981,7 @@ void GameManager::GateUpdate()
 					if (!direction.IsZero())
 						direction.Normalize();
 					float rad = direction.AimedAngle();
-					chest->transform->SetLocalRotation(float3(Random::LCG::GetBoundedRandomFloat(0.0f, 2.0f), -rad, Random::LCG::GetBoundedRandomFloat(0.0f, 2.0f)));
+					chest->transform->SetLocalRotation(float3(DegToRad(Random::LCG::GetBoundedRandomFloat(0.0f, 10.0f)), -rad, DegToRad(Random::LCG::GetBoundedRandomFloat(0.0f, 10.0f))));
 
 					chest->GetComponent<C_RigidBody>()->TransformMovesRigidBody(false);
 				}

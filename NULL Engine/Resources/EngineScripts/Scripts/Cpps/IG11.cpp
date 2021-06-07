@@ -325,10 +325,10 @@ void IG11::ManageMovement()
 			break;
 		}
 
-		if (health > 200.0f) 
+		if (health > maxHealth / 2) 
 			moveState = FirstStageAttacks();
 
-		else if (health <= 200.0f)
+		else if (health <= maxHealth / 2)
 			moveState = SecondStageAttacks();
 
 		break;
@@ -701,7 +701,10 @@ bool IG11::SpiralAttack()
 	}
 	if (sniperWeapon)
 	{
-		sniperWeapon->projectilesPerShot = 0;
+		sniperWeapon->fireRate = 0.001f;
+		sniperWeapon->ammo = 20;
+		sniperWeapon->projectilesPerShot = 1;
+		sniperWeapon->shotSpreadArea = 5;
 	}
 
 	if (specialAttackRot >= 360.0f * spiralAttackSpins)
