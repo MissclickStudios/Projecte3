@@ -144,8 +144,6 @@ void Player::SetUp()
 	// --- SCENES
 	inHub = !strcmp(App->scene->GetCurrentScene(), "HUB");
 
-	LOG("IN HUB: { %s }", (inHub) ? "TRUE" : "FALSE");
-
 	// --- GAME OBJECTS
 	rightHand		= gameObject->FindChild(rightHandName.c_str());
 	leftHand		= gameObject->FindChild(leftHandName.c_str());
@@ -241,7 +239,7 @@ void Player::Behavior()
 
 		if (moveState != PlayerState::DEAD && moveState != PlayerState::DEAD_OUT)
 		{
-			//ManageAim();
+			ManageAim();
 
 			ManageInvincibility();
 
@@ -1333,14 +1331,15 @@ void Player::Change()
 void Player::GatherMoveInputs()
 {
 	// Controller movement
-	moveInput.x = (float)App->input->GetGameControllerAxisValue(0);
-	moveInput.y = (float)App->input->GetGameControllerAxisValue(1);
+	moveInput.x = (float)App->input->GetGameControllerAxisInput(LEFT_JOYSTICK_X_AXIS);														// Gets the axis input regardless of thresholds
+	moveInput.y = (float)App->input->GetGameControllerAxisInput(LEFT_JOYSTICK_Y_AXIS);														// and axis states. Careful with joystick noise.
 
 	//LOG("[Keyboard: %s]::[Controller: %s]", (usingKeyboard) ? "True" : "False", (usingGameController) ? "True" : "False");
+	//LOG("MOVE INPUT: { %.3f, %.3f }", moveInput.x, moveInput.y);
 
 	if (!dashCooldownTimer.IsActive())
 	{
-		if ((App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(0) == ButtonState::BUTTON_DOWN))
+		if ((App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(LEFT_TRIGGER) == ButtonState::BUTTON_DOWN))
 		{
 			if (!dashTimer.IsActive())
 				moveState = PlayerState::DASH_IN;
@@ -1353,17 +1352,25 @@ void Player::GatherMoveInputs()
 		dashCooldownTimer.Stop();
 	}
 
-	// Keyboard movement
-	if (usingKeyboard && !usingGameController)								// If there was keyboard input and no controller input
+	if (usingKeyboard && !usingGameController)																								// If there was keyboard input and no GC input.
 	{	
 		if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT)	{ moveInput.y = -MAX_INPUT; }
 		if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT)	{ moveInput.y = MAX_INPUT; }
 		if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT)	{ moveInput.x = MAX_INPUT; }
 		if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)	{ moveInput.x = -MAX_INPUT; }
 
-		moveState = (abs(moveInput.x) >= MAX_INPUT || abs(moveInput.y) >= MAX_INPUT) ? PlayerState::RUN : PlayerState::IDLE;
+		if (abs(moveInput.x) >= MAX_INPUT || abs(moveInput.y) >= MAX_INPUT)
+		{
+			moveState = (App->input->GetKey(SDL_SCANCODE_LCTRL) != KeyState::KEY_REPEAT) ? PlayerState::RUN : PlayerState::WALK;
+		}
+		else
+		{
+			moveState = PlayerState::IDLE;
+		}
+
+		//moveState = (abs(moveInput.x) >= MAX_INPUT || abs(moveInput.y) >= MAX_INPUT) ? PlayerState::RUN : PlayerState::IDLE;
 	}
-	else if (usingGameController)
+	else if (usingGameController)																											// If there was controller input.
 	{	
 		if (abs(moveInput.x) > P_JOYSTICK_THRESHOLD || abs(moveInput.y) > P_JOYSTICK_THRESHOLD)
 		{
@@ -1380,19 +1387,17 @@ void Player::GatherMoveInputs()
 			moveState = PlayerState::IDLE;
 	}
 
-	//LOG("[X: %.3f]::[Y: %.3f]::[State: %u]", moveInput.x, moveInput.y, (uint)moveState);
-
 	SetPlayerDirection();
 }
 
 void Player::GatherAimInputs()
 {
 	// Controller aim
-	aimInput.x = (float)App->input->GetGameControllerAxisRaw(2);												// x right joystick
-	aimInput.y = (float)App->input->GetGameControllerAxisRaw(3);												// y right joystick
+	aimInput.x = (float)App->input->GetGameControllerAxisRaw(RIGHT_JOYSTICK_X_AXIS);							// x right joystick
+	aimInput.y = (float)App->input->GetGameControllerAxisRaw(RIGHT_JOYSTICK_Y_AXIS);							// y right joystick
 
-	aimInputThreshold.x = (float)App->input->GetGameControllerAxisValue(2);										// x right joystick with threshhold
-	aimInputThreshold.y = (float)App->input->GetGameControllerAxisValue(3);										// y right joystick with threshhold
+	aimInputThreshold.x = (float)App->input->GetGameControllerAxisValue(RIGHT_JOYSTICK_X_AXIS);					// x right joystick with threshhold
+	aimInputThreshold.y = (float)App->input->GetGameControllerAxisValue(RIGHT_JOYSTICK_Y_AXIS);					// y right joystick with threshhold
 
 	//LOG("AIM INPUT		--> [%.3f]::[%.3f]", aimInput.x, aimInput.y);
 	//LOG("AIM THRESHOLD	--> [%.3f]::[%.3f]", aimInputThreshold.x, aimInputThreshold.y);
