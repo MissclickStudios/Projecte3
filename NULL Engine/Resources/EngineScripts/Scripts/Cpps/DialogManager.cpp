@@ -182,7 +182,7 @@ void DialogManager::StartNewLine()
 	if (strcmp(currentLine->speakerName.c_str(), "Mando") == 0)
 	{
 		//Set image to mando's portrait
-		speakerImage->SetTextureCoordinates(3620, 1499, 320, 320);
+		speakerImage->SetTextureCoordinates(-1680, -1830, 320, 320);
 	}
 	if (strcmp(currentLine->speakerName.c_str(), "IG-11") == 0)
 	{
@@ -192,22 +192,22 @@ void DialogManager::StartNewLine()
 	if (strcmp(currentLine->speakerName.c_str(), "IG-12") == 0)
 	{
 		//Set image to mando's portrait
-		speakerImage->SetTextureCoordinates(2660, 1499, 320, 320);
+		speakerImage->SetTextureCoordinates(-2000, -1830, 320, 320);
 	}
 	if (strcmp(currentLine->speakerName.c_str(), "Grogu") == 0)
 	{
 		//Set image to mando's portrait
-		speakerImage->SetTextureCoordinates(3300, 1499, 320, 320);
+		speakerImage->SetTextureCoordinates(-2000, -1830, 320, 320);
 	}
 	if (strcmp(currentLine->speakerName.c_str(), "Greef Karga") == 0)
 	{
 		//Set image to mando's portrait
-		speakerImage->SetTextureCoordinates(2980, 1499, 320, 320);
+		speakerImage->SetTextureCoordinates(-2000, -1830, 320, 320);
 	}
 	if (strcmp(currentLine->speakerName.c_str(), "Armorer") == 0)
 	{
 		//Set image to mando's portrait
-		speakerImage->SetTextureCoordinates(2020, 1499, 320, 320);
+		speakerImage->SetTextureCoordinates(-2000, -1830, 320, 320);
 	}
 
 	dialogText->SetText("");
@@ -280,8 +280,17 @@ void DialogManager::EndDialog()
 	App->uiSystem->RemoveActiveCanvas(dialogCanvas);
 	state = DialogState::NO_DIALOG;
 
-	if(armorer != nullptr && !armorer->menuOpen)
+	if (armorer != nullptr)
+	{
+		if (!armorer->menuOpen)
+		{
+			mando->SetPlayerInteraction(InteractionType::NONE);
+		}
+	}
+	else
+	{
 		mando->SetPlayerInteraction(InteractionType::NONE);
+	}
 }
 
 bool DialogManager::StartDialog(const char* dialogName)

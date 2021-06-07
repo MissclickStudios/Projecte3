@@ -13,6 +13,7 @@
 
 #include "GameObject.h"
 
+#include "C_AudioSource.h"
 #include "C_Transform.h"
 #include "C_UI_Text.h"
 #include "C_AudioSource.h"
@@ -159,10 +160,18 @@ void GameManager::Start()
 	if(cameraGameObject != nullptr)
 		cameraScript = (CameraMovement*)cameraGameObject->GetScript("CameraMovement");
 
-	if (strcmp(App->scene->GetCurrentScene(), levelNames.winScene.c_str()) == 0)
+	if (strcmp(App->scene->GetCurrentScene(), levelNames.winScene.c_str()) == 0) //Win screen
+	{
 		SetUpWinScreen();
+	}
 
-	if (strcmp(App->scene->GetCurrentScene(), levelNames.l1Initial.c_str()) == 0)
+	if (strcmp(App->scene->GetCurrentScene(), levelNames.winScene.c_str()) == 0 || strcmp(App->scene->GetCurrentScene(), levelNames.loseScene.c_str()) == 0 || 
+		strcmp(App->scene->GetCurrentScene(), "Credits") == 0) //Lock mando (He is flying in the scene)
+	{
+		playerScript->gameObject->SetIsActive(false); //Pause mando so he doesn't produce any sound or movement (Silence him o_o)
+	}
+
+	if (strcmp(App->scene->GetCurrentScene(), levelNames.l1Initial.c_str()) == 0) //Initial screen
 		runStats.runTime = 0.f;
 
 	//Start Dialogs based on scene & Advance Story
@@ -180,9 +189,9 @@ void GameManager::Start()
 		if (strcmp(App->scene->GetCurrentScene(), levelNames.ruinsBoss.c_str()) == 0)
 		{
 			if (!storyDialogState.defeatedIG12FirstTime)
-				dialogManager->StartDialog("1st Conversation IG-11");
+				dialogManager->StartDialog("1st Conversation IG-12");
 			else
-				dialogManager->StartDialog("Pool Conversation IG-11");
+				dialogManager->StartDialog("Pool Conversation IG-12");
 			return;
 		}
 
@@ -204,6 +213,13 @@ void GameManager::Start()
 		
 		//dialogManager->StartDialog("GroguHello");
 	}	
+
+	clearedRoomAudio = new C_AudioSource(gameObject);
+
+	if (clearedRoomAudio != nullptr)
+	{
+		clearedRoomAudio->SetEvent("room_cleared");
+	}
 }
 
 void GameManager::Update()
@@ -961,32 +977,39 @@ void GameManager::GateUpdate()
 
 			gate->Unlock();
 
-			uint num = Random::LCG::GetBoundedRandomUint(0, 100);
-			if (num <= chestSpawnChance && chestPrefab.uid != NULL)
-			{
-				GameObject* chest = App->resourceManager->LoadPrefab(chestPrefab.uid, App->scene->GetSceneRoot());
-				if (chest != nullptr && lastEnemyDead != nullptr)
-				{
-					float3 position = lastEnemyDead->transform->GetWorldPosition();
-					position.y += 10.0f;
-					chest->transform->SetWorldPosition(position);
+			clearedRoomAudio->PlayFx("room_cleared");
 
-					float2 playerPosition, chestPosition;
-					playerPosition.x = playerGameObject->transform->GetWorldPosition().x;
-					playerPosition.y = playerGameObject->transform->GetWorldPosition().z;
-					chestPosition.x = chest->transform->GetWorldPosition().x;
-					chestPosition.y = chest->transform->GetWorldPosition().z;
-
-					float2 direction = playerPosition - chestPosition;
-					if (!direction.IsZero())
-						direction.Normalize();
-					float rad = direction.AimedAngle();
-					chest->transform->SetLocalRotation(float3(DegToRad(Random::LCG::GetBoundedRandomFloat(0.0f, 10.0f)), -rad, DegToRad(Random::LCG::GetBoundedRandomFloat(0.0f, 10.0f))));
-
-					chest->GetComponent<C_RigidBody>()->TransformMovesRigidBody(false);
-				}
-			}
+			DropChest();
 		}
+}
+
+void GameManager::DropChest()
+{
+	uint num = Random::LCG::GetBoundedRandomUint(0, 100);
+	if (num <= chestSpawnChance && chestPrefab.uid != NULL)
+	{
+		GameObject* chest = App->resourceManager->LoadPrefab(chestPrefab.uid, App->scene->GetSceneRoot());
+		if (chest != nullptr && lastEnemyDead != nullptr)
+		{
+			float3 position = lastEnemyDead->transform->GetWorldPosition();
+			position.y += 10.0f;
+			chest->transform->SetWorldPosition(position);
+
+			float2 playerPosition, chestPosition;
+			playerPosition.x = playerGameObject->transform->GetWorldPosition().x;
+			playerPosition.y = playerGameObject->transform->GetWorldPosition().z;
+			chestPosition.x = chest->transform->GetWorldPosition().x;
+			chestPosition.y = chest->transform->GetWorldPosition().z;
+
+			float2 direction = playerPosition - chestPosition;
+			if (!direction.IsZero())
+				direction.Normalize();
+			float rad = direction.AimedAngle();
+			chest->transform->SetLocalRotation(float3(DegToRad(Random::LCG::GetBoundedRandomFloat(0.0f, 10.0f)), -rad, DegToRad(Random::LCG::GetBoundedRandomFloat(0.0f, 10.0f))));
+
+			chest->GetComponent<C_RigidBody>()->TransformMovesRigidBody(false);
+		}
+	}
 }
 
 void GameManager::HandleBackgroundMusic()
@@ -1105,6 +1128,8 @@ void GameManager::SetUpWinScreen()
 	tmp = App->scene->GetGameObjectByName("WeaponText");
 	if (tmp != nullptr)
 		tmp->GetComponent<C_UI_Text>()->SetText(runStats.weaponUsed.c_str());
+
+
 }
 
 void GameManager::ResetArmorerItemsLvl()
