@@ -407,11 +407,16 @@ void Player::LoadState(ParsonNode& playerNode)
 	if (secondaryGunGameObject != nullptr)
 	{
 		equipedGun.uid = uid;
+
 		secondaryWeapon = (Weapon*)GetObjectScript(secondaryGunGameObject, ObjectType::WEAPON);
 
 		if (secondaryWeapon != nullptr)
 		{
-			secondaryWeapon->SetOwnership(type, rightHand, rightHandName.c_str());
+			if (secondaryWeapon->type == WeaponType::MINIGUN)
+				secondaryWeapon->SetOwnership(type, leftHand, leftHandName.c_str());
+			else
+				secondaryWeapon->SetOwnership(type, rightHand, rightHandName.c_str());
+
 			int savedAmmo = playerNode.GetInteger("Equiped Gun Ammo");
 			if (savedAmmo > secondaryWeapon->MaxAmmo())
 				savedAmmo = secondaryWeapon->MaxAmmo();
