@@ -200,26 +200,15 @@ void C_UI_Text::Draw2D( )
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(VAO);
 
-	int i = 0;
-	uint it = 0;
-	bool rowHead = true;
-	float nextWordSize = 0;
+	int textRows = 0;
+	uint characterIt = 0;
+	bool nextRow = true;
+	//float nextWordSize = 0;
 	std::string::const_iterator c;
-	std::string::const_iterator m;
-	for (c = text.begin(); c != text.end(); ++c)
+	//std::string::const_iterator m;
+	for (c = text.cbegin(); c != text.cend(); ++c)
 	{
 		Character ch = Characters[*c];
-		
-		//Calculate next word size
-		 m = c;
-		if (text.at(it) == *" ")
-			for (uint currCh = 0; currCh <= nextWordLetters; ++currCh)
-			{
-				m++;
-				nextWordSize += Characters[*m].size.x;
-			}
-		else
-			nextWordSize = 0;
 
 		glBindTexture(GL_TEXTURE_2D, ch.textureID);
 
@@ -229,7 +218,40 @@ void C_UI_Text::Draw2D( )
 		float w = ch.size.x;
 		float h = ch.size.y;
 
-		ypos = ypos - vSpaceBetween * 5 * i;
+		ypos = ypos - vSpaceBetween * textRows;
+
+
+		if (xpos >= rect.w * 15000)
+		{
+			nextRow = true;
+			x = 0;
+			textRows++;
+
+			if (text.at(characterIt) != *" ")
+			{
+				uint wordSize = 0;
+				for (uint i = 0; text.at(characterIt - i) != *" "; ++i)
+				{
+					wordSize++;
+					c--;
+				}
+				characterIt -= wordSize;
+			}
+		}
+		else
+		{
+			if (!(text.at(characterIt) == *" " && nextRow))
+			{
+				float adv = ch.advance + hSpaceBetween;
+				x += ((uint)adv >> 6);
+			}
+
+			nextRow = false;
+		}
+
+		++characterIt;
+
+
 
 		float vertices[6][4] = {
 			{ xpos,     ypos + h,   0.0f, 0.0f },
@@ -246,28 +268,6 @@ void C_UI_Text::Draw2D( )
 
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
-
-		if ((xpos + nextWordSize) >= rect.w * 15000)
-		{
-			rowHead = true;
-			x = 0;
-			i++;
-		}
-		else
-		{
-			char j = text.at(it);
-			std::string converter = " ";
-			char k = converter.at(0);
-			if (!(j == k && rowHead))
-			{
-				float adv = ch.advance + hSpaceBetween * 10;
-				x += ((uint)adv >> 6);
-			}
-
-			rowHead = false;
-		}
-
-		++it;
 	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);

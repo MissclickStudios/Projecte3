@@ -87,7 +87,7 @@ private:
 
 	float fontSize = 0.001;
 	uint hSpaceBetween = 0; // extra space between letters
-	float vSpaceBetween = 15; // space between rows
+	float vSpaceBetween = 75; // space between rows
 
 };
 
