@@ -463,9 +463,9 @@ void IG11::ManageMovement()
 		deathTimer.Start();
 		moveState = IG11State::DEAD;
 		
-		tmp = (Player*)player->GetScript("Payer");
+		tmp = (Player*)player->GetScript("Player");
 		if(tmp)
-			tmp->hubCurrency += beskarValue;
+			tmp->GiveBeskar(beskarValue);
 
 		if(healthBarCanvas)
 			App->uiSystem->RemoveActiveCanvas(healthBarCanvas);

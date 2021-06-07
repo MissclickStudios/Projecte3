@@ -420,7 +420,7 @@ public:
 		if (player == nullptr)
 			return;
 
-		player->hubCurrency += ingots;
+		player->beskar += ingots;
 	}
 
 	int ingots;
@@ -442,7 +442,7 @@ public:
 		if (player == nullptr)
 			return;
 
-		player->currency += credits;
+		player->GiveCredits(credits);
 	}
 
 	int credits;

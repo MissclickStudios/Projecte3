@@ -1,7 +1,7 @@
 {
-    "ModTime": 1622906383,
-    "UID": 914798143,
-    "ParentUID": 296213747,
+    "ModTime": 1623003598,
+    "UID": 252940085,
+    "ParentUID": 1598465591,
     "PrefabID": 202576878,
     "IsPrefab": true,
     "Name": "Explosive barrel",
@@ -18,9 +18,9 @@
         {
             "Type": 1,
             "LocalPosition": [
-                9.7147579193115234,
-                5.6537308692932129,
-                52.064273834228516
+                -7.5957965850830078,
+                5.7010364532470703,
+                61.871086120605469
             ],
             "LocalRotation": [
                 0,
@@ -44,10 +44,10 @@
             "Is Trigger": false,
             "Show Collider": true,
             "Size X": 5,
-            "Size Y": 10,
+            "Size Y": 20,
             "Size Z": 5,
             "Center X": 0,
-            "Center Y": 5,
+            "Center Y": 10,
             "Center Z": 0
         },
         {
@@ -69,7 +69,7 @@
                 {
                     "Type": 2,
                     "Name": "particleEmitttingTime",
-                    "float": 0.5
+                    "float": 0.20000000298023224
                 },
                 {
                     "Type": 5,
@@ -80,6 +80,11 @@
                     "Type": 5,
                     "Name": "explosionAudio",
                     "string": "item_barrel_explosion"
+                },
+                {
+                    "Type": 5,
+                    "Name": "markerName",
+                    "string": ""
                 },
                 {
                     "Type": 5,
@@ -101,86 +106,8 @@
     ],
     "Children": [
         {
-            "UID": 1397491960,
-            "ParentUID": 914798143,
-            "PrefabID": 202576878,
-            "IsPrefab": true,
-            "Name": "ExplosionObject",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 8,
-                    "Is Static": true,
-                    "Filter": " void"
-                },
-                {
-                    "Type": 9,
-                    "Is Trigger": true,
-                    "Show Collider": true,
-                    "Size X": 30,
-                    "Size Y": 30,
-                    "Size Z": 30,
-                    "Center X": 0,
-                    "Center Y": 5,
-                    "Center Z": 0
-                },
-                {
-                    "Type": 24,
-                    "ResourceUID": 69873825,
-                    "AssetsPath": "Assets\/Scripts\/\/BarrelExplosion.h",
-                    "DataName": "BarrelExplosion",
-                    "HasInspector": true,
-                    "InspectorVariables": [
-                        {
-                            "Type": 0,
-                            "Name": "damage",
-                            "int": 40
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "power",
-                            "float": 100
-                        },
-                        {
-                            "Type": 1,
-                            "Name": "stun",
-                            "bool": false
-                        }
-                    ]
-                }
-            ],
-            "Children": []
-        },
-        {
-            "UID": 1271243781,
-            "ParentUID": 914798143,
+            "UID": 1204017915,
+            "ParentUID": 252940085,
             "PrefabID": 202576878,
             "IsPrefab": true,
             "Name": "BarrelMesh",
@@ -259,6 +186,205 @@
                 }
             ],
             "Children": []
+        },
+        {
+            "UID": 1422993062,
+            "ParentUID": 252940085,
+            "PrefabID": 202576878,
+            "IsPrefab": true,
+            "Name": "ExplosionObject",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": " void"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": true,
+                    "Show Collider": true,
+                    "Size X": 30,
+                    "Size Y": 30,
+                    "Size Z": 30,
+                    "Center X": 0,
+                    "Center Y": 5,
+                    "Center Z": 0
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 69873825,
+                    "AssetsPath": "Assets\/Scripts\/\/BarrelExplosion.h",
+                    "DataName": "BarrelExplosion",
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 0,
+                            "Name": "damage",
+                            "int": 40
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "power",
+                            "float": 100
+                        },
+                        {
+                            "Type": 1,
+                            "Name": "stun",
+                            "bool": false
+                        }
+                    ]
+                }
+            ],
+            "Children": []
+        },
+        {
+            "UID": 1966619552,
+            "ParentUID": 252940085,
+            "PrefabID": 202576878,
+            "IsPrefab": true,
+            "Name": "Marker",
+            "IsActive": false,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        1.3062114715576172,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        1,
+                        0,
+                        2.6740158887150756e-07
+                    ],
+                    "LocalScale": [
+                        50,
+                        1,
+                        50
+                    ]
+                }
+            ],
+            "Children": [
+                {
+                    "UID": 347027674,
+                    "ParentUID": 1966619552,
+                    "PrefabID": 202576878,
+                    "IsPrefab": true,
+                    "Name": "Plane001",
+                    "IsActive": false,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "MaintainThroughScenes": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                -0.70710676908493042,
+                                0,
+                                0,
+                                0.70710676908493042
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 2,
+                            "UID": 1016193486,
+                            "Name": "Plane001.nemesh",
+                            "Path": "Library\/Meshes\/1016193486.nemesh",
+                            "File": "1016193486.nemesh",
+                            "ShowWireframe": false,
+                            "ShowBoundingBox": false,
+                            "Outline": false,
+                            "OutlineThickness": 0,
+                            "OutlineColor": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ]
+                        },
+                        {
+                            "Type": 3,
+                            "Material": {
+                                "UID": 1705422038,
+                                "Color": [
+                                    0.70588237047195435,
+                                    0.70588237047195435,
+                                    0.70588237047195435,
+                                    1
+                                ],
+                                "Name": "Plane001.nemat",
+                                "Path": "Library\/Materials\/1705422038.nemat",
+                                "File": "1705422038.nemat"
+                            },
+                            "Texture": {
+                                "AssetsPath": "Assets\/Textures\/Particles\/dot_particle.png",
+                                "AssetsName": "dot_particle.png",
+                                "LibaryPath": "Library\/Textures\/841043181.netex",
+                                "LibraryFile": "841043181.netex"
+                            },
+                            "Shader": {
+                                "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                                "AssetsName": "DefaultShader.shader",
+                                "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                                "LibraryFile": "800223282.neshader"
+                            }
+                        }
+                    ],
+                    "Children": []
+                }
+            ]
         }
     ]
 } 

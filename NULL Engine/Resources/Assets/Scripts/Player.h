@@ -177,8 +177,14 @@ public:
 	Prefab equipedGun;
 
 	// Currency	
-	int currency				= 0;
-	int hubCurrency				= 0;
+	void GiveCredits(int _credits);
+	void GiveBeskar(int _beskar);
+
+	void SubtractCredits(int _credits);
+	void SubtractBeskar(int _beskar);
+
+	int credits				= 0;
+	int beskar				= 0;
 
 	std::string gameManager		= "Game Manager";
 
@@ -233,6 +239,9 @@ public:
 	//Die cutscene
 	bool doDieCutscene = false;
 
+	// Utils
+	bool inHub = false;
+
 	// Debug
 	void SetGodMode(bool enable);
 	bool GetGodMode()const;
@@ -264,7 +273,7 @@ private:
 	float interactionDuration = 0.0f;
 
 	// Movement Methods
-	void MoveIdle();
+	void MovementIdle();
 	void Walk();
 	void Run();
 	void DashIn();

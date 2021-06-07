@@ -99,7 +99,7 @@ void DarkTrooper::SetUp()
 	if (blasterGameObject)
 		blasterWeapon = (Weapon*)GetObjectScript(blasterGameObject, ObjectType::WEAPON);
 	if (blasterWeapon)
-		blasterWeapon->SetOwnership(type, hand);
+		blasterWeapon->SetOwnership(type, hand, rightHandName);
 
 	if (shotgun.uid != NULL)
 		shotgunGameObject = App->resourceManager->LoadPrefab(shotgun.uid, App->scene->GetSceneRoot());
@@ -107,7 +107,7 @@ void DarkTrooper::SetUp()
 	if (shotgunGameObject)
 		shotgunWeapon = (Weapon*)GetObjectScript(shotgunGameObject, ObjectType::WEAPON);
 	if (shotgunWeapon)
-		shotgunWeapon->SetOwnership(type, hand);
+		shotgunWeapon->SetOwnership(type, hand, rightHandName);
 
 	for (uint i = 0; i < gameObject->components.size(); ++i)
 	{
@@ -275,7 +275,7 @@ void DarkTrooper::ManageMovement()
 		if (player)
 		{
 			Player* playerScript = (Player*)player->GetScript("Player");
-			playerScript->currency += Random::LCG::GetBoundedRandomUint(minCredits, maxCredits);
+			playerScript->GiveCredits(Random::LCG::GetBoundedRandomUint(minCredits, maxCredits));
 		}
 		deathTimer.Start();
 		moveState = DarkTrooperState::DEAD;

@@ -56,7 +56,7 @@ M_Input::M_Input(bool isActive) : Module("Input", isActive)
 	gameController.index	= CONTROLLER_INDEX;
 
 	gameController.max_axis_input_threshold = 0.5f;
-	gameController.min_axis_input_threshold = 0.15f;
+	gameController.min_axis_input_threshold = 0.2f;
 	gameController.max_positive_threshold	= (int)(gameController.max_axis_input_threshold * MAX_AXIS);
 	gameController.max_negative_threshold	= -(int)(gameController.max_axis_input_threshold * MAX_AXIS);
 	gameController.min_positive_threshold	= (int)(gameController.min_axis_input_threshold * MAX_AXIS);
@@ -158,6 +158,7 @@ bool M_Input::SaveConfiguration(ParsonNode& root) const
 }
 
 // --------- INPUT METHODS ---------
+// -- KEYBOARD
 KeyState M_Input::GetKey(int id) const
 {
 	return keyboard[id];
@@ -168,14 +169,20 @@ bool M_Input::GetKey(int id, KeyState state) const
 	return (keyboard[id] == state);
 }
 
-KeyState M_Input::GetMouseButton(int id) const
-{
-	return mouseButtons[id];
-}
-
 uint M_Input::GetMaxNumScancodes() const
 {
 	return maxNumScancodes;
+}
+
+bool M_Input::KeyboardReceivedInputs() const
+{
+	return keyboardReceivedInput;
+}
+
+// --- MOUSE
+KeyState M_Input::GetMouseButton(int id) const
+{
+	return mouseButtons[id];
 }
 
 int M_Input::GetMouseX() const
@@ -223,6 +230,12 @@ int M_Input::GetMouseYWheel() const
 	return mouseWheelY;
 }
 
+bool M_Input::MouseReceivedInputs() const
+{
+	return mouseReceivedInput;
+}
+
+// -- GAME CONTROLLER
 ButtonState M_Input::GetGameControllerButton(int id) const
 {
 	if (gameController.id != nullptr)
@@ -303,6 +316,17 @@ int M_Input::GetGameControllerAxisRaw(int id) const
 	return 0;
 }
 
+int M_Input::GetGameControllerAxisInput(int id) const
+{
+	return ((gameController.id != nullptr) ? SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id)) : 0);
+}
+
+bool M_Input::GameControllerReceivedInputs() const
+{
+	return gameControllerReceivedInput;
+}
+
+// -- OTHERS
 bool M_Input::WindowSizeWasManipulated(Uint8 windowEvent) const
 {
 	return (windowEvent == SDL_WINDOWEVENT_RESIZED
@@ -310,21 +334,6 @@ bool M_Input::WindowSizeWasManipulated(Uint8 windowEvent) const
 		|| windowEvent == SDL_WINDOWEVENT_RESTORED
 		|| windowEvent == SDL_WINDOWEVENT_MAXIMIZED
 		|| windowEvent == SDL_WINDOWEVENT_MINIMIZED*/);
-}
-
-bool M_Input::KeyboardReceivedInputs()
-{
-	return keyboardReceivedInput;
-}
-
-bool M_Input::MouseReceivedInputs()
-{
-	return mouseReceivedInput;
-}
-
-bool M_Input::GameControllerReceivedInputs()
-{
-	return gameControllerReceivedInput;
 }
 
 void M_Input::AddModuleToProcessInput(Module* module)
@@ -507,6 +516,10 @@ void M_Input::GatherGameControllerInputs()
 		if (abs(axis_value) < (int)(gameController.min_axis_input_threshold * MAX_AXIS))
 		{
 			axis_value = 0;																					// Safety check to compensate for the controller's joystick dead value.
+		}
+		else
+		{
+			gameControllerReceivedInput = true;
 		}
 
 		//LOG("CURRENT AXIS VALUE IS: %d", axis_value);

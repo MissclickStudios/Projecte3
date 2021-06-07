@@ -187,7 +187,7 @@ void Weapon::SetOwnership(EntityType type, GameObject* hand, std::string handNam
 	{
 		if (weaponModelPrefab.uid != NULL)
 		{
-			GameObject* skeletonHand = GetHand(this->hand->parent, handName);
+			GameObject* skeletonHand = this->hand->parent->FindChild(handName.c_str());
 			if (skeletonHand)
 				weaponModel = App->resourceManager->LoadPrefab(weaponModelPrefab.uid, skeletonHand); // Load the prefab onto a gameobject
 		}

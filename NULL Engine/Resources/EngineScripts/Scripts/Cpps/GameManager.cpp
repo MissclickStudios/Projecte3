@@ -1,7 +1,3 @@
-#include <algorithm>
-#include <chrono>
-#include <random>
-
 #include "FileSystemDefinitions.h"
 #include "JSONParser.h"
 #include "Log.h"
@@ -20,6 +16,7 @@
 #include "C_Transform.h"
 #include "C_UI_Text.h"
 #include "C_AudioSource.h"
+#include "C_RigidBody.h"
 
 #include "GameManager.h"
 #include "DialogManager.h"
@@ -410,47 +407,91 @@ void GameManager::LoadArmorerItemLvl(ParsonNode& node)
 
 void GameManager::GenerateLevel()
 {
-	// get a time-based seed
-	unsigned seed = std::chrono::system_clock::now()
-		.time_since_epoch()
-		.count();
 	if (l1Easy >= 0 && l1Easy < level1.size() && l1Intermediate > l1Easy && l1Intermediate < level1.size()) 
 	{
-		shuffle(level1.begin(), level1.begin() + l1Easy, std::default_random_engine(seed));
-		shuffle(level1.begin() + l1Easy + 1, level1.begin() + l1Intermediate, std::default_random_engine(seed));
-		shuffle(level1.begin() + l1Intermediate + 1, level1.end(), std::default_random_engine(seed));
+		for (int i = 0; i < l1Easy; ++i)
+		{
+			if (Random::LCG::GetBoundedRandomUint(0, 1) == 1) 
+			{
+				std::string tmp = level1[i];
+				level1[i] = level1[i + 1];
+				level1[i + 1] = tmp;
+			}		
+		}
+		for (int i = l1Easy + 1; i < l1Intermediate; ++i)
+		{
+			if (Random::LCG::GetBoundedRandomUint(0, 1) == 1)
+			{
+				std::string tmp = level1[i];
+				level1[i] = level1[i + 1];
+				level1[i + 1] = tmp;
+			}
+		}
+		for (int i = l1Intermediate + 1; i < level1.size()-1; ++i)
+		{
+			if (Random::LCG::GetBoundedRandomUint(0, 1) == 1)
+			{
+				std::string tmp = level1[i];
+				level1[i] = level1[i + 1];
+				level1[i + 1] = tmp;
+			}
+		}
 	}
 	else
-		shuffle(level1.begin(), level1.end(), std::default_random_engine(seed));
+	{
+		for (int i = 0; i < level1.size() - 1; ++i)
+		{
+			if (Random::LCG::GetBoundedRandomUint(0, 1) == 1)
+			{
+				std::string tmp = level1[i];
+				level1[i] = level1[i + 1];
+				level1[i + 1] = tmp;
+			}
+		}
+	}
 	
-	//LEVEL2
-	seed = std::chrono::system_clock::now()
-		.time_since_epoch()
-		.count();
 	if (RuinsEasy >= 0 && RuinsEasy < level1Ruins.size() && RuinsIntermediate > RuinsEasy && RuinsIntermediate < level1Ruins.size()) 
 	{
-		shuffle(level1Ruins.begin(), level1Ruins.begin() + RuinsEasy, std::default_random_engine(seed));
-		shuffle(level1Ruins.begin() + RuinsEasy + 1, level1Ruins.begin() + RuinsIntermediate, std::default_random_engine(seed));
-		shuffle(level1Ruins.begin() + RuinsIntermediate + 1, level1Ruins.end(), std::default_random_engine(seed));
+		for (int i = 0; i < RuinsEasy; ++i)
+		{
+			if (Random::LCG::GetBoundedRandomUint(0, 1) == 1)
+			{
+				std::string tmp = level1Ruins[i];
+				level1Ruins[i] = level1Ruins[i + 1];
+				level1Ruins[i + 1] = tmp;
+			}
+		}
+		for (int i = RuinsEasy + 1; i < RuinsIntermediate; ++i)
+		{
+			if (Random::LCG::GetBoundedRandomUint(0, 1) == 1)
+			{
+				std::string tmp = level1Ruins[i];
+				level1Ruins[i] = level1Ruins[i + 1];
+				level1Ruins[i + 1] = tmp;
+			}
+		}
+		for (int i = RuinsIntermediate + 1; i < level1Ruins.size() - 1; ++i)
+		{
+			if (Random::LCG::GetBoundedRandomUint(0, 1) == 1)
+			{
+				std::string tmp = level1Ruins[i];
+				level1Ruins[i] = level1Ruins[i + 1];
+				level1Ruins[i + 1] = tmp;
+			}
+		}
 	}
 	else
-		shuffle(level1Ruins.begin(), level1Ruins.end(), std::default_random_engine(seed));
-
-	//Fisher-Yates shuffle
-	/*int size = level1.size();
-	for (int i = 0; i < size - 1; ++i) 
 	{
-		int j = i + rand() % (size - i);
-		std::swap(level1[i], level1[j]);
+		for (int i = 0; i < level1Ruins.size() - 1; ++i)
+		{
+			if (Random::LCG::GetBoundedRandomUint(0, 1))
+			{
+				std::string tmp = level1Ruins[i];
+				level1Ruins[i] = level1Ruins[i + 1];
+				level1Ruins[i + 1] = tmp;
+			}
+		}
 	}
-	size = level2.size();
-	for (int i = 0; i < size - 1; ++i)
-	{
-		int j = i + rand() % (size - i);
-		std::swap(level2[i], level2[j]);
-	}*/
-	//std::random_shuffle(level1.begin(), level1.end());
-	//std::random_shuffle(level2.begin(), level2.end());
 }
 
 void GameManager::GoNextRoom()
@@ -771,7 +812,7 @@ void GameManager::AddFixedRoom(std::string name, int level, int position)
 
 void GameManager::HandleRoomGeneration()
 {
-	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_REPEAT)
+	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_REPEAT)																// ATTENTION: Could collide with other LCTRL uses.
 	{
 		if (App->input->GetKey(SDL_SCANCODE_KP_6) == KeyState::KEY_DOWN)
 		{
@@ -788,7 +829,6 @@ void GameManager::HandleRoomGeneration()
 			else if (currentLevel == 2)
 			{
 				(roomNum < level2.size() - 1) ? GoNextRoom() : LOG("[SCENE] Level Generator: End of the Game Reached!");
-<<<<<<< Updated upstream
 			}*/
 
 		}
@@ -928,7 +968,7 @@ void GameManager::GateUpdate()
 				if (chest != nullptr && lastEnemyDead != nullptr)
 				{
 					float3 position = lastEnemyDead->transform->GetWorldPosition();
-					position.y += 2.0f;
+					position.y += 10.0f;
 					chest->transform->SetWorldPosition(position);
 
 					float2 playerPosition, chestPosition;
@@ -941,7 +981,9 @@ void GameManager::GateUpdate()
 					if (!direction.IsZero())
 						direction.Normalize();
 					float rad = direction.AimedAngle();
-					chest->transform->SetLocalRotation(float3(0, -rad, 0));
+					chest->transform->SetLocalRotation(float3(DegToRad(Random::LCG::GetBoundedRandomFloat(0.0f, 10.0f)), -rad, DegToRad(Random::LCG::GetBoundedRandomFloat(0.0f, 10.0f))));
+
+					chest->GetComponent<C_RigidBody>()->TransformMovesRigidBody(false);
 				}
 			}
 		}
@@ -1003,7 +1045,7 @@ void GameManager::LoadItemPool(std::vector<ItemData*>& pool, std::string path)
 		int minimum = itemNode.GetInteger("Min");
 		int maximum = itemNode.GetInteger("Max");
 		float power = itemNode.GetNumber("Power");
-		float duration = itemNode.GetInteger("Duration");
+		float duration = itemNode.GetNumber("Duration");
 		float chance = itemNode.GetInteger("Chance");
 		std::string texturePath = itemNode.GetString("Texture Path");
 		pool.emplace_back(new ItemData(name, description, price, rarity, power, duration, chance, minimum, maximum, texturePath));
