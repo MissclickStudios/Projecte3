@@ -168,7 +168,8 @@ void GameManager::Start()
 	if (strcmp(App->scene->GetCurrentScene(), levelNames.winScene.c_str()) == 0 || strcmp(App->scene->GetCurrentScene(), levelNames.loseScene.c_str()) == 0 || 
 		strcmp(App->scene->GetCurrentScene(), "Credits") == 0) //Lock mando (He is flying in the scene)
 	{
-		playerScript->gameObject->SetIsActive(false); //Pause mando so he doesn't produce any sound or movement (Silence him o_o)
+		playerScript->DisableInput(); //Pause mando so he doesn't produce any sound or movement (Silence him o_o)
+		playerScript->gameObject->GetComponent<C_RigidBody>()->MakeStatic();
 	}
 
 	if (strcmp(App->scene->GetCurrentScene(), levelNames.l1Initial.c_str()) == 0) //Initial screen
