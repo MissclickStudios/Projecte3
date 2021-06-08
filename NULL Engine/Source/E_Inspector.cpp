@@ -1220,11 +1220,14 @@ void E_Inspector::DrawUITextComponent(C_UI_Text* text)
 
 		ImGui::Separator();
 
-		static char buffer[64];
-		strcpy_s(buffer, text->GetText());
-		if (ImGui::InputText("TextInput", buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
+		static char buffer[128];
+		if (strlen(text->GetText()) < 128) 
 		{
-			text->SetText(buffer);
+			strcpy_s(buffer, text->GetText());
+			if (ImGui::InputText("TextInput", buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
+			{
+				text->SetText(buffer);
+			}
 		}
 
 		ImGui::SameLine(); HelpMarker("Press ENTER to Rename");
