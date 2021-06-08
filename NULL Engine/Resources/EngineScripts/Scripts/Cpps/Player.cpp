@@ -671,7 +671,7 @@ void Player::SetPlayerInteraction(InteractionType type, float duration)
 		interactionDuration = 0.0f;
 		
 		if (rigidBody != nullptr)																				// Making the player dynamic again once the interaction has finished.
-			rigidBody->MakeDynamic();
+			//rigidBody->MakeDynamic();
 
 		if (dashTimer.IsActive())																				// In case the interaction was set while the player was dashing.
 			moveState = PlayerState::DASH;
@@ -683,7 +683,8 @@ void Player::SetPlayerInteraction(InteractionType type, float duration)
 	aimState	= AimState::IDLE;
 	
 	if (rigidBody != nullptr)																					// Making sure that the player will remain still while interacting.
-		rigidBody->MakeStatic();
+		rigidBody->StopInertia();
+		//rigidBody->MakeStatic();
 
 	switch (currentInteraction)
 	{
@@ -1487,6 +1488,11 @@ void Player::GatherInteractionInputs()
 			if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_DOWN) { SetPlayerInteraction(InteractionType::OPEN_CHEST); }
 			if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_DOWN) { SetPlayerInteraction(InteractionType::SIGNAL_GROGU); }
 		}
+	}
+	else
+	{
+		if (rigidBody != nullptr)
+			rigidBody->StopInertia();
 	}
 	
 	if (currentInteraction == InteractionType::TALK)																					// Bring the controller TALK finisher here too.
