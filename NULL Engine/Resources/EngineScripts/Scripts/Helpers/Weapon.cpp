@@ -515,6 +515,9 @@ void Weapon::FireProjectile(float2 direction)
 			float3 aimDirection = { direction.x, 0.0f, direction.y };
 			rigidBody->TransformMovesRigidBody(true);
 			rigidBody->SetLinearVelocity(aimDirection * ProjectileSpeed());
+			rigidBody->UseGravity(false);
+			rigidBody->FreezePositionY(false);
+			rigidBody->DisableY(true);
 		}
 
 		if (projectile->bulletScript)

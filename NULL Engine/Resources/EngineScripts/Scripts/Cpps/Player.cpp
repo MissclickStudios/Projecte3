@@ -1588,7 +1588,7 @@ void Player::Aim()
 			aimingAimPlane->SetIsActive(true);
 	}
 
-	LOG("AIM VECTOR: [{ %.3f, %.3f }]::[%.3f]", aimVector.x, aimVector.y, aimVector.AimedAngle() * RADTODEG);
+	// MECAGO EN TI LOG("AIM VECTOR: [{ %.3f, %.3f }]::[%.3f]", aimVector.x, aimVector.y, aimVector.AimedAngle() * RADTODEG);
 
 	//gameObject->transform->SetLocalRotation(float3(0.0f, 0.0f, 0.0f));
 

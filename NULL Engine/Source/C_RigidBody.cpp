@@ -307,7 +307,7 @@ void C_RigidBody::ApplyPhysicsChanges()
 		dynamicBody->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, !useGravity);
 		dynamicBody->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, !isKinematic);
 
-		float vely = 0.0f;
+		float vely = linearVel.y;
 		if (disableY)
 			vely = dynamicBody->getLinearVelocity().y;
 		dynamicBody->setLinearVelocity(physx::PxVec3(linearVel.x, vely, linearVel.z));

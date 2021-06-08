@@ -58,14 +58,13 @@ void GroguPush::Start()
 	abilityParticles = gameObject->FindChild("Ability")->GetComponent<C_ParticleSystem>();
 	abilityParticles->StopSpawn();
 
+	abilityCollider->SetTrigger(true);
+	abilityCollider->SetIsActive(false);
 }
 
 void GroguPush::Update()
 {
 	doAbility = false;
-
-	abilityCollider->SetTrigger(false);
-	abilityCollider->SetIsActive(false);
 
 	// Particles
 	if (particleTimer.IsActive())
@@ -91,7 +90,6 @@ void GroguPush::Update()
 		doAbility = true;
 
 		abilityCollider->SetIsActive(true);
-		abilityCollider->SetTrigger(true);
 
 		abilityCooldownTimer.Start();
 		particleTimer.Start();
