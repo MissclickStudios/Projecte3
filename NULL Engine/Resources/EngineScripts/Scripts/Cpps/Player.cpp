@@ -1459,7 +1459,7 @@ void Player::GatherAimInputs()
 		return;
 	}
 
-	if ((App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(SDL_CONTROLLER_BUTTON_X) == ButtonState::BUTTON_DOWN))
+	if ((App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(SDL_CONTROLLER_BUTTON_Y) == ButtonState::BUTTON_DOWN))
 	{
 		aimState = AimState::RELOAD_IN;
 		return;

@@ -34,7 +34,7 @@ void CreditsSceneManager::Update()
 
 	if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(0) == ButtonState::BUTTON_DOWN)
 	{
-		gameManager->GoNextRoom();
+		gameManager->ReturnHub();
 	}
 }
 

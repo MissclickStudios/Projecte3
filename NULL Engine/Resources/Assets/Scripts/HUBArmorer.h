@@ -16,6 +16,7 @@ class ItemData;
 enum class HUBArmorerState: char {
 	ACTIVE,
 	INACTIVE,
+	NONE
 };
 
 class SCRIPTS_API HUBArmorer : public Script {
@@ -55,7 +56,7 @@ private:
 	C_Canvas* hubShopCanvas = nullptr;
 	Player* mando = nullptr;
 	GameManager* gameManager = nullptr;
-	HUBArmorerState state = HUBArmorerState::INACTIVE;
+	HUBArmorerState state = HUBArmorerState::NONE;
 
 	C_Animator* armorerAnimator = nullptr;
 
