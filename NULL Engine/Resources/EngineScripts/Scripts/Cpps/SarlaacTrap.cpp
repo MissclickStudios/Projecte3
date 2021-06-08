@@ -23,7 +23,7 @@ SarlaacTrap::~SarlaacTrap()
 void SarlaacTrap::Start()
 {
 	sarlaacAnimator = gameObject->GetComponent<C_Animator>();
-	StartMoving();
+	sarlaacAnimator->PlayClip("Preview", animationName.c_str(), 0u);
 }
 
 void SarlaacTrap::Update()
