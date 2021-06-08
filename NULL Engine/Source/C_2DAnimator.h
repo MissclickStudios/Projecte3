@@ -70,9 +70,9 @@ private:
 
 	uint						currentFrameIdTexture;
 
-	std::string					name;
-	std::string					name1;
-	std::string					name2;
+	std::string					name = "";
+	std::string					name1 = "";
+	std::string					name2 = "";
 };
 
 #endif // __C_2DANIMATOR__

@@ -135,5 +135,6 @@ void M_ScriptManager::ResolveScriptHelperFunctions()
 		StringVecEmplaceBackChar = (void(*)(void*, const char*))GetProcAddress(dllHandle, "StringVectorEmplaceBackChar");
 		StringVecReserve = (void(*)(void*, int))GetProcAddress(dllHandle, "StringVectorReserve");
 		StringVecErase = (void(*)(void*, int))GetProcAddress(dllHandle, "StringVectorErase");
+		SetString = (void(*)(void*, const char*))GetProcAddress(dllHandle, "SetString");
 	}
 }

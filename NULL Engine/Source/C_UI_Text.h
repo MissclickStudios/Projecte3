@@ -62,12 +62,13 @@ public:
 	int nextWordLetters;
 	
 	bool nextWord;
+	std::string text;
 private:
 
 	float rectWidth;
 	float currentWidth;
 
-	std::string text;
+	
 
 
 	unsigned char image[640][480];

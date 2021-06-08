@@ -29,7 +29,7 @@ public:
 	void UpdateMenu();
 
 	std::string mandoName = "Mandalorian"; 
-	std::string hubShopCanvasName = "HUBShopCanvas";
+	std::string hubShopCanvasName = "ArmorerShopCanvas";
 
 	float talkDistance = 10.f;
 

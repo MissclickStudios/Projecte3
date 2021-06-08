@@ -22,7 +22,6 @@
 #include "Player.h"
 
 #include "MathGeoLib/include/Math/float3.h"
-#include "CoreDllHelpers.h"
 
 Entity::Entity() : Object()
 {
@@ -37,7 +36,6 @@ Entity::~Entity()
 		delete *effects.begin();
 		effects.erase(effects.begin());
 	}
-	CoreCrossDllHelpers::CoreReleaseString(rightHandName);
 }
 
 void Entity::Awake()
