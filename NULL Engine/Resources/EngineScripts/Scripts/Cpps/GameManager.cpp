@@ -366,7 +366,7 @@ void GameManager::GenerateNewRun(bool fromMenu)
 			}
 			for (int i = 0; i < level1Ruins.size(); ++i)
 			{
-				if (strstr(level1Ruins[i].c_str(), (levelNames.ruinsShop + ".json").c_str()) || strstr(level1Ruins[i].c_str(), (levelNames.ruinsBoss + ".json").c_str()) || strstr(level1Ruins[i].c_str(), (levelNames.winScene + ".json").c_str()))
+				if (strstr(level1Ruins[i].c_str(), (levelNames.ruinsShop + ".json").c_str()) || strstr(level1Ruins[i].c_str(), (levelNames.ruinsBoss + ".json").c_str()) || strstr(level1Ruins[i].c_str(), (levelNames.winScene + ".json").c_str()) || strstr(level1Ruins[i].c_str(), "Credits.json"))
 				{
 					level1Ruins.erase(level1Ruins.begin() + i);
 					--i;
