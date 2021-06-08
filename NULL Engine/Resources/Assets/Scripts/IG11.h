@@ -65,7 +65,7 @@ public:
 	// Flee
 	float fleeDistance = 0.0f;
 
-
+	AnimationInfo talkAnimation = { "Talk" };
 	AnimationInfo walkAnimation = { "Run" };
 	AnimationInfo runAnimation = { "Run" };
 	AnimationInfo fleeAnimation = { "Run" };
@@ -74,6 +74,7 @@ public:
 	AnimationInfo changeAnimation = { "Change" };
 	AnimationInfo onGuardAnimation = { "OnGuard" };
 	AnimationInfo specialAnimation = { "SpecialAttack" };
+	AnimationInfo doubleSpecialAnimation = { "DoubleSpecial" };
 
 	// Attack
 	float attackDistance = 0.0f;
