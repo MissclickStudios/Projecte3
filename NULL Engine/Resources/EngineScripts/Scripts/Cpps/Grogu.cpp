@@ -137,9 +137,11 @@ void Grogu::ManageLevitation()
 	GameObject* go = App->scene->GetGameObjectByName("Grogu Mesh");
 	if (go != nullptr)
 	{
-		if (go->transform->GetWorldPosition().y >= -3)
+		float y = player->transform->GetWorldPosition().y;
+
+		if (go->transform->GetWorldPosition().y >= y - 3)
 			isGoingUp = false;
-		else if (go->transform->GetWorldPosition().y <= -5)
+		else if (go->transform->GetWorldPosition().y <= y - 5)
 			isGoingUp = true;
 
 		float3 pos = go->transform->GetWorldPosition();
@@ -152,6 +154,7 @@ void Grogu::ManageLevitation()
 		go->transform->SetWorldPosition(pos);
 	}
 }
+
 void Grogu::Movement()
 {
 	float2 moveDirection = { direction.x, direction.z };
