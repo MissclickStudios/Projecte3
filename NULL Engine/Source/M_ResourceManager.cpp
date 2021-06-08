@@ -1061,7 +1061,7 @@ void M_ResourceManager::RefreshDirectoryFiles(const char* directory)
 	{
 		std::string extension = App->fileSystem->GetFileExtension(filesToUpdate[i].c_str());
 		
-		if (extension == "h" || extension == "particles" || extension == "navmesh" || extension == "shader")
+		if (extension == "h"  || extension == "navmesh" || extension == "shader" || extension == "png") //|| extension == "particles"
 		{
 			DeleteFromLibrary(filesToUpdate[i].c_str());
 			ImportFile(filesToUpdate[i].c_str());
