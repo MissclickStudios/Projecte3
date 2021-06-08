@@ -79,6 +79,8 @@ private:
 	FT_Library ft;
 
 	std::map<char, Character> Characters;
+	std::string::const_iterator findLastCharacterRow(std::string::const_iterator begin, float x);
+	void DrawRow(std::string::const_iterator begin, std::string::const_iterator end, float x, float y, int currentRow);
 
 	R_Shader* rShader;
 

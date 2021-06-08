@@ -177,19 +177,78 @@ void C_UI_Text::SetVSpaceBetween(const float vSpaceBetween)
 	this->vSpaceBetween = vSpaceBetween;
 }
 
-
-void C_UI_Text::Draw2D( )
+std::string::const_iterator C_UI_Text::findLastCharacterRow(std::string::const_iterator begin, float x)
 {
+	float xpos = 0.0f;
+	std::string::const_iterator lastChar = begin;
+	std::string::const_iterator it;
+	for (it = begin; xpos <= rect.w * 15000; ++it)
+	{
+		if (it == text.cend())
+			return it;
+		xpos += (x + Characters[*it].bearing.x);
+		x += ((uint)(Characters[*it].advance + hSpaceBetween) >> 6);
+		if ((*(it._Ptr)) == ' ') 
+		{
+			++it;
+			lastChar = it;
+			if (it == text.cend())
+				return it;
+		}
+	}
+	//Could not split the word because it is just too big
+	if (lastChar == begin)
+		return it;
+	return lastChar;
+}
+
+void C_UI_Text::DrawRow(std::string::const_iterator begin, std::string::const_iterator end, float x, float y, int currentRow)
+{
+	for (std::string::const_iterator c= begin; c != end; ++c)
+	{
+		Character ch = Characters[*c];
+
+		glBindTexture(GL_TEXTURE_2D, ch.textureID);
+
+		float xpos = (x + ch.bearing.x);
+		float ypos = (y - (ch.size.y - ch.bearing.y)) - vSpaceBetween * currentRow;
+		float w = ch.size.x;
+		float h = ch.size.y;
+
+		x += ((uint)(ch.advance + hSpaceBetween) >> 6);
+
+		float vertices[6][4] = {
+			{ xpos,     ypos + h,   0.0f, 0.0f },
+			{ xpos,     ypos,       0.0f, 1.0f },
+			{ xpos + w, ypos,       1.0f, 1.0f },
+
+			{ xpos,     ypos + h,   0.0f, 0.0f },
+			{ xpos + w, ypos,       1.0f, 1.0f },
+			{ xpos + w, ypos + h,   1.0f, 0.0f }
+		};
+
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+	}
+}
+
+
+void C_UI_Text::Draw2D()
+{
+	C_Canvas* canvas = GetOwner()->parent->GetComponent<C_Canvas>();
+	if (canvas == nullptr)
+		return;
+
+	float x = canvas->GetPosition().x + GetRect().x;
+	float y = canvas->GetPosition().y + GetRect().y;
+
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND); //enabled in draw 2d render ui
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glUseProgram(rShader->shaderProgramID);
-
-	C_Canvas* canvas = GetOwner()->parent->GetComponent<C_Canvas>();
-
-	float x = canvas->GetPosition().x + GetRect().x;
-	float y = canvas->GetPosition().y + GetRect().y;
 
 	float4x4 projectionMatrix = float4x4::FromTRS(float3(x, y, 0), Quat::FromEulerXYZ(0, 0, 0), float3(fontSize, fontSize, 1)).Transposed();
 
@@ -199,8 +258,21 @@ void C_UI_Text::Draw2D( )
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(VAO);
+	int currentRow = 0;
+	std::string::const_iterator beginl = text.cbegin();
+	std::string::const_iterator endl = text.cbegin();
+	while (endl != text.cend())
+	{
+		endl = findLastCharacterRow(beginl, x);
+		x = 0;
+		DrawRow(beginl, endl, x, y, currentRow);
+		//if (endl == beginl)
+		//	break;
+		beginl = endl;
+		++currentRow;
+	}
 
-	int textRows = 0;
+	/*int textRows = 0;
 	uint characterIt = 0;
 	bool nextRow = true;
 	//float nextWordSize = 0;
@@ -268,7 +340,7 @@ void C_UI_Text::Draw2D( )
 
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
-	}
+	}*/
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
