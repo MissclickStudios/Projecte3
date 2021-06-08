@@ -1220,11 +1220,14 @@ void E_Inspector::DrawUITextComponent(C_UI_Text* text)
 
 		ImGui::Separator();
 
-		static char buffer[64];
-		strcpy_s(buffer, text->GetText());
-		if (ImGui::InputText("TextInput", buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
+		static char buffer[128];
+		if (strlen(text->GetText()) < 128) 
 		{
-			text->SetText(buffer);
+			strcpy_s(buffer, text->GetText());
+			if (ImGui::InputText("TextInput", buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
+			{
+				text->SetText(buffer);
+			}
 		}
 
 		ImGui::SameLine(); HelpMarker("Press ENTER to Rename");
@@ -1418,7 +1421,7 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 					char buffer[128];
 					strcpy_s(buffer, ((std::string*)(*variable).ptr)->c_str());
 					if (ImGui::InputText((*variable).variableName.data(), buffer, IM_ARRAYSIZE(buffer)))
-						*(std::string*)(*variable).ptr = buffer;
+						EngineApp->scriptManager->SetString((*variable).ptr, buffer);
 					break;
 				}
 				case InspectorScriptData::ShowMode::TEXT:
@@ -1827,7 +1830,7 @@ void E_Inspector::DrawAnimator2DComponent(C_2DAnimator* cAnimator)
 		strcpy_s(buffer, cAnimator->GetName(1));
 		if (ImGui::InputText("Animation Name", buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
 		{
-			cAnimator->ChangeName(buffer,1);
+			//cAnimator->ChangeName(buffer,1);
 			cAnimator->GetAnimationSprites(buffer,1);
 		}
 
@@ -1835,7 +1838,7 @@ void E_Inspector::DrawAnimator2DComponent(C_2DAnimator* cAnimator)
 		strcpy_s(buffer1, cAnimator->GetName(2));
 		if (ImGui::InputText("Aditional Animation Name", buffer1, IM_ARRAYSIZE(buffer1), ImGuiInputTextFlags_EnterReturnsTrue))
 		{
-			cAnimator->ChangeName(buffer1, 2);
+			//cAnimator->ChangeName(buffer1, 2);
 			cAnimator->GetAnimationSprites(buffer1, 2);
 		}
 
@@ -1843,7 +1846,7 @@ void E_Inspector::DrawAnimator2DComponent(C_2DAnimator* cAnimator)
 		strcpy_s(buffer2, cAnimator->GetName(3));
 		if (ImGui::InputText("Aditional Animation Name 1", buffer2, IM_ARRAYSIZE(buffer2), ImGuiInputTextFlags_EnterReturnsTrue))
 		{
-			cAnimator->ChangeName(buffer2, 3);
+			//cAnimator->ChangeName(buffer2, 3);
 			cAnimator->GetAnimationSprites(buffer2, 3);
 		}
 
@@ -1896,10 +1899,6 @@ void E_Inspector::DrawAnimator2DComponent(C_2DAnimator* cAnimator)
 			cAnimator->spritesheet3->animationNumber = aaa;
 		}
 
-
-
-
-
 		ImGui::Separator();
 
 		if (!show)
@@ -1907,10 +1906,6 @@ void E_Inspector::DrawAnimator2DComponent(C_2DAnimator* cAnimator)
 			componentToDelete = cAnimator;
 			showDeleteComponentPopup = true;
 		}
-
-
-
-
 	}
 	return;
 }

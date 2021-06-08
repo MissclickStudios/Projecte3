@@ -28,4 +28,8 @@ namespace ScriptCrossDllHelpers
 	{
 		(*(std::vector<std::string>*)ptr).erase((*(std::vector<std::string>*)ptr).begin() + index);
 	}
+	SCRIPTS_FUNCTION void SetString(void* dstptr, const char* source)
+	{
+		(*(std::string*)dstptr) = source;
+	}
 }

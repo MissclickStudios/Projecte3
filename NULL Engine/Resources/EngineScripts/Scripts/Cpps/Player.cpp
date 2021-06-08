@@ -1452,13 +1452,13 @@ void Player::GatherAimInputs()
 
 	SetAimDirection();
 
-	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(SDL_CONTROLLER_BUTTON_B) == ButtonState::BUTTON_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(SDL_CONTROLLER_BUTTON_Y) == ButtonState::BUTTON_DOWN)
 	{
 		aimState = AimState::CHANGE_IN;
 		return;
 	}
 
-	if ((App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(SDL_CONTROLLER_BUTTON_Y) == ButtonState::BUTTON_DOWN))
+	if ((App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(SDL_CONTROLLER_BUTTON_X) == ButtonState::BUTTON_DOWN))
 	{
 		aimState = AimState::RELOAD_IN;
 		return;
