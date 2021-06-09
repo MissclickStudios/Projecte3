@@ -15,6 +15,7 @@ class GameObject;
 class Gate;
 class CameraMovement;
 class DialogManager;
+class C_AudioSource;
 
 class PerfectTimer;
 
@@ -113,6 +114,8 @@ private:
     void BackTrackUpdate();
     void GateUpdate();
 
+    void DropChest();
+
     void HandleBackgroundMusic();
 
 public:
@@ -168,6 +171,8 @@ private:
 
     GameObject* playerGameObject = nullptr;
     Gate* gate = nullptr;
+
+    C_AudioSource* clearedRoomAudio = nullptr;
 
     GameObject* groguGameObject = nullptr;
     const char* saveFileName = "GameState.json";

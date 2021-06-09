@@ -24,11 +24,11 @@
 
 #include "Player.h"
 
-#define MAX_INPUT			32767.0f
-#define WALK_THRESHOLD		16384.0f
-#define AIM_THRESHOLD		8192.0f
-#define JOYSTICK_THRESHOLD	4096.0f
-#define WALKING_FACTOR		0.5f
+#define MAX_INPUT				32767.0f
+#define WALK_THRESHOLD			16384.0f
+#define AIM_THRESHOLD			8192.0f
+#define P_JOYSTICK_THRESHOLD	4096.0f
+#define WALKING_FACTOR			0.5f
 
 Player* CreatePlayer()
 {
@@ -141,6 +141,9 @@ void Player::SetUp()
 	changeTimer.Stop();
 	interactionTimer.Stop();
 
+	// --- SCENES
+	inHub = !strcmp(App->scene->GetCurrentScene(), "HUB");
+
 	// --- GAME OBJECTS
 	rightHand		= gameObject->FindChild(rightHandName.c_str());
 	leftHand		= gameObject->FindChild(leftHandName.c_str());
@@ -229,10 +232,8 @@ void Player::Behavior()
 	usingGameController = App->input->GameControllerReceivedInputs();
 
 	ManageInteractions();
-	
-	//LOG("[%d]::[%d]::[%d]", (int)moveState, (int)aimState, (int)currentInteraction);
 
-	if (currentInteraction == InteractionType::NONE)
+	if (currentInteraction == InteractionType::NONE)																			// All inputs will be ignored while the player is interacting.
 	{
 		ManageMovement();
 
@@ -406,11 +407,16 @@ void Player::LoadState(ParsonNode& playerNode)
 	if (secondaryGunGameObject != nullptr)
 	{
 		equipedGun.uid = uid;
+
 		secondaryWeapon = (Weapon*)GetObjectScript(secondaryGunGameObject, ObjectType::WEAPON);
 
 		if (secondaryWeapon != nullptr)
 		{
-			secondaryWeapon->SetOwnership(type, rightHand, rightHandName.c_str());
+			if (secondaryWeapon->type == WeaponType::MINIGUN)
+				secondaryWeapon->SetOwnership(type, leftHand, leftHandName.c_str());
+			else
+				secondaryWeapon->SetOwnership(type, rightHand, rightHandName.c_str());
+
 			int savedAmmo = playerNode.GetInteger("Equiped Gun Ammo");
 			if (savedAmmo > secondaryWeapon->MaxAmmo())
 				savedAmmo = secondaryWeapon->MaxAmmo();
@@ -663,14 +669,22 @@ void Player::SetPlayerInteraction(InteractionType type, float duration)
 	{
 		interactionTimer.Stop();
 		interactionDuration = 0.0f;
+		
+		if (rigidBody != nullptr)																				// Making the player dynamic again once the interaction has finished.
+			//rigidBody->MakeDynamic();
+
+		if (dashTimer.IsActive())																				// In case the interaction was set while the player was dashing.
+			moveState = PlayerState::DASH;
+
 		return;
 	}
 
 	moveState	= PlayerState::IDLE;
 	aimState	= AimState::IDLE;
 	
-	if (rigidBody != nullptr)
+	if (rigidBody != nullptr)																					// Making sure that the player will remain still while interacting.
 		rigidBody->StopInertia();
+		//rigidBody->MakeStatic();
 
 	switch (currentInteraction)
 	{
@@ -691,7 +705,11 @@ void Player::AnimatePlayer()
 	AnimationInfo* torsoInfo	= GetAimStateAnimation();
 	AnimationInfo* legsInfo		= GetMoveStateAnimation();
 
-	if (GetEntityState() != EntityState::NONE || aimState == AimState::IDLE || torsoInfo == nullptr || legsInfo == nullptr)			// TAKE INTO ACCOUNT STUN AND KNOCKBACK + LOOK INTO DASH PROBLEMS 
+	//LOG("CURRENT:	{ %s }",	(currentAnimation != nullptr) ? currentAnimation->name.c_str() : "NONE");
+	//LOG("TORSO:	  { %s }",		(torsoInfo != nullptr) ? torsoInfo->name.c_str() : "NONE");
+	//LOG("LEGS:	   { %s }",		(legsInfo != nullptr) ? legsInfo->name.c_str() : "NONE");
+
+	if (GetEntityState() != EntityState::NONE || aimState == AimState::IDLE || torsoInfo == nullptr || legsInfo == nullptr)		// TAKE INTO ACCOUNT STUN AND KNOCKBACK + LOOK INTO DASH PROBLEMS 
 	{	
 		if (torsoTrack != nullptr)
 		{
@@ -946,14 +964,14 @@ void Player::ManageInteractions()
 {
 	GatherInteractionInputs();
 
-	if (currentInteraction == InteractionType::TALK)													// If the interaction is TALK, then it will be ended when the dialog system says so.
+	if (currentInteraction == InteractionType::TALK)															// If the interaction is TALK, then it'll be ended through the dialog system.
 		return;
 
-	if (currentInteraction != InteractionType::NONE && !interactionTimer.IsActive())					// If there is an interaction and the timer is not active.
+	if (currentInteraction != InteractionType::NONE && !interactionTimer.IsActive())							// If there is an interaction and the timer is not active.
 	{
 		interactionTimer.Start();
 	}
-	else if (currentInteraction == InteractionType::NONE && interactionTimer.IsActive())				// If there is no interaction and the timer is active.
+	else if (currentInteraction == InteractionType::NONE && interactionTimer.IsActive())						// If there is no interaction and the timer is active.
 	{
 		interactionTimer.Stop();
 		interactionDuration = 0.0f;
@@ -977,31 +995,28 @@ void Player::ManageMovement()
 		}
 		else
 		{
-			if (currentInteraction == InteractionType::NONE)
-			{
-				if (moveState != PlayerState::DASH)
-					GatherMoveInputs();
-			}
+			if (moveState != PlayerState::DASH)
+				GatherMoveInputs();
 		}
 	}
 
 	if (runParticles != nullptr)
 		runParticles->StopSpawn();
 
-	if (rigidBody == nullptr)														// Ending early in case there is no rigidBody associated with the player.
+	if (rigidBody == nullptr)																					// Ending early in case there is no rigidBody associated with the player.
 		return;
 
 	switch (moveState)
 	{
-	case PlayerState::IDLE:		{ MoveIdle(); } break;
-	case PlayerState::WALK:		{ Walk(); }		break;
-	case PlayerState::RUN:		{ Run(); }		break;
+	case PlayerState::IDLE:		{ MovementIdle(); } break;
+	case PlayerState::WALK:		{ Walk(); }			break;
+	case PlayerState::RUN:		{ Run(); }			break;
 
-	case PlayerState::DASH_IN:	{ DashIn(); }
-	case PlayerState::DASH:		{ Dash(); }		break;
+	case PlayerState::DASH_IN:	{ DashIn(); }																	// All "_IN" states will be used to Start their main counterparts.
+	case PlayerState::DASH:		{ Dash(); }			break;
 
 	case PlayerState::DEAD_IN:	{ DeadIn(); }
-	case PlayerState::DEAD:		{ Dead(); }		break;
+	case PlayerState::DEAD:		{ Dead(); }			break;
 	}
 }
 
@@ -1101,7 +1116,7 @@ void Player::SignalGrogu()
 }
 
 // --- MOVEMENT STATE METHODS
-void Player::MoveIdle()
+void Player::MovementIdle()
 {
 	currentAnimation = &idleAnimation;
 
@@ -1115,7 +1130,7 @@ void Player::Walk()
 	
 	Movement();
 
-	if (runParticles != nullptr)
+	if (!inHub && runParticles != nullptr)
 		runParticles->ResumeSpawn();
 }
 
@@ -1125,7 +1140,7 @@ void Player::Run()
 	
 	Movement();
 
-	if (runParticles != nullptr)
+	if (!inHub && runParticles != nullptr)
 		runParticles->ResumeSpawn();
 
 }
@@ -1322,14 +1337,15 @@ void Player::Change()
 void Player::GatherMoveInputs()
 {
 	// Controller movement
-	moveInput.x = (float)App->input->GetGameControllerAxisValue(0);
-	moveInput.y = (float)App->input->GetGameControllerAxisValue(1);
+	moveInput.x = (float)App->input->GetGameControllerAxisInput(LEFT_JOYSTICK_X_AXIS);														// Gets the axis input regardless of thresholds
+	moveInput.y = (float)App->input->GetGameControllerAxisInput(LEFT_JOYSTICK_Y_AXIS);														// and axis states. Careful with joystick noise.
 
 	//LOG("[Keyboard: %s]::[Controller: %s]", (usingKeyboard) ? "True" : "False", (usingGameController) ? "True" : "False");
+	//LOG("MOVE INPUT: { %.3f, %.3f }", moveInput.x, moveInput.y);
 
 	if (!dashCooldownTimer.IsActive())
 	{
-		if ((App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(0) == ButtonState::BUTTON_DOWN))
+		if ((App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(LEFT_TRIGGER) == ButtonState::BUTTON_DOWN))
 		{
 			if (!dashTimer.IsActive())
 				moveState = PlayerState::DASH_IN;
@@ -1342,19 +1358,27 @@ void Player::GatherMoveInputs()
 		dashCooldownTimer.Stop();
 	}
 
-	// Keyboard movement
-	if (usingKeyboard && !usingGameController)								// If there was keyboard input and no controller input
+	if (usingKeyboard && !usingGameController)																								// If there was keyboard input and no GC input.
 	{	
+		moveInput = float2::zero;
+		
 		if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT)	{ moveInput.y = -MAX_INPUT; }
 		if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT)	{ moveInput.y = MAX_INPUT; }
 		if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT)	{ moveInput.x = MAX_INPUT; }
 		if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)	{ moveInput.x = -MAX_INPUT; }
 
-		moveState = (abs(moveInput.x) >= MAX_INPUT || abs(moveInput.y) >= MAX_INPUT) ? PlayerState::RUN : PlayerState::IDLE;
+		if (abs(moveInput.x) >= MAX_INPUT || abs(moveInput.y) >= MAX_INPUT)
+		{
+			moveState = (App->input->GetKey(SDL_SCANCODE_LCTRL) != KeyState::KEY_REPEAT) ? PlayerState::RUN : PlayerState::WALK;
+		}
+		else
+		{
+			moveState = PlayerState::IDLE;
+		}
 	}
-	else if (usingGameController)
+	else if (usingGameController)																											// If there was controller input.
 	{	
-		if (abs(moveInput.x) > JOYSTICK_THRESHOLD || abs(moveInput.y) > JOYSTICK_THRESHOLD)
+		if (abs(moveInput.x) > P_JOYSTICK_THRESHOLD || abs(moveInput.y) > P_JOYSTICK_THRESHOLD)
 		{
 			moveState = (abs(moveInput.x) > WALK_THRESHOLD || abs(moveInput.y) > WALK_THRESHOLD) ? PlayerState::RUN : PlayerState::WALK;
 		}
@@ -1369,38 +1393,36 @@ void Player::GatherMoveInputs()
 			moveState = PlayerState::IDLE;
 	}
 
-	//LOG("[X: %.3f]::[Y: %.3f]::[State: %u]", moveInput.x, moveInput.y, (uint)moveState);
-
 	SetPlayerDirection();
 }
 
 void Player::GatherAimInputs()
 {
 	// Controller aim
-	aimInput.x = (float)App->input->GetGameControllerAxisRaw(2);				// x right joystick
-	aimInput.y = (float)App->input->GetGameControllerAxisRaw(3);				// y right joystick
+	aimInput.x = (float)App->input->GetGameControllerAxisRaw(RIGHT_JOYSTICK_X_AXIS);							// x right joystick
+	aimInput.y = (float)App->input->GetGameControllerAxisRaw(RIGHT_JOYSTICK_Y_AXIS);							// y right joystick
 
-	aimInputThreshold.x = (float)App->input->GetGameControllerAxisValue(2);		// x right joystick with threshhold
-	aimInputThreshold.y = (float)App->input->GetGameControllerAxisValue(3);		// y right joystick with threshhold
+	aimInputThreshold.x = (float)App->input->GetGameControllerAxisValue(RIGHT_JOYSTICK_X_AXIS);					// x right joystick with threshhold
+	aimInputThreshold.y = (float)App->input->GetGameControllerAxisValue(RIGHT_JOYSTICK_Y_AXIS);					// y right joystick with threshhold
 
-	//LOG("AIM INPUT		--> [%.3f]::[%.3f]", aimInput.x, aimInput.y);
-	//LOG("AIM THRESHOLD	--> [%.3f]::[%.3f]", aimInputThreshold.x, aimInputThreshold.y);
+	// LOG("AIM INPUT		--> [%.3f]::[%.3f]", aimInput.x, aimInput.y);
+	// LOG("AIM THRESHOLD	--> [%.3f]::[%.3f]", aimInputThreshold.x, aimInputThreshold.y);
 
 	if (aimState != AimState::IDLE && aimState != AimState::AIMING && aimState != AimState::ON_GUARD)			// If the player is in this states, ignore action inputs (shoot, reload, etc.)
 	{
-		// aimState = AimState::IDLE;
 		return;
 	}
 	
-	// Keyboard aim
-	if (usingKeyboard && !usingGameController)																	// If there was no controller input
-	{
+	if (usingKeyboard && !usingGameController)																	// If there was keyboard input and no controller input
+	{	
+		aimInput = float2::zero;																				// Re-setting the vector to clear any noise generated by the game controller.
+
 		if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT)	{ aimInput.y = -MAX_INPUT; }
 		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT)	{ aimInput.y = MAX_INPUT; }
 		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT)	{ aimInput.x = MAX_INPUT; }
 		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT)	{ aimInput.x = -MAX_INPUT; }
 		
-		if (abs(aimInput.x) < MAX_INPUT && abs(aimInput.y) < MAX_INPUT)
+		if (abs(aimInput.x) < MAX_INPUT && abs (aimInput.y) < MAX_INPUT)
 		{
 			aimState = AimState::IDLE;
 		}
@@ -1411,7 +1433,7 @@ void Player::GatherAimInputs()
 		}
 
 	}
-	else if (usingGameController)																														//There is input above the threshold
+	else if (usingGameController)																				// If there was game controller input above the threshold.
 	{
 		if (abs(aimInputThreshold.x) <= AIM_THRESHOLD && abs(aimInputThreshold.y) <= AIM_THRESHOLD)
 		{
@@ -1422,8 +1444,6 @@ void Player::GatherAimInputs()
 			if (aimState == AimState::IDLE)
 				aimState = AimState::AIMING;
 		}
-		
-		//aimState = (abs(aimInputThreshold.x) <= AIM_THRESHOLD && abs(aimInputThreshold.y) <= AIM_THRESHOLD) ? AimState::IDLE : AimState::AIMING;
 	}
 	else
 	{
@@ -1432,7 +1452,7 @@ void Player::GatherAimInputs()
 
 	SetAimDirection();
 
-	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(SDL_CONTROLLER_BUTTON_B) == ButtonState::BUTTON_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(SDL_CONTROLLER_BUTTON_Y) == ButtonState::BUTTON_DOWN)
 	{
 		aimState = AimState::CHANGE_IN;
 		return;
@@ -1462,12 +1482,17 @@ void Player::GatherInteractionInputs()
 	if (currentInteraction == InteractionType::NONE)																					// For debug purposes.
 	{
 		if (App->input->GetKey(SDL_SCANCODE_RCTRL) == KeyState::KEY_REPEAT)
-		{
+		{	
 			if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_DOWN) { SetPlayerInteraction(InteractionType::TALK); }
 			if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_DOWN) { SetPlayerInteraction(InteractionType::USE); }
 			if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_DOWN) { SetPlayerInteraction(InteractionType::OPEN_CHEST); }
 			if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_DOWN) { SetPlayerInteraction(InteractionType::SIGNAL_GROGU); }
 		}
+	}
+	else
+	{
+		if (rigidBody != nullptr)
+			rigidBody->StopInertia();
 	}
 	
 	if (currentInteraction == InteractionType::TALK)																					// Bring the controller TALK finisher here too.
@@ -1563,18 +1588,12 @@ void Player::Aim()
 			aimingAimPlane->SetIsActive(true);
 	}
 
-	float rad = aimVector.AimedAngle();
+	// MECAGO EN TI LOG("AIM VECTOR: [{ %.3f, %.3f }]::[%.3f]", aimVector.x, aimVector.y, aimVector.AimedAngle() * RADTODEG);
+
+	//gameObject->transform->SetLocalRotation(float3(0.0f, 0.0f, 0.0f));
 
 	if (skeleton != nullptr)
-		skeleton->transform->SetLocalRotation(float3(0, -rad + DegToRad(90), 0));
-	
-	/*if (abs(aimVector.x) >= JOYSTICK_THRESHOLD || abs(aimVector.y) >= JOYSTICK_THRESHOLD)					// In case the rotation has to be locked under the JOYSTICK_THRESHOLD.
-	{
-		if (skeleton != nullptr)
-			skeleton->transform->SetLocalRotation(float3(0, -rad + DegToRad(90), 0));
-	}*/
-
-	//LOG("Aim vector x = %f , y = %f", aimVector.x, aimVector.y);
+		skeleton->transform->SetLocalRotation(float3(0, -(aimVector.AimedAngle()) + DegToRad(90), 0));
 }
 
 void Player::ApplyDash()

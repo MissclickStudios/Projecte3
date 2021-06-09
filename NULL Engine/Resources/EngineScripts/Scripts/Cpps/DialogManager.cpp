@@ -110,7 +110,7 @@ void DialogManager::Update()
 					state = DialogState::TALKED;
 					currentLineLetter = 0;
 				}
-				else if (currentLine->lineText.at(currentLineLetter) == *" ")
+				/*else if (currentLine->lineText.at(currentLineLetter) == *" ")
 				{
 					dialogText->nextWordLetters = 0;
 					wordIt = 1;
@@ -121,7 +121,7 @@ void DialogManager::Update()
 						wordIt++;
 						dialogText->nextWordLetters++;
 					}
-				}
+				}*/
 					
 			}
 
@@ -179,25 +179,35 @@ void DialogManager::StartNewLine()
 
 	//set speaker image
 	
-	if (strcmp(currentLine->speakerName.c_str(), "Mando"))
+	if (strcmp(currentLine->speakerName.c_str(), "Mando") == 0)
 	{
 		//Set image to mando's portrait
+		speakerImage->SetTextureCoordinates(-1680, -1830, 320, 320);
 	}
-	if (strcmp(currentLine->speakerName.c_str(), "IG-11"))
+	if (strcmp(currentLine->speakerName.c_str(), "IG-11") == 0)
 	{
 		//Set image to mando's portrait
+		speakerImage->SetTextureCoordinates(-2000, -1830, 320, 320);
 	}
-	if (strcmp(currentLine->speakerName.c_str(), "IG-12"))
+	if (strcmp(currentLine->speakerName.c_str(), "IG-12") == 0)
 	{
 		//Set image to mando's portrait
+		speakerImage->SetTextureCoordinates(-2000, -1830, 320, 320);
 	}
-	if (strcmp(currentLine->speakerName.c_str(), "Grogu"))
+	if (strcmp(currentLine->speakerName.c_str(), "Grogu") == 0)
 	{
 		//Set image to mando's portrait
+		speakerImage->SetTextureCoordinates(-2000, -1830, 320, 320);
 	}
-	if (strcmp(currentLine->speakerName.c_str(), "Greef Jawa"))
+	if (strcmp(currentLine->speakerName.c_str(), "Greef Karga") == 0)
 	{
 		//Set image to mando's portrait
+		speakerImage->SetTextureCoordinates(-2000, -1830, 320, 320);
+	}
+	if (strcmp(currentLine->speakerName.c_str(), "Armorer") == 0)
+	{
+		//Set image to mando's portrait
+		speakerImage->SetTextureCoordinates(-2000, -1830, 320, 320);
 	}
 
 	dialogText->SetText("");
@@ -270,8 +280,17 @@ void DialogManager::EndDialog()
 	App->uiSystem->RemoveActiveCanvas(dialogCanvas);
 	state = DialogState::NO_DIALOG;
 
-	if(armorer != nullptr && !armorer->menuOpen)
+	if (armorer != nullptr)
+	{
+		if (!armorer->menuOpen)
+		{
+			mando->SetPlayerInteraction(InteractionType::NONE);
+		}
+	}
+	else
+	{
 		mando->SetPlayerInteraction(InteractionType::NONE);
+	}
 }
 
 bool DialogManager::StartDialog(const char* dialogName)

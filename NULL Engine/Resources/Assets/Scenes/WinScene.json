@@ -1,5 +1,5 @@
 {
-    "ModTime": 1622807334,
+    "ModTime": 1623085221,
     "Models In Scene": [],
     "Game Objects": [
         {
@@ -86,7 +86,7 @@
         },
         {
             "UID": 371728131,
-            "ParentUID": 2067667001,
+            "ParentUID": 773358620,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -260,6 +260,58 @@
             ]
         },
         {
+            "UID": 512517584,
+            "ParentUID": 546855136,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "WeaponText",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": true,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 22,
+                    "Text": "Some Text",
+                    "Color": [
+                        1,
+                        0.5,
+                        0,
+                        1
+                    ],
+                    "X": -0.34999999403953552,
+                    "Y": -0.39500001072883606,
+                    "W": 0.050999999046325684,
+                    "H": 0.0010000000474974513,
+                    "childOrder": 8
+                }
+            ]
+        },
+        {
             "UID": 546855136,
             "ParentUID": 1342880680,
             "PrefabID": 0,
@@ -303,6 +355,110 @@
                         "W": 1.0926049947738647,
                         "H": 0.5787392258644104
                     }
+                }
+            ]
+        },
+        {
+            "UID": 672677957,
+            "ParentUID": 546855136,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "AttemptText",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 22,
+                    "Text": "Some Text",
+                    "Color": [
+                        1,
+                        0.5,
+                        0,
+                        1
+                    ],
+                    "X": -0.31999999284744263,
+                    "Y": 0.25,
+                    "W": 0.020999999716877937,
+                    "H": 0.0010000000474974513,
+                    "childOrder": 4
+                }
+            ]
+        },
+        {
+            "UID": 771407632,
+            "ParentUID": 546855136,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "PrecisionText",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 22,
+                    "Text": "Some Text",
+                    "Color": [
+                        1,
+                        0.5,
+                        0,
+                        1
+                    ],
+                    "X": -0.33500000834465027,
+                    "Y": -0.075000002980232239,
+                    "W": 0.030999999493360519,
+                    "H": 0.0010000000474974513,
+                    "childOrder": 6
                 }
             ]
         },
@@ -589,235 +745,6 @@
             ]
         },
         {
-            "UID": 1876816008,
-            "ParentUID": 371728131,
-            "PrefabID": 316805506,
-            "IsPrefab": true,
-            "Name": "Game Manager",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": true,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 24,
-                    "ResourceUID": 1796064373,
-                    "AssetsPath": "Assets\/Scripts\/\/GameManager.h",
-                    "DataName": "GameManager",
-                    "HasInspector": true,
-                    "InspectorVariables": [
-                        {
-                            "Type": 1,
-                            "Name": "enabled",
-                            "bool": true
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "mainMenuScene",
-                            "string": "MainMenu"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "SpawnPointName",
-                            "string": "PlayerSpawn"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "loseSceneName",
-                            "string": "Assets\/Scenes\/LoseScene.json"
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "cameraName",
-                            "string": "GameCameraVS2"
-                        },
-                        {
-                            "Type": 0,
-                            "Name": "l1Easy",
-                            "int": 1
-                        },
-                        {
-                            "Type": 0,
-                            "Name": "l1Intermediate",
-                            "int": 4
-                        },
-                        {
-                            "Type": 7,
-                            "Name": "level1",
-                            "vectorstring": [
-                                "Level1_Room4B.json",
-                                "Level1_Room2B.json",
-                                "Level1_Room1B.json",
-                                "Level1_Room3B.json",
-                                "Level1_Room7B.json",
-                                "Level1_Room6B.json",
-                                "Level1_Room5B.json"
-                            ]
-                        },
-                        {
-                            "Type": 0,
-                            "Name": "RuinsEasy",
-                            "int": 1
-                        },
-                        {
-                            "Type": 0,
-                            "Name": "RuinsIntermediate",
-                            "int": 4
-                        },
-                        {
-                            "Type": 7,
-                            "Name": "level1Ruins",
-                            "vectorstring": [
-                                "Level1_Ruins1B.json",
-                                "Level1_Ruins7B.json",
-                                "Level1_Ruins3B.json",
-                                "Level1_Ruins2B.json",
-                                "Level1_Ruins5B.json",
-                                "Level1_Ruins6B.json",
-                                "Level1_Ruins4B.json"
-                            ]
-                        },
-                        {
-                            "Type": 4,
-                            "Name": "playerPrefab",
-                            "prefab": 813688999
-                        },
-                        {
-                            "Type": 4,
-                            "Name": "groguPrefab",
-                            "prefab": 13642032
-                        },
-                        {
-                            "Type": 4,
-                            "Name": "chestPrefab",
-                            "prefab": 673064202
-                        },
-                        {
-                            "Type": 0,
-                            "Name": "chestSpawnChance",
-                            "int": 60
-                        },
-                        {
-                            "Type": 4,
-                            "Name": "mistPlane1",
-                            "prefab": 236149164
-                        },
-                        {
-                            "Type": 4,
-                            "Name": "mistPlane2",
-                            "prefab": 0
-                        },
-                        {
-                            "Type": 3,
-                            "Name": "mistPlane1Position",
-                            "float3x": 0,
-                            "float3y": 0,
-                            "float3z": 0
-                        },
-                        {
-                            "Type": 3,
-                            "Name": "mistPlane2Position",
-                            "float3x": 0,
-                            "float3y": 0,
-                            "float3z": 0
-                        }
-                    ]
-                },
-                {
-                    "Type": 8,
-                    "Is Static": true,
-                    "Filter": " void"
-                },
-                {
-                    "Type": 9,
-                    "Is Trigger": false,
-                    "Show Collider": true,
-                    "Size X": 1000,
-                    "Size Y": 100,
-                    "Size Z": 1000,
-                    "Center X": 0,
-                    "Center Y": -75,
-                    "Center Z": 0
-                }
-            ]
-        },
-        {
-            "UID": 672677957,
-            "ParentUID": 546855136,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "AttemptText",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 22,
-                    "Text": "Some Text",
-                    "Color": [
-                        1,
-                        0.5,
-                        0,
-                        1
-                    ],
-                    "X": -0.31999999284744263,
-                    "Y": 0.25,
-                    "W": 0.020999999716877937,
-                    "H": 0.0010000000474974513,
-                    "childOrder": 4
-                }
-            ]
-        },
-        {
             "UID": 1529248260,
             "ParentUID": 546855136,
             "PrefabID": 0,
@@ -866,58 +793,6 @@
                     "W": 0.026000000536441803,
                     "H": 0.0010000000474974513,
                     "childOrder": 5
-                }
-            ]
-        },
-        {
-            "UID": 771407632,
-            "ParentUID": 546855136,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "PrecisionText",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 22,
-                    "Text": "Some Text",
-                    "Color": [
-                        1,
-                        0.5,
-                        0,
-                        1
-                    ],
-                    "X": -0.33500000834465027,
-                    "Y": -0.075000002980232239,
-                    "W": 0.030999999493360519,
-                    "H": 0.0010000000474974513,
-                    "childOrder": 6
                 }
             ]
         },
@@ -974,11 +849,11 @@
             ]
         },
         {
-            "UID": 512517584,
-            "ParentUID": 546855136,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "WeaponText",
+            "UID": 1699955976,
+            "ParentUID": 371728131,
+            "PrefabID": 129017146,
+            "IsPrefab": true,
+            "Name": "PlayerSpawn",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
@@ -992,8 +867,45 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
+                        -56.518646240234375,
+                        -73.539878845214844,
+                        -10.568336486816406
+                    ],
+                    "LocalRotation": [
                         0,
                         0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1876816008,
+            "ParentUID": 371728131,
+            "PrefabID": 316805506,
+            "IsPrefab": true,
+            "Name": "Game Manager",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        19.021013259887695,
                         0
                     ],
                     "LocalRotation": [
@@ -1009,19 +921,144 @@
                     ]
                 },
                 {
-                    "Type": 22,
-                    "Text": "Some Text",
-                    "Color": [
-                        1,
-                        0.5,
-                        0,
-                        1
-                    ],
-                    "X": -0.34999999403953552,
-                    "Y": -0.39500001072883606,
-                    "W": 0.050999999046325684,
-                    "H": 0.0010000000474974513,
-                    "childOrder": 8
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": " void"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 1000,
+                    "Size Y": 100,
+                    "Size Z": 1000,
+                    "Center X": 0,
+                    "Center Y": -75,
+                    "Center Z": 0
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 1796064373,
+                    "AssetsPath": "Assets\/Scripts\/\/GameManager.h",
+                    "DataName": "GameManager",
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 1,
+                            "Name": "enabled",
+                            "bool": true
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "mainMenuScene",
+                            "string": "MainMenu"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "SpawnPointName",
+                            "string": "PlayerSpawn"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "loseSceneName",
+                            "string": "Assets\/Scenes\/LoseScene.json"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "cameraName",
+                            "string": "GameCameraVS2"
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "l1Easy",
+                            "int": 1
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "l1Intermediate",
+                            "int": 4
+                        },
+                        {
+                            "Type": 7,
+                            "Name": "level1",
+                            "vectorstring": [
+                                "Level1_Room3B.json",
+                                "Level1_Room7B.json",
+                                "Level1_Room1B.json",
+                                "Level1_Room2B.json",
+                                "Level1_Room6B.json",
+                                "Level1_Room4B.json",
+                                "Level1_Room5B.json"
+                            ]
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "RuinsEasy",
+                            "int": 1
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "RuinsIntermediate",
+                            "int": 4
+                        },
+                        {
+                            "Type": 7,
+                            "Name": "level1Ruins",
+                            "vectorstring": [
+                                "Level1_Ruins2B.json",
+                                "Level1_Ruins7B.json",
+                                "Level1_Ruins1B.json",
+                                "Level1_Ruins3B.json",
+                                "Level1_Ruins5B.json",
+                                "Level1_Ruins4B.json",
+                                "Level1_Ruins6B.json"
+                            ]
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "playerPrefab",
+                            "prefab": 813688999
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "groguPrefab",
+                            "prefab": 13642032
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "chestPrefab",
+                            "prefab": 673064202
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "chestSpawnChance",
+                            "int": 60
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "mistPlane1",
+                            "prefab": 236149164
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "mistPlane2",
+                            "prefab": 0
+                        },
+                        {
+                            "Type": 3,
+                            "Name": "mistPlane1Position",
+                            "float3x": 0,
+                            "float3y": 0,
+                            "float3z": 0
+                        },
+                        {
+                            "Type": 3,
+                            "Name": "mistPlane2Position",
+                            "float3x": 0,
+                            "float3y": 0,
+                            "float3z": 0
+                        }
+                    ]
                 }
             ]
         }

@@ -67,7 +67,7 @@ void Bullet::OnResume()
 
 void Bullet::OnCollisionEnter(GameObject* object)
 {
-	hit = true;
+	Hit();
 
 	Entity* entity = (Entity*)GetObjectScript(object, ObjectType::ENTITY);
 	if (!entity)

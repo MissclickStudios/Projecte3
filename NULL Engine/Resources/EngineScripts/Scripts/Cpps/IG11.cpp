@@ -295,7 +295,7 @@ void IG11::ManageMovement()
 	//Handle cutscene
 	if (gameManager->dialogManager->GetDialogState() != DialogState::NO_DIALOG)
 	{
-		currentAnimation = &specialAnimation;
+		currentAnimation = &talkAnimation;
 		aimState = AimState::ON_GUARD;
 		return;
 	}
@@ -325,10 +325,10 @@ void IG11::ManageMovement()
 			break;
 		}
 
-		if (health > 200.0f) 
+		if (health > maxHealth / 2) 
 			moveState = FirstStageAttacks();
 
-		else if (health <= 200.0f)
+		else if (health <= maxHealth / 2)
 			moveState = SecondStageAttacks();
 
 		break;
@@ -498,7 +498,7 @@ void IG11::ManageAim()
 	case AimState::SHOOT:
 		currentAnimation = &shootAnimation; // temporary till torso gets an independent animator
 
-		if (moveState != IG11State::DOUBLE_SPIRAL_ATTACK && moveState != IG11State::ROTATE_ATTACK)
+		if (moveState != IG11State::DOUBLE_SPIRAL_ATTACK)
 			secondaryAimDirection = aimDirection;
 		else
 			secondaryAimDirection = -aimDirection;
@@ -506,10 +506,10 @@ void IG11::ManageAim()
 		if (moveState == IG11State::U_ATTACK)
 			UAttackShots--;
 			
-		if (moveState == IG11State::SPIRAL_ATTACK ||
-			moveState == IG11State::ROTATE_ATTACK ||
-			moveState == IG11State::DOUBLE_SPIRAL_ATTACK) 
+		if (moveState == IG11State::SPIRAL_ATTACK || moveState == IG11State::ROTATE_ATTACK) 
 				currentAnimation = &specialAnimation;
+		else if (moveState == IG11State::DOUBLE_SPIRAL_ATTACK)
+			currentAnimation = &doubleSpecialAnimation;
 
 		if (blasterWeapon != nullptr)
 		{
@@ -701,7 +701,10 @@ bool IG11::SpiralAttack()
 	}
 	if (sniperWeapon)
 	{
-		sniperWeapon->projectilesPerShot = 0;
+		sniperWeapon->fireRate = 0.001f;
+		sniperWeapon->ammo = 20;
+		sniperWeapon->projectilesPerShot = 1;
+		sniperWeapon->shotSpreadArea = 5;
 	}
 
 	if (specialAttackRot >= 360.0f * spiralAttackSpins)
@@ -744,7 +747,7 @@ bool IG11::DoubleSpiralAttack()
 	{
 		blasterWeapon->fireRate = 0.001f;
 		blasterWeapon->ammo = 20;
-		blasterWeapon->projectilesPerShot = 2;
+		blasterWeapon->projectilesPerShot = 1;
 		blasterWeapon->shotSpreadArea = 4;
 	}
 	if (sniperWeapon)
@@ -752,7 +755,7 @@ bool IG11::DoubleSpiralAttack()
 
 		sniperWeapon->fireRate = 0.001f;
 		sniperWeapon->ammo = 20;
-		sniperWeapon->projectilesPerShot = 2;
+		sniperWeapon->projectilesPerShot = 1;
 		sniperWeapon->shotSpreadArea = 4;
 		
 	}

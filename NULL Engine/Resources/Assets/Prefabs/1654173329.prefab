@@ -1,7 +1,7 @@
 {
-    "ModTime": 1622932410,
-    "UID": 2125493045,
-    "ParentUID": 296213747,
+    "ModTime": 1623017831,
+    "UID": 2025476349,
+    "ParentUID": 888400124,
     "PrefabID": 1654173329,
     "IsPrefab": true,
     "Name": "Turret",
@@ -18,9 +18,9 @@
         {
             "Type": 1,
             "LocalPosition": [
-                34.47979736328125,
-                18.334770202636719,
-                0
+                100.533447265625,
+                8.8278312683105469,
+                32.987522125244141
             ],
             "LocalRotation": [
                 0,
@@ -38,8 +38,8 @@
             "Type": 8,
             "Is Static": false,
             "Filter": " enemy",
-            "Mass": 10,
-            "Density": 1,
+            "Mass": 1000,
+            "Density": 100,
             "Linear Damping": 0,
             "Angular Damping": 0,
             "Use Gravity": true,
@@ -169,8 +169,8 @@
     ],
     "Children": [
         {
-            "UID": 730149259,
-            "ParentUID": 2125493045,
+            "UID": 901060846,
+            "ParentUID": 2025476349,
             "PrefabID": 1654173329,
             "IsPrefab": true,
             "Name": "Skeleton",
@@ -206,8 +206,8 @@
             ],
             "Children": [
                 {
-                    "UID": 1056803262,
-                    "ParentUID": 730149259,
+                    "UID": 1139973327,
+                    "ParentUID": 901060846,
                     "PrefabID": 1654173329,
                     "IsPrefab": true,
                     "Name": "Hand",
@@ -244,8 +244,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1522846912,
-                    "ParentUID": 730149259,
+                    "UID": 1716491371,
+                    "ParentUID": 901060846,
                     "PrefabID": 1654173329,
                     "IsPrefab": true,
                     "Name": "Head",
@@ -281,8 +281,8 @@
                     ],
                     "Children": [
                         {
-                            "UID": 924877525,
-                            "ParentUID": 1522846912,
+                            "UID": 60515327,
+                            "ParentUID": 1716491371,
                             "PrefabID": 1654173329,
                             "IsPrefab": true,
                             "Name": "HeadMesh",
@@ -363,8 +363,8 @@
                             "Children": []
                         },
                         {
-                            "UID": 1012743397,
-                            "ParentUID": 1522846912,
+                            "UID": 1340252692,
+                            "ParentUID": 1716491371,
                             "PrefabID": 1654173329,
                             "IsPrefab": true,
                             "Name": "Barrel",
@@ -405,8 +405,8 @@
             ]
         },
         {
-            "UID": 889777901,
-            "ParentUID": 2125493045,
+            "UID": 1781443526,
+            "ParentUID": 2025476349,
             "PrefabID": 1654173329,
             "IsPrefab": true,
             "Name": "Base",
@@ -469,12 +469,6 @@
                         "Name": "turret_base.nemat",
                         "Path": "Library\/Materials\/1886986290.nemat",
                         "File": "1886986290.nemat"
-                    },
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/\/Enemies\/Turet\/turret_droid_complete_AO.png",
-                        "AssetsName": "turret_droid_complete_AO.png",
-                        "LibaryPath": "Library\/Textures\/1157271398.netex",
-                        "LibraryFile": "1157271398.netex"
                     },
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",

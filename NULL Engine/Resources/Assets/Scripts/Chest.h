@@ -23,7 +23,7 @@ public:
 	void OnPause() override;
 	void OnResume() override;
 
-	void OnTriggerRepeat(GameObject* object) override;
+	void OnCollisionEnter(GameObject* object) override;
 	
 	std::string gameManagerName = "Game Manager";
 	std::string playerName = "Mandalorian";
@@ -37,7 +37,7 @@ public:
 
 protected:
 
-	bool used = false;
+	bool open = false;
 
 	GameManager* gameManager = nullptr;
 };

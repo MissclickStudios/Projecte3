@@ -123,6 +123,16 @@ void HUBArmorer::Update()
 	{
 		switch (state)
 		{
+		case HUBArmorerState::NONE:
+
+			if (armorerAnimator != nullptr)
+				if (armorerAnimator->GetTrackAsPtr("Preview") != nullptr)
+				{
+					armorerAnimator->PlayClip("Preview", "Idle", 0.f);
+					state = HUBArmorerState::INACTIVE;
+				}
+
+			break;
 		case HUBArmorerState::INACTIVE:
 
 			if (mando->transform->GetDistanceTo(gameObject->transform->GetLocalPosition()) <= talkDistance)
@@ -133,21 +143,16 @@ void HUBArmorer::Update()
 					menuOpen = true;
 					state = HUBArmorerState::ACTIVE;
 					gameManager->TalkedToArmorer();
+
+					if (armorerAnimator != nullptr)
+						armorerAnimator->PlayClip("Preview", "Talk", 0.f);
 				}
 			}
 
-			if (armorerAnimator != nullptr)
-			{
-				armorerAnimator->PlayClip("Preview", "Idle", 0.f);
-			}
+			
 
 			break;
 		case HUBArmorerState::ACTIVE:
-
-			if (armorerAnimator != nullptr)
-			{
-				armorerAnimator->PlayClip("Preview", "Talk", 0.f);
-			}
 
 			if (mando->transform->GetDistanceTo(gameObject->transform->GetLocalPosition()) >= talkDistance || App->input->GetKey(SDL_SCANCODE_B) == KeyState::KEY_UP || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_UP) // B/Square button on controller
 			{
@@ -155,6 +160,10 @@ void HUBArmorer::Update()
 				mando->SetPlayerInteraction(InteractionType::NONE);
 				menuOpen = false;
 				state = HUBArmorerState::INACTIVE;
+
+				if (armorerAnimator != nullptr)
+					armorerAnimator->PlayClip("Preview", "Idle", 0.f);
+
 				break;
 			}
 

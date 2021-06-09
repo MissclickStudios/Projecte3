@@ -5,32 +5,37 @@
 #include "Application.h"
 #include "M_Scene.h"
 #include "M_Input.h"
+#include "M_ResourceManager.h"
 
 #include "GameObject.h"
 #include "C_Transform.h"
 #include "C_RigidBody.h"
 #include "C_BoxCollider.h"
+#include "C_ParticleSystem.h"
 
 #include "GameManager.h"
+#include "Bullet.h"
 
 #include "MC_Time.h"
 #include "Log.h"
+#include "Random.h"
 
 #define MAX_INPUT 32767
 
 Grogu* CreateGrogu()
 {
 	Grogu* script = new Grogu();
-	
-	// Basic Stats
+
 	INSPECTOR_DRAGABLE_FLOAT(script->speed);
-	INSPECTOR_DRAGABLE_FLOAT(script->verticalSpeed);
-	// Modifiers
-	INSPECTOR_DRAGABLE_FLOAT(script->speedModifier);
-	// Behaviour
 	INSPECTOR_DRAGABLE_FLOAT(script->minDistanceToMando);
 	INSPECTOR_DRAGABLE_FLOAT(script->maxDistanceToMando);
-	INSPECTOR_CHECKBOX_BOOL(script->isLevitationEnabled);
+
+	INSPECTOR_DRAGABLE_FLOAT(script->power);
+	INSPECTOR_DRAGABLE_FLOAT(script->cooldown);
+	INSPECTOR_CHECKBOX_BOOL(script->deflectBullets);
+
+	INSPECTOR_PREFAB(script->ParticlePrefab);
+	INSPECTOR_DRAGABLE_FLOAT(script->particleTime);
 
 	return script;
 }
@@ -38,6 +43,9 @@ Grogu* CreateGrogu()
 Grogu::Grogu() : Entity()
 {
 	type = EntityType::GROGU;
+
+	cooldownTimer.Stop();
+	particleTimer.Stop();
 }
 
 Grogu::~Grogu()
@@ -47,31 +55,137 @@ Grogu::~Grogu()
 void Grogu::SetUp()
 {
 	player = App->scene->GetGameObjectByName(playerName.c_str());
+	mesh = App->scene->GetGameObjectByName(meshName.c_str());
+
+	attackCollider = gameObject->GetComponent<C_BoxCollider>();
+	if (attackCollider != nullptr)
+		attackCollider->SetIsActive(false);
 
 	if (rigidBody != nullptr)
-	{
-		rigidBody->FreezeRotationX(true);
-		rigidBody->FreezeRotationY(true);
-		rigidBody->FreezeRotationZ(true);
-	}
+		rigidBody->DisableY(false);
 
-	isGoingUp = false;
+	if (player != nullptr)
+	{
+		GameObject* particleGameObject = App->scene->InstantiatePrefab(ParticlePrefab.uid, player, player->transform->GetWorldPosition(), Quat());
+		if (particleGameObject != nullptr)
+		{
+			particles = particleGameObject->GetComponent<C_ParticleSystem>();
+			if (particles != nullptr)
+				particles->StopSpawn();
+		}
+	}
 }
 
 void Grogu::Behavior()
 {
-	// Check if player is referenced properly
 	if (player == nullptr)
 		return;
 
-	ManageMovement();
-	ManageRotation();
-	ManageLevitation();
+	GetDistance();
+	if (!cooldownTimer.IsActive())
+	{
+		if (App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_DOWN
+			|| App->input->GetGameControllerButton(SDL_CONTROLLER_BUTTON_LEFTSHOULDER) == ButtonState::BUTTON_DOWN)
+			state = GroguState::ATTACK_IN;
+	}
+	else if (cooldownTimer.ReadSec() > cooldown)
+		cooldownTimer.Stop();
+
+	if (particleTimer.IsActive() && particleTimer.ReadSec() > particleTime)
+	{
+		particleTimer.Stop();
+		if (particles != nullptr)
+			particles->StopSpawn();
+	}
+
+	switch (state)
+	{
+	case GroguState::IDLE:
+		if (distance > maxDistanceToMando)
+			state = GroguState::MOVE;
+		if (rigidBody != nullptr)
+			rigidBody->StopInertia();
+		break;
+	case GroguState::MOVE:
+		if (distance < minDistanceToMando)
+			state = GroguState::IDLE;
+		Move();
+		break;
+	case GroguState::ATTACK_IN:
+		state = GroguState::ATTACK;
+		if (attackCollider != nullptr)
+			attackCollider->SetIsActive(true);
+		particleTimer.Start();
+		if (particles != nullptr)
+			particles->ResumeSpawn();
+		stopAttack = false;
+		break;
+	case GroguState::ATTACK:
+		state = GroguState::IDLE;
+		if (attackCollider != nullptr)
+			attackCollider->SetIsActive(false);
+		stopAttack = true;
+		cooldownTimer.Start();
+		break;
+	}
+
+	Rotate();
+	Levitate();
 }
 
 void Grogu::CleanUp()
 {
 	
+}
+
+void Grogu::OnTriggerRepeat(GameObject* object)
+{
+	if (stopAttack)
+		return;
+
+	Entity* entity = (Entity*)GetObjectScript(object, ObjectType::ENTITY);
+	if (entity != nullptr)
+	{
+		float2 entityPosition, position;
+		entityPosition.x = entity->transform->GetWorldPosition().x;
+		entityPosition.y = entity->transform->GetWorldPosition().z;
+		position.x = player->transform->GetWorldPosition().x;
+		position.y = player->transform->GetWorldPosition().z;
+		float2 direction = entityPosition - position;
+
+		float distance = direction.Length();
+		if (distance < 1.0f)
+			distance = 1.0f;
+
+		float currentPower = power / distance;
+
+		direction.Normalize();
+		direction *= currentPower;
+
+		entity->AddEffect(EffectType::KNOCKBACK, 0.75f, false, 0.0f, 0.0f, float3(direction.x, -10.0f, direction.y));
+
+		return;
+	}
+	Bullet* bullet = (Bullet*)GetObjectScript(object, ObjectType::BULLET);
+	if (bullet != nullptr)
+	{
+		if (!deflectBullets)
+			bullet->Hit();
+		else
+		{
+			C_RigidBody* bulletRigidBody = bullet->gameObject->GetComponent<C_RigidBody>();
+			if (bulletRigidBody != nullptr)
+			{
+				float3 velocity = bulletRigidBody->GetLinearVelocity();
+				velocity *= -0.15f;
+				velocity.y = 20.0f;
+
+				bulletRigidBody->SetLinearVelocity(velocity);
+				bulletRigidBody->UseGravity(true);
+				bulletRigidBody->DisableY(false);
+			}
+		}
+	}
 }
 
 void Grogu::SaveState(ParsonNode& groguNode)
@@ -84,79 +198,50 @@ void Grogu::LoadState(ParsonNode& groguNode)
 	
 }
 
-void Grogu::Reset()
+void Grogu::Move()
 {
+	if (rigidBody == nullptr)
+		return;
 
-}	
-
-void Grogu::ManageMovement()
-{
-	float3 position = gameObject->transform->GetWorldPosition();
-	float3 playerPos = player->transform->GetWorldPosition();
-
-	// Update Grogu's Y
-	gameObject->transform->SetLocalPosition({ position.x, playerPos.y, position.z });
-
-	// Check if player and grogu are apart
-	float3 deltaPos = playerPos - position;
-
-	if (sqrt(deltaPos.x * deltaPos.x + deltaPos.z * deltaPos.z) > maxDistanceToMando)
-	{
-		direction = deltaPos;
-		direction.Normalize();
-
-		Movement();
-	}
-	else if(sqrt(deltaPos.x * deltaPos.x + deltaPos.z * deltaPos.z) < minDistanceToMando)
-	{
-		if (rigidBody != nullptr)
-			rigidBody->Set2DVelocity(float2::zero);
-	}
+	direction.Normalize();
+	direction *= Speed();
+	rigidBody->SetLinearVelocity(direction);
 }
 
-void Grogu::ManageRotation()
+void Grogu::Rotate()
 {
+	if (mesh == nullptr)
+		return;
+
 	float3 direction = player->transform->GetWorldPosition() - gameObject->transform->GetWorldPosition();
 	direction.Normalize();
 	float2 aimDirection = { direction.x, direction.z };
 	float rad = aimDirection.AimedAngle();
 
-	GameObject* go = App->scene->GetGameObjectByName("Grogu Mesh");
-	if (go != nullptr)
-	{
-		go->transform->SetLocalRotation(float3(0, -rad - DegToRad(60), 0));
-	}
+	mesh->transform->SetLocalRotation(float3(0, -rad - DegToRad(60), 0));
 }
 
-
-void Grogu::ManageLevitation()
+void Grogu::Levitate()
 {
-	if (!isLevitationEnabled)
+	if (mesh == nullptr)
+		return;
+}
+
+void Grogu::Attack()
+{
+}
+
+void Grogu::GetDistance()
+{
+	if (player == nullptr)
 		return;
 
-	GameObject* go = App->scene->GetGameObjectByName("Grogu Mesh");
-	if (go != nullptr)
-	{
-		if (go->transform->GetWorldPosition().y >= -3)
-			isGoingUp = false;
-		else if (go->transform->GetWorldPosition().y <= -5)
-			isGoingUp = true;
+	float3 position = gameObject->transform->GetWorldPosition();
+	float3 playerPosition = player->transform->GetWorldPosition();
+	playerPosition.y += 5.0f;
 
-		float3 pos = go->transform->GetWorldPosition();
-
-		if (isGoingUp)
-			pos.y += verticalSpeed * MC_Time::Game::GetDT();
-		else
-			pos.y -= verticalSpeed * MC_Time::Game::GetDT();
-
-		go->transform->SetWorldPosition(pos);
-	}
-}
-void Grogu::Movement()
-{
-	float2 moveDirection = { direction.x, direction.z };
-	moveDirection *= Speed();
-
-	if (rigidBody != nullptr)
-		rigidBody->Set2DVelocity(moveDirection);
+	direction = playerPosition - position;
+	distance = direction.Length();
+	if (attackCollider != nullptr)
+		attackCollider->SetCenter(direction.x, direction.y, direction.z);
 }

@@ -1,5 +1,5 @@
 {
-    "ModTime": 1622882956,
+    "ModTime": 1623085168,
     "Models In Scene": [],
     "Game Objects": [
         {
@@ -130,7 +130,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         0,
-                        0,
+                        4.5547666549682617,
                         0
                     ],
                     "LocalRotation": [
@@ -144,6 +144,22 @@
                         1,
                         1
                     ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": " void"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 1000,
+                    "Size Y": 100,
+                    "Size Z": 1000,
+                    "Center X": 0,
+                    "Center Y": -75,
+                    "Center Z": 0
                 },
                 {
                     "Type": 24,
@@ -191,12 +207,12 @@
                             "Type": 7,
                             "Name": "level1",
                             "vectorstring": [
-                                "Level1_Room4B.json",
-                                "Level1_Room2B.json",
-                                "Level1_Room1B.json",
                                 "Level1_Room3B.json",
                                 "Level1_Room7B.json",
+                                "Level1_Room1B.json",
+                                "Level1_Room2B.json",
                                 "Level1_Room6B.json",
+                                "Level1_Room4B.json",
                                 "Level1_Room5B.json"
                             ]
                         },
@@ -214,13 +230,13 @@
                             "Type": 7,
                             "Name": "level1Ruins",
                             "vectorstring": [
-                                "Level1_Ruins1B.json",
-                                "Level1_Ruins7B.json",
-                                "Level1_Ruins3B.json",
                                 "Level1_Ruins2B.json",
+                                "Level1_Ruins7B.json",
+                                "Level1_Ruins1B.json",
+                                "Level1_Ruins3B.json",
                                 "Level1_Ruins5B.json",
-                                "Level1_Ruins6B.json",
-                                "Level1_Ruins4B.json"
+                                "Level1_Ruins4B.json",
+                                "Level1_Ruins6B.json"
                             ]
                         },
                         {
@@ -268,28 +284,12 @@
                             "float3z": 0
                         }
                     ]
-                },
-                {
-                    "Type": 8,
-                    "Is Static": true,
-                    "Filter": " void"
-                },
-                {
-                    "Type": 9,
-                    "Is Trigger": false,
-                    "Show Collider": true,
-                    "Size X": 1000,
-                    "Size Y": 100,
-                    "Size Z": 1000,
-                    "Center X": 0,
-                    "Center Y": -50,
-                    "Center Z": 0
                 }
             ]
         },
         {
             "UID": 575581970,
-            "ParentUID": 636928613,
+            "ParentUID": 773358620,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -365,6 +365,43 @@
                     "AssetsPath": "Assets\/Scripts\/\/CreditsSceneManager.h",
                     "DataName": "CreditsSceneManager",
                     "HasInspector": false
+                }
+            ]
+        },
+        {
+            "UID": 981754286,
+            "ParentUID": 575581970,
+            "PrefabID": 129017146,
+            "IsPrefab": true,
+            "Name": "PlayerSpawn",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "MaintainThroughScenes": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        72.925308227539063,
+                        -132.45834350585938,
+                        61.394397735595703
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
                 }
             ]
         }
