@@ -684,6 +684,8 @@ bool IG11::SpiralAttack()
 	//handRight->transform->SetLocalPosition(alternativeRight);
 	//handLeft->transform->SetLocalPosition(alternativeLeft);
 
+	this->rigidBody->StopInertia();
+
 	specialAttackRot += spiralAttackSpeed * MC_Time::Game::GetDT();
 	float angle = specialAttackStartAim.AimedAngle();
 	angle += DegToRad(specialAttackRot);
@@ -735,6 +737,8 @@ bool IG11::UAttack()
 
 bool IG11::DoubleSpiralAttack()
 {
+	this->rigidBody->StopInertia();
+	
 	specialAttackRot += spiralAttackSpeed * MC_Time::Game::GetDT();
 	float angle = specialAttackStartAim.AimedAngle();
 	angle += DegToRad(specialAttackRot);
@@ -768,6 +772,8 @@ bool IG11::DoubleSpiralAttack()
 
 bool IG11::RotateAttack()
 {
+	this->rigidBody->StopInertia();
+	
 	specialAttackRot += spiralAttackSpeed * MC_Time::Game::GetDT();
 	float angle = specialAttackStartAim.AimedAngle();
 	angle += DegToRad(specialAttackRot);
