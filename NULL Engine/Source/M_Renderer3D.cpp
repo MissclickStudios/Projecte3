@@ -674,21 +674,6 @@ void M_Renderer3D::RenderScene()
 
 	if (renderWorldAxis)
 		DrawWorldAxis();
-
-	/*for (auto renderer = renderers.begin(); renderer != renderers.end(); ++renderer)
-	{
-		renderer->second->Render();
-
-		renderer->second->CleanUp();
-		RELEASE(renderer->second);
-	}
-
-	renderers.clear();*/
-	
-	// TMP
-	/*static float4x4 dbTrnsfrm		= float4x4::FromTRS(float3(0.0f, 10.0f, 0.0f), Quat::FromEulerXYZ(90.0f * DEGTORAD, 0.0f, 0.0f), float3::one);
-	static RE_Circle debugCircle	= RE_Circle(dbTrnsfrm, float3(0.0f, 10.0f, 0.0f), 5.0f, 20, 2.0f);
-	debugCircle.Render();*/
 	
 	RenderMeshes();
 	RenderCuboids();
@@ -727,9 +712,6 @@ void M_Renderer3D::RenderScene()
 			}
 		}
 	}
-
-	//PrimitiveDrawExamples p_ex = PrimitiveDrawExamples();
-	//p_ex.DrawAllExamples();
 
 	for (uint i = 0; i < primitives.size(); ++i)
 	{
@@ -905,24 +887,21 @@ void M_Renderer3D::AddRenderersBatch(const std::multimap<float, Renderer*>& rend
 
 void M_Renderer3D::RenderMeshes()
 {	
-	/*C_Camera* currentCamera = App->camera->GetCurrentCamera();
-	float3 cameraPos = (currentCamera != nullptr) ? currentCamera->GetFrustum().Pos() : float3::zero;
-	std::multimap<float, MeshRenderer> sortedRenderers;
-	for (auto mRenderer = meshRenderers.cbegin(); mRenderer != meshRenderers.cend(); ++mRenderer)
-	{
-		float distanceToCamera = (*mRenderer).transform->GetWorldPosition().DistanceSq(cameraPos);
-		sortedRenderers.emplace(distanceToCamera, (*mRenderer));
-	}
-	
-	std::sort(meshRenderers.begin(), meshRenderers.end(), [&cameraPos](MeshRenderer mRendererA, MeshRenderer mRendererB) { return (mRendererA.transform->GetWorldPosition().Distance(cameraPos)) > (mRendererB.transform->GetWorldPosition().Distance(cameraPos)); });*/
-	
 	std::sort(meshRenderers.begin(), meshRenderers.end(), [](MeshRenderer mRendererA, MeshRenderer mRendererB) { return ((mRendererA.cTransform->GetWorldPosition().y) < (mRendererB.cTransform->GetWorldPosition().y)); });
 	
+	std::vector<MeshRenderer> lastRenderers;
+
 	for (uint i = 0; i < meshRenderers.size(); ++i)
 	{
-		meshRenderers[i].Render();
+		(!meshRenderers[i].renderLast) ? meshRenderers[i].Render() : lastRenderers.push_back(meshRenderers[i]);
 	}
 
+	for (uint i = 0; i < lastRenderers.size(); ++i)
+	{
+		lastRenderers[i].Render();
+	}
+
+	lastRenderers.clear();
 	meshRenderers.clear();
 }
 
@@ -1046,6 +1025,11 @@ void M_Renderer3D::DeleteFromMeshRenderers(R_Mesh* rMeshToDelete)
 			meshRenderers.erase(meshRenderers.begin() + i);
 		}
 	}
+}
+
+void M_Renderer3D::DeleteFromCuboids(float3* cuboidToDelete)
+{
+
 }
 
 void M_Renderer3D::ClearRenderers()
@@ -1606,10 +1590,11 @@ void M_Renderer3D::GenScreenBuffer()
 
 // --- RENDERER STRUCTURES METHODS ---
 // --- MESH RENDERER METHODS
-MeshRenderer::MeshRenderer(C_Transform* cTransform, C_Mesh* cMesh,  C_Material* cMaterial) :
-cTransform	(cTransform),
-cMesh		(cMesh),
-cMaterial	(cMaterial)
+MeshRenderer::MeshRenderer(C_Transform* cTransform, C_Mesh* cMesh, C_Material* cMaterial) :
+	cTransform	(cTransform),
+	cMesh		(cMesh),
+	cMaterial	(cMaterial),
+	renderLast	((cMesh != nullptr) ? cMesh->GetRenderLast() : false)
 {
 
 }

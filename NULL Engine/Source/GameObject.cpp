@@ -63,7 +63,6 @@ transform				(nullptr),
 isMasterRoot			(false),
 isSceneRoot				(false),
 isBone					(false),
-maintainThroughScenes	(false),
 toDelete				(false),
 show_bounding_boxes		(false)
 {
@@ -87,7 +86,6 @@ transform				(nullptr),
 isMasterRoot			(false),
 isSceneRoot				(false),
 isBone					(false),
-maintainThroughScenes	(false),
 toDelete				(false),
 show_bounding_boxes		(false)
 {
@@ -164,11 +162,12 @@ bool GameObject::SaveState(ParsonNode& root) const
 	root.SetBool("IsPrefab", isPrefab);
 
 	root.SetString("Name", name.c_str());
+
 	root.SetBool("IsActive", isActive);
 	root.SetBool("IsStatic", isStatic);
 	root.SetBool("IsSceneRoot", isSceneRoot);
-	root.SetBool("MaintainThroughScenes", maintainThroughScenes);
 	root.SetBool("ShowBoundingBoxes", show_bounding_boxes);
+
 	ParsonNode navNode = root.SetNode("NavigationInfo");
 	navNode.SetBool("isNavigable",isNavigable);
 	navNode.SetInteger("navigationArea", navigationArea);
@@ -196,7 +195,6 @@ bool GameObject::LoadState(ParsonNode& root)
 	isActive				= root.GetBool("IsActive");
 	isStatic				= root.GetBool("IsStatic");
 	isSceneRoot				= root.GetBool("IsSceneRoot");
-	maintainThroughScenes	= root.GetBool("MaintainThroughScenes");
 	show_bounding_boxes		= root.GetBool("ShowBoundingBoxes");
 
 	ParsonNode navNode = root.GetNode("NavigationInfo");
@@ -815,31 +813,6 @@ void GameObject::SetChildsIsStatic(const bool setTo, GameObject* parent)
 
 			SetChildsIsStatic(setTo, parent->childs[i]);
 		}
-	}
-}
-
-bool GameObject::GetMaintainThroughScenes() const
-{
-	return maintainThroughScenes;
-}
-
-void GameObject::SetMaintainThroughScenes(const bool setTo)
-{
-	maintainThroughScenes = setTo;
-
-	std::vector<GameObject*> childs;
-	std::vector<GameObject*> parents;
-
-	GetAllChilds(childs);
-	GetAllParents(parents);
-
-	for (auto child = childs.cbegin(); child != childs.cend(); ++child)
-	{
-		(*child)->maintainThroughScenes = setTo;
-	}
-	for (auto parent = parents.cbegin(); parent != parents.cend(); ++parent)
-	{
-		(*parent)->maintainThroughScenes = setTo;
 	}
 }
 

@@ -1,5 +1,4 @@
 #include "Profiler.h"
-
 #include "JSONParser.h"
 
 #include "Application.h"
@@ -16,19 +15,19 @@
 
 #include "MemoryManager.h"
 
-
 #define INVALID_BONE_ID 4294967295
 
 C_Mesh::C_Mesh(GameObject* owner) : Component(owner, ComponentType::MESH),
-rMesh			(nullptr),
-skinnedMesh		(nullptr),
-rootBone		(nullptr),
-cAnimatorOwner	(nullptr),
-showWireframe	(false),
-showBoundingBox	(false),
-outlineMesh		(false),
-outlineColor	(Color(0,0,0,1)),
-outlineThickness(1)
+rMesh				(nullptr),
+skinnedMesh			(nullptr),
+rootBone			(nullptr),
+cAnimatorOwner		(nullptr),
+showWireframe		(false),
+showBoundingBox		(false),
+outlineMesh			(false),
+renderLast			(false),
+outlineColor		(Black),
+outlineThickness	(1.0f)
 {
 }
 
@@ -85,6 +84,8 @@ bool C_Mesh::SaveState(ParsonNode& root) const
 		root.SetBool("Outline", outlineMesh);
 		root.SetNumber("OutlineThickness", outlineThickness);
 		root.SetColor("OutlineColor", outlineColor);
+
+		root.SetBool("RenderLast", renderLast);
 	}
 
 	return ret;
@@ -99,15 +100,16 @@ bool C_Mesh::LoadState(ParsonNode& root)
 	std::string assetsPath = ASSETS_MODELS_PATH + std::string(root.GetString("Name"));
 	App->resourceManager->AllocateResource((uint32)root.GetNumber("UID"), assetsPath.c_str());
 	
-	rMesh = (R_Mesh*)App->resourceManager->RequestResource((uint32)root.GetNumber("UID"));
+	rMesh				= (R_Mesh*)App->resourceManager->RequestResource((uint32)root.GetNumber("UID"));
 
-	showWireframe = root.GetBool("ShowWireframe");
-	showBoundingBox = root.GetBool("ShowBoundingBox");
+	showWireframe		= root.GetBool("ShowWireframe");
+	showBoundingBox		= root.GetBool("ShowBoundingBox");
 
-	outlineMesh = root.GetBool("Outline");
-	outlineThickness = root.GetNumber("OutlineThickness");
-	outlineColor = root.GetColor("OutlineColor");
+	outlineMesh			= root.GetBool("Outline");
+	outlineThickness	= root.GetNumber("OutlineThickness");
+	outlineColor		= root.GetColor("OutlineColor");
 
+	renderLast			= root.GetBool("RenderLast");
 
 	if (rMesh == nullptr)
 	{
@@ -386,4 +388,14 @@ float C_Mesh::GetOutlineThickness() const
 void C_Mesh::SetOutlineThickness(float outline)
 {
 	this->outlineThickness = outline;
+}
+
+bool C_Mesh::GetRenderLast() const
+{
+	return renderLast;
+}
+
+void C_Mesh::SetRenderLast(bool setTo)
+{
+	renderLast = setTo;
 }

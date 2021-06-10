@@ -513,66 +513,6 @@ bool M_Scene::LoadScene(const char* path)
 	return true;
 }
 
-bool M_Scene::CleanUpCurrentScene(std::vector<GameObject*>& parentMaintained)						// ATTENTION: Look for a way to erase an item in a loop and keep iter. without problems.
-{
-	LOG("Unloading { %s } Scene", currentScene.c_str());
-
-	App->renderer->defaultSkyBox.CleanUp();
-
-	for (auto object = gameObjects.begin(); object != gameObjects.end(); ++object)					// ATTENTION: There are a total of 6 loops when only 2 should be needed. Revise later.
-	{
-		if ((*object)->GetMaintainThroughScenes() && (*object)->parent == sceneRoot)
-		{
-			parentMaintained.push_back((*object));												// If not done first all parent pointers get corrupted or set to NULL.
-		}
-	}
-
-	std::map<uint32, std::string> goToDelete;
-	std::vector<uint32> modelsToDelete;
-	std::vector<GameObject*> why;
-	for (auto object = gameObjects.begin(); object != gameObjects.end(); ++object)
-	{
-		if (!(*object)->GetMaintainThroughScenes())
-		{
-			goToDelete.emplace((*object)->GetUID(), (*object)->GetName());				// Getting the GameObjects that should be deleted.
-
-			(*object)->CleanUp();
-			RELEASE((*object));
-		}
-	}
-
-	for (auto model = models.begin(); model != models.end(); ++model)
-	{
-		if (goToDelete.find(model->first) != goToDelete.end())
-		{
-			App->resourceManager->FreeResource(model->second.first);								// Getting the models that should be deleted.
-			modelsToDelete.push_back(model->first);
-		}
-	}
-
-	for (auto object = goToDelete.begin(); object != goToDelete.end(); ++object)
-	{	
-		/*(gameObjects.find(object->first) != gameObjects.end())	? gameObjects.erase(object->first) : LOG("[ERROR] Scene: Could not Delete { %s }! Error: GO amiss", object->second.c_str());
-		(goNamesMap.find(object->second) != goNamesMap.end())	? goNamesMap.erase(object->second) : LOG("[ERROR] Scene: Could not Delete { %s }! Error: Name amiss", object->second.c_str());*/
-	}
-	for (auto model = modelsToDelete.begin(); model != modelsToDelete.end(); ++model)
-	{
-		(models.find((*model)) != models.end()) ? models.erase((*model)) : LOG("[ERROR] Scene: Could not Delete Model { %lu }! Error: Model could not be found in map", (*model));
-	}
-
-	for (auto object = gameObjects.cbegin(); object != gameObjects.cend(); ++object)				// Making sure that the remaining GOs (maintain) are not set to delete.
-	{
-		//(object->second != nullptr) ? object->second->toDelete = false : LOG("[ERROR] Scene: GameObject remaining after Current Scene CleanUp was nullptr!");
-	}
-
-	sceneRoot			= nullptr;
-	animationRoot		= nullptr;
-	cullingCamera		= nullptr;
-	selectedGameObject	= nullptr;
-	
-	return false;
-}
-
 void M_Scene::SaveCurrentScene()
 {
 	SaveScene(currentScene.c_str());
