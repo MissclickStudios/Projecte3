@@ -90,7 +90,6 @@ bool M_Renderer3D::Init(ParsonNode& configuration)
 	LOG("Creating 3D Renderer context");
 	bool ret = true;
 	ret = InitOpenGL();																			// Initializing OpenGL. (Context and initial configuration)
-
 	OnResize();																					// Projection matrix recalculation to keep up with the resizing of the window.
 	
 	Importer::Textures::Init();																	// Initializing DevIL.
@@ -332,6 +331,9 @@ bool M_Renderer3D::InitOpenGL()
 	
 	//Create OpenGL Context
 	context = SDL_GL_CreateContext(App->window->GetWindow());
+	int a, b;
+	SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION,&a);
+	SDL_GL_GetAttribute(SDL_GL_CONTEXT_MINOR_VERSION,&b);
 	if (context == NULL)
 	{
 		LOG("[ERROR] OpenGL context could not be created! SDL_Error: %s\n", SDL_GetError());
@@ -370,25 +372,25 @@ bool M_Renderer3D::InitOpenGL()
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 
-		//Check for error
-		GLenum error = glGetError();
-		if (error != GL_NO_ERROR)
-		{
-			LOG("[ERROR] Error initializing OpenGL! %s\n", glewGetErrorString(error));
-			ret = false;
-		}
+		////Check for error
+		//GLenum error = glGetError();
+		//if (error != GL_NO_ERROR)
+		//{
+		//	LOG("[ERROR] Error initializing OpenGL! %s\n", glewGetErrorString(error));
+		//	ret = false;
+		//}
 
 		//Initialize Modelview Matrix
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
-		//Check for error
-		error = glGetError();
-		if (error != GL_NO_ERROR)
-		{
-			LOG("[ERROR] Error initializing OpenGL! %s\n", glewGetErrorString(error));
-			ret = false;
-		}
+		////Check for error
+		//error = glGetError();
+		//if (error != GL_NO_ERROR)
+		//{
+		//	LOG("[ERROR] Error initializing OpenGL! %s\n", glewGetErrorString(error));
+		//	ret = false;
+		//}
 
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 		glClearDepth(1.0f);
@@ -397,13 +399,13 @@ bool M_Renderer3D::InitOpenGL()
 		glClearColor(0.f, 0.f, 0.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		//Check for error
-		error = glGetError();
-		if (error != GL_NO_ERROR)
-		{
-			LOG("[ERROR] Error initializing OpenGL! %s\n", glewGetErrorString(error));
-			ret = false;
-		}
+		////Check for error
+		//error = glGetError();
+		//if (error != GL_NO_ERROR)
+		//{
+		//	LOG("[ERROR] Error initializing OpenGL! %s\n", glewGetErrorString(error));
+		//	ret = false;
+		//}
 
 		GLfloat LightModelAmbient[] = { 0.0f, 0.0f, 0.0f, 1.0f };
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
@@ -434,6 +436,13 @@ bool M_Renderer3D::InitOpenGL()
 		glEnable(GL_STENCIL_TEST);
 		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
 		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
+		GLenum err = glGetError();
+		while (err != GL_NO_ERROR)
+		{
+			LOG("OpenGl error: %d", err);
+			err = glGetError();
+		}
 	}
 
 	return ret;
@@ -444,15 +453,12 @@ bool M_Renderer3D::InitGlew()
 	bool ret = true;
 
 	// Initializing glew.
-	GLenum glewInitReturn = glewInit();												// glew must be initialized after an OpenGL rendering context has been created.
-
-	if (glewInitReturn != GLEW_NO_ERROR)
+	GLuint GLEWerr = glewInit();
+	if (GLEWerr != GLEW_OK) 
 	{
-		LOG("[ERROR] GLEW could not initialize! SDL_Error: %s\n", SDL_GetError());
-
+		LOG("[ERROR] GLEW could not initialize!: %s\n", glewGetErrorString(GLEWerr));
 		ret = false;
 	}
-
 	return ret;
 }
 

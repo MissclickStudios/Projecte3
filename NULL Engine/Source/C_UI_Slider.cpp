@@ -147,6 +147,12 @@ bool C_UI_Slider::LoadState(ParsonNode& root)
 
 void C_UI_Slider::LoadBuffers()
 {
+	GLenum err = glGetError();
+	while (err != GL_NO_ERROR)
+	{
+		LOG("OpenGl error: %d", err);
+		err = glGetError();
+	}
 	const float texCoordsBuffer[] = {
 		0.0f, 1.0f, 0.0f, 1.0f,
 		1.0f, 0.0f, 1.0f, 0.0f,
@@ -247,6 +253,41 @@ void C_UI_Slider::Draw2D()
 
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(newCoords), newCoords);
+		GLenum err = glGetError();
+		while (err != GL_NO_ERROR)
+		{
+			LOG("OpenGl error: %d", err);
+			unsigned int a = sizeof(newCoords);
+			int b = 500;
+			glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &b);
+			if (b != 96)
+			{
+				LOG("inputsize: %d existingSize: %d", a, b);
+				glBindBuffer(GL_ARRAY_BUFFER, 0);
+				// --- Delete Buffers
+				glDeleteBuffers(1, (GLuint*)&VAO);
+				glDeleteBuffers(1, (GLuint*)&VBO);
+				// --- Rebuild the buffers
+				glGenVertexArrays(1, &VAO);
+				glGenBuffers(1, &VBO);
+
+				glBindBuffer(GL_ARRAY_BUFFER, VBO);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(newCoords), newCoords, GL_DYNAMIC_DRAW);
+
+				glBindVertexArray(VAO);
+
+				// position attribute
+				glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+				glEnableVertexAttribArray(0);
+
+				// texture coord attribute
+				glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+				glEnableVertexAttribArray(1);
+
+				glBindBuffer(GL_ARRAY_BUFFER, 0);
+			}
+			err = glGetError();
+		}
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		x += offset + rect.w;
