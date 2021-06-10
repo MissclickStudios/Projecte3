@@ -46,6 +46,7 @@ GroguPush::~GroguPush()
 
 void GroguPush::Start()
 {
+	gameObject->SetIsActive(false);
 	/*
 	player = App->scene->GetGameObjectByName(playerName.c_str());
 	if (player != nullptr)

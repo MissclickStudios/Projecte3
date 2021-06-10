@@ -169,6 +169,9 @@ void Entity::PreUpdate()
 			if (GetParticles("Hit") != nullptr)
 				GetParticles("Hit")->StopSpawn();
 		}
+
+		if (type == EntityType::TURRET && rigidBody != nullptr)
+			rigidBody->StopInertia();
 	}
 }
 
