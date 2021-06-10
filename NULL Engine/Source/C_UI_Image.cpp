@@ -88,6 +88,7 @@ void C_UI_Image::LoadBuffers()
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
+
 }
 
 void C_UI_Image::HandleInput(C_UI** selectedUi)
@@ -96,6 +97,7 @@ void C_UI_Image::HandleInput(C_UI** selectedUi)
 
 void C_UI_Image::Draw2D()
 {
+	//float4x4 identity = float4x4::identity;
 	uint32 id;
 	C_2DAnimator* cAnimator = GetOwner()->GetComponent<C_2DAnimator>();
 	C_Material* cMaterial = GetOwner()->GetComponent<C_Material>();
@@ -216,20 +218,51 @@ void C_UI_Image::Draw2D()
 
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(theCoords), theCoords);
+		GLenum err = glGetError();
+		while (err != GL_NO_ERROR)
+		{
+			LOG("OpenGl error: %d", err);
+			unsigned int a = sizeof(theCoords);
+			int b = 500;
+			glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &b);
+			if (b != 96) 
+			{
+				LOG("inputsize: %d existingSize: %d", a, b);
+				glBindBuffer(GL_ARRAY_BUFFER, 0);
+				// --- Delete Buffers
+				glDeleteBuffers(1, (GLuint*)&VAO);
+				glDeleteBuffers(1, (GLuint*)&VBO);
+				// --- Rebuild the buffers
+				glGenVertexArrays(1, &VAO);
+				glGenBuffers(1, &VBO);
+		
+				glBindBuffer(GL_ARRAY_BUFFER, VBO);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(theCoords), theCoords, GL_DYNAMIC_DRAW);
+		
+				glBindVertexArray(VAO);
+		
+				// position attribute
+				glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+				glEnableVertexAttribArray(0);
+		
+				// texture coord attribute
+				glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+				glEnableVertexAttribArray(1);
+
+				glBindBuffer(GL_ARRAY_BUFFER, 0);
+		
+			}
+			err = glGetError();
+		}
 	}
 
 
 	glBindVertexArray(VAO);
-
 	glDrawArrays(GL_TRIANGLES, 0, 6);
-
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-
 	glDisable(GL_BLEND);
-
 	glBindTexture(GL_TEXTURE_2D, 0);
-
 	glUseProgram(0);
 }
 

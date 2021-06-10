@@ -229,6 +229,38 @@ void C_UI_Text::DrawRow(std::string::const_iterator begin, std::string::const_it
 
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+		GLenum err = glGetError();
+		while (err != GL_NO_ERROR)
+		{
+			LOG("OpenGl error: %d", err);
+			unsigned int a = sizeof(vertices);
+			int b = 500;
+			glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &b);
+			if (b != 96)
+			{
+				LOG("inputsize: %d existingSize: %d", a, b);
+				glBindBuffer(GL_ARRAY_BUFFER, 0);
+				// --- Delete Buffers
+				glDeleteBuffers(1, (GLuint*)&VAO);
+				glDeleteBuffers(1, (GLuint*)&VBO);
+				// --- Rebuild the buffers
+				glGenVertexArrays(1, &VAO);
+				glGenBuffers(1, &VBO);
+
+				glBindBuffer(GL_ARRAY_BUFFER, VBO);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW);
+
+				glBindVertexArray(VAO);
+
+				// position attribute
+				glEnableVertexAttribArray(0);
+				glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
+
+				glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+			}
+			err = glGetError();
+		}
 
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 	}

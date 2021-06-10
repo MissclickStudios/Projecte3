@@ -23,19 +23,21 @@
 GroguPush* CreateGroguPush()
 {
 	GroguPush* script = new GroguPush();
-
+	/*
 	INSPECTOR_INPUT_FLOAT3(script->abilityRadius);
 	INSPECTOR_INPUT_FLOAT(script->abilityCooldown);
 	INSPECTOR_INPUT_FLOAT(script->abilityPower);
-
+	*/
 	return script;
 }
 
 GroguPush::GroguPush() : Object()
 {
+	/*
 	baseType = ObjectType::GROGU_ABILITY;
 	abilityCooldownTimer.Stop();
 	particleTimer.Stop();
+	*/
 }
 
 GroguPush::~GroguPush()
@@ -44,6 +46,8 @@ GroguPush::~GroguPush()
 
 void GroguPush::Start()
 {
+	gameObject->SetIsActive(false);
+	/*
 	player = App->scene->GetGameObjectByName(playerName.c_str());
 	if (player != nullptr)
 		playerScript = (Player*)player->GetScript("Player");
@@ -58,14 +62,15 @@ void GroguPush::Start()
 	abilityParticles = gameObject->FindChild("Ability")->GetComponent<C_ParticleSystem>();
 	abilityParticles->StopSpawn();
 
+	abilityCollider->SetTrigger(true);
+	abilityCollider->SetIsActive(false);
+	*/
 }
 
 void GroguPush::Update()
 {
+	/*
 	doAbility = false;
-
-	abilityCollider->SetTrigger(false);
-	abilityCollider->SetIsActive(false);
 
 	// Particles
 	if (particleTimer.IsActive())
@@ -91,7 +96,6 @@ void GroguPush::Update()
 		doAbility = true;
 
 		abilityCollider->SetIsActive(true);
-		abilityCollider->SetTrigger(true);
 
 		abilityCooldownTimer.Start();
 		particleTimer.Start();
@@ -100,6 +104,7 @@ void GroguPush::Update()
 
 		playerScript->SetPlayerInteraction(InteractionType::SIGNAL_GROGU);
 	}
+	*/
 }
 
 void GroguPush::CleanUp()
@@ -109,6 +114,7 @@ void GroguPush::CleanUp()
 
 void GroguPush::OnTriggerRepeat(GameObject* object)
 {
+	/*
 	if (!doAbility)
 		return;
 	Entity* entity = (Entity*)GetObjectScript(object, ObjectType::ENTITY);
@@ -135,10 +141,12 @@ void GroguPush::OnTriggerRepeat(GameObject* object)
 	direction *= currentPower;
 	entity->gameObject->GetComponent<C_RigidBody>()->FreezePositionY(true);
 	entity->AddEffect(EffectType::KNOCKBACK, 0.25f, false, currentPower, 0.f, float3(direction.x, 0.f, direction.y), true);
+	*/
 }
 
 void GroguPush::OnTriggerExit(GameObject* object)
 {
+	/*
 	Entity* entity = (Entity*)GetObjectScript(object, ObjectType::ENTITY);
 	if (!entity)
 		return;
@@ -147,4 +155,5 @@ void GroguPush::OnTriggerExit(GameObject* object)
 		return;
 
 	entity->gameObject->GetComponent<C_RigidBody>()->FreezePositionY(false);
+	*/
 }

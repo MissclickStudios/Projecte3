@@ -175,6 +175,8 @@ public:
     //Win screen stats
     RunStats runStats;
 
+    bool cameraShake = true;
+
 private:
 
     GameObject* cameraGameObject = nullptr;

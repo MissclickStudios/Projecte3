@@ -90,7 +90,6 @@ bool M_Renderer3D::Init(ParsonNode& configuration)
 	LOG("Creating 3D Renderer context");
 	bool ret = true;
 	ret = InitOpenGL();																			// Initializing OpenGL. (Context and initial configuration)
-
 	OnResize();																					// Projection matrix recalculation to keep up with the resizing of the window.
 	
 	Importer::Textures::Init();																	// Initializing DevIL.
@@ -332,6 +331,9 @@ bool M_Renderer3D::InitOpenGL()
 	
 	//Create OpenGL Context
 	context = SDL_GL_CreateContext(App->window->GetWindow());
+	int a, b;
+	SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION,&a);
+	SDL_GL_GetAttribute(SDL_GL_CONTEXT_MINOR_VERSION,&b);
 	if (context == NULL)
 	{
 		LOG("[ERROR] OpenGL context could not be created! SDL_Error: %s\n", SDL_GetError());
@@ -370,25 +372,25 @@ bool M_Renderer3D::InitOpenGL()
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 
-		//Check for error
-		GLenum error = glGetError();
-		if (error != GL_NO_ERROR)
-		{
-			LOG("[ERROR] Error initializing OpenGL! %s\n", glewGetErrorString(error));
-			ret = false;
-		}
+		////Check for error
+		//GLenum error = glGetError();
+		//if (error != GL_NO_ERROR)
+		//{
+		//	LOG("[ERROR] Error initializing OpenGL! %s\n", glewGetErrorString(error));
+		//	ret = false;
+		//}
 
 		//Initialize Modelview Matrix
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
-		//Check for error
-		error = glGetError();
-		if (error != GL_NO_ERROR)
-		{
-			LOG("[ERROR] Error initializing OpenGL! %s\n", glewGetErrorString(error));
-			ret = false;
-		}
+		////Check for error
+		//error = glGetError();
+		//if (error != GL_NO_ERROR)
+		//{
+		//	LOG("[ERROR] Error initializing OpenGL! %s\n", glewGetErrorString(error));
+		//	ret = false;
+		//}
 
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 		glClearDepth(1.0f);
@@ -397,13 +399,13 @@ bool M_Renderer3D::InitOpenGL()
 		glClearColor(0.f, 0.f, 0.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		//Check for error
-		error = glGetError();
-		if (error != GL_NO_ERROR)
-		{
-			LOG("[ERROR] Error initializing OpenGL! %s\n", glewGetErrorString(error));
-			ret = false;
-		}
+		////Check for error
+		//error = glGetError();
+		//if (error != GL_NO_ERROR)
+		//{
+		//	LOG("[ERROR] Error initializing OpenGL! %s\n", glewGetErrorString(error));
+		//	ret = false;
+		//}
 
 		GLfloat LightModelAmbient[] = { 0.0f, 0.0f, 0.0f, 1.0f };
 		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, LightModelAmbient);
@@ -434,6 +436,13 @@ bool M_Renderer3D::InitOpenGL()
 		glEnable(GL_STENCIL_TEST);
 		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
 		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
+		GLenum err = glGetError();
+		while (err != GL_NO_ERROR)
+		{
+			LOG("OpenGl error: %d", err);
+			err = glGetError();
+		}
 	}
 
 	return ret;
@@ -444,15 +453,12 @@ bool M_Renderer3D::InitGlew()
 	bool ret = true;
 
 	// Initializing glew.
-	GLenum glewInitReturn = glewInit();												// glew must be initialized after an OpenGL rendering context has been created.
-
-	if (glewInitReturn != GLEW_NO_ERROR)
+	GLuint GLEWerr = glewInit();
+	if (GLEWerr != GLEW_OK) 
 	{
-		LOG("[ERROR] GLEW could not initialize! SDL_Error: %s\n", SDL_GetError());
-
+		LOG("[ERROR] GLEW could not initialize!: %s\n", glewGetErrorString(GLEWerr));
 		ret = false;
 	}
-
 	return ret;
 }
 
@@ -668,28 +674,22 @@ void M_Renderer3D::RenderScene()
 
 	if (renderWorldAxis)
 		DrawWorldAxis();
-
-	/*for (auto renderer = renderers.begin(); renderer != renderers.end(); ++renderer)
-	{
-		renderer->second->Render();
-
-		renderer->second->CleanUp();
-		RELEASE(renderer->second);
-	}
-
-	renderers.clear();*/
 	
-	// TMP
-	/*static float4x4 dbTrnsfrm		= float4x4::FromTRS(float3(0.0f, 10.0f, 0.0f), Quat::FromEulerXYZ(90.0f * DEGTORAD, 0.0f, 0.0f), float3::one);
-	static RE_Circle debugCircle	= RE_Circle(dbTrnsfrm, float3(0.0f, 10.0f, 0.0f), 5.0f, 20, 2.0f);
-	debugCircle.Render();*/
-	
-	RenderMeshes();
+	std::vector<MeshRenderer> lastRenderers;
+
+	RenderMeshes(lastRenderers);
 	RenderCuboids();
 	//RenderRays();
 	RenderSkeletons();
 	RenderParticles();
 	
+	for (uint i = 0; i < lastRenderers.size(); ++i)
+	{
+		lastRenderers[i].Render();
+	}
+
+	lastRenderers.clear();
+
 	if (App->camera->DrawLastRaycast())
 	{
 		RayRenderer last_ray = RayRenderer(App->camera->lastRaycast, rayColor, rayWidth);
@@ -699,7 +699,7 @@ void M_Renderer3D::RenderScene()
 	if (App->detour->debugDraw && App->detour->navMeshResource != nullptr && App->detour->navMeshResource->navMesh != nullptr) {
 		if (App->detour->renderMeshes.data() != nullptr)
 		{
-			R_Shader* shaderProgram = App->resourceManager->GetShader("DefaultShader");;
+			R_Shader* shaderProgram = App->resourceManager->GetShader("DefaultShader");
 
 			for (int i = 0; i < App->detour->renderMeshes.size(); ++i)
 			{
@@ -721,9 +721,6 @@ void M_Renderer3D::RenderScene()
 			}
 		}
 	}
-
-	//PrimitiveDrawExamples p_ex = PrimitiveDrawExamples();
-	//p_ex.DrawAllExamples();
 
 	for (uint i = 0; i < primitives.size(); ++i)
 	{
@@ -897,26 +894,23 @@ void M_Renderer3D::AddRenderersBatch(const std::multimap<float, Renderer*>& rend
 	this->renderers = renderers;
 }
 
-void M_Renderer3D::RenderMeshes()
+void M_Renderer3D::RenderMeshes(std::vector<MeshRenderer>& lastRenderers)
 {	
-	/*C_Camera* currentCamera = App->camera->GetCurrentCamera();
-	float3 cameraPos = (currentCamera != nullptr) ? currentCamera->GetFrustum().Pos() : float3::zero;
-	std::multimap<float, MeshRenderer> sortedRenderers;
-	for (auto mRenderer = meshRenderers.cbegin(); mRenderer != meshRenderers.cend(); ++mRenderer)
-	{
-		float distanceToCamera = (*mRenderer).transform->GetWorldPosition().DistanceSq(cameraPos);
-		sortedRenderers.emplace(distanceToCamera, (*mRenderer));
-	}
-	
-	std::sort(meshRenderers.begin(), meshRenderers.end(), [&cameraPos](MeshRenderer mRendererA, MeshRenderer mRendererB) { return (mRendererA.transform->GetWorldPosition().Distance(cameraPos)) > (mRendererB.transform->GetWorldPosition().Distance(cameraPos)); });*/
-	
 	std::sort(meshRenderers.begin(), meshRenderers.end(), [](MeshRenderer mRendererA, MeshRenderer mRendererB) { return ((mRendererA.cTransform->GetWorldPosition().y) < (mRendererB.cTransform->GetWorldPosition().y)); });
 	
+	//std::vector<MeshRenderer> lastRenderers;
+
 	for (uint i = 0; i < meshRenderers.size(); ++i)
 	{
-		meshRenderers[i].Render();
+		(!meshRenderers[i].renderLast) ? meshRenderers[i].Render() : lastRenderers.push_back(meshRenderers[i]);
 	}
 
+	/*for (uint i = 0; i < lastRenderers.size(); ++i)
+	{
+		lastRenderers[i].Render();
+	}
+
+	lastRenderers.clear();*/
 	meshRenderers.clear();
 }
 
@@ -1040,6 +1034,11 @@ void M_Renderer3D::DeleteFromMeshRenderers(R_Mesh* rMeshToDelete)
 			meshRenderers.erase(meshRenderers.begin() + i);
 		}
 	}
+}
+
+void M_Renderer3D::DeleteFromCuboids(float3* cuboidToDelete)
+{
+
 }
 
 void M_Renderer3D::ClearRenderers()
@@ -1600,10 +1599,11 @@ void M_Renderer3D::GenScreenBuffer()
 
 // --- RENDERER STRUCTURES METHODS ---
 // --- MESH RENDERER METHODS
-MeshRenderer::MeshRenderer(C_Transform* cTransform, C_Mesh* cMesh,  C_Material* cMaterial) :
-cTransform	(cTransform),
-cMesh		(cMesh),
-cMaterial	(cMaterial)
+MeshRenderer::MeshRenderer(C_Transform* cTransform, C_Mesh* cMesh, C_Material* cMaterial) :
+	cTransform	(cTransform),
+	cMesh		(cMesh),
+	cMaterial	(cMaterial),
+	renderLast	((cMesh != nullptr) ? cMesh->GetRenderLast() : false)
 {
 
 }

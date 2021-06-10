@@ -1,7 +1,7 @@
 {
-    "ModTime": 1622542159,
-    "UID": 1149928200,
-    "ParentUID": 1474137658,
+    "ModTime": 1623358500,
+    "UID": 1091623488,
+    "ParentUID": 888400124,
     "PrefabID": 13642032,
     "IsPrefab": true,
     "Name": "Grogu",
@@ -18,15 +18,15 @@
         {
             "Type": 1,
             "LocalPosition": [
-                10.188199996948242,
-                7.4949817657470703,
-                -23.882108688354492
+                -121.65496826171875,
+                3.1322164535522461,
+                -27.06773567199707
             ],
             "LocalRotation": [
-                -0.00019084199448116124,
-                0.87518000602722168,
-                0.00018996506696566939,
-                -0.4837973415851593
+                0,
+                0,
+                0,
+                1
             ],
             "LocalScale": [
                 0.20031058788299561,
@@ -44,39 +44,69 @@
                 {
                     "Type": 2,
                     "Name": "speed",
-                    "float": 30
-                },
-                {
-                    "Type": 2,
-                    "Name": "verticalSpeed",
-                    "float": 1
-                },
-                {
-                    "Type": 2,
-                    "Name": "speedModifier",
-                    "float": 1
+                    "float": 40
                 },
                 {
                     "Type": 2,
                     "Name": "minDistanceToMando",
-                    "float": 7
+                    "float": 1
                 },
                 {
                     "Type": 2,
                     "Name": "maxDistanceToMando",
-                    "float": 10
+                    "float": 0.5
+                },
+                {
+                    "Type": 2,
+                    "Name": "sprintDistance",
+                    "float": 30
+                },
+                {
+                    "Type": 2,
+                    "Name": "slowDistance",
+                    "float": 5
+                },
+                {
+                    "Type": 2,
+                    "Name": "power",
+                    "float": 250
+                },
+                {
+                    "Type": 2,
+                    "Name": "cooldown",
+                    "float": 5
                 },
                 {
                     "Type": 1,
-                    "Name": "isLevitationEnabled",
-                    "bool": true
+                    "Name": "deflectBullets",
+                    "bool": false
+                },
+                {
+                    "Type": 4,
+                    "Name": "ParticlePrefab",
+                    "prefab": 2009834404
+                },
+                {
+                    "Type": 2,
+                    "Name": "particleTime",
+                    "float": 0.5
+                },
+                {
+                    "Type": 2,
+                    "Name": "circleTime",
+                    "float": 5
+                },
+                {
+                    "Type": 2,
+                    "Name": "radius",
+                    "float": 5
                 }
             ]
         },
         {
             "Type": 8,
             "Is Static": false,
-            "Filter": " void",
+            "Filter": " grogu",
             "Mass": 10,
             "Density": 1,
             "Linear Damping": 0,
@@ -89,12 +119,23 @@
             "Freeze Rotation X": true,
             "Freeze Rotation Y": true,
             "Freeze Rotation Z": true
+        },
+        {
+            "Type": 9,
+            "Is Trigger": true,
+            "Show Collider": true,
+            "Size X": 70,
+            "Size Y": 20,
+            "Size Z": 70,
+            "Center X": -3.4004745483398438,
+            "Center Y": -1.4356489181518555,
+            "Center Z": 3.5492992401123047
         }
     ],
     "Children": [
         {
-            "UID": 981689427,
-            "ParentUID": 1149928200,
+            "UID": 1679403893,
+            "ParentUID": 1091623488,
             "PrefabID": 13642032,
             "IsPrefab": true,
             "Name": "Grogu Mesh",
@@ -111,18 +152,18 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -0.2219085693359375,
-                        -31.329494476318359,
-                        -0.11519050598144531
+                        -0.22191619873046875,
+                        -26.329000473022461,
+                        -0.1151885986328125
                     ],
                     "LocalRotation": [
                         0,
-                        0.86602413654327393,
-                        -1.2727253279054551e-11,
-                        0.50000238418579102
+                        0.92230570316314697,
+                        0,
+                        0.38646113872528076
                     ],
                     "LocalScale": [
-                        1.0004411935806274,
+                        1.0004415512084961,
                         0.9974244236946106,
                         1.0007774829864502
                     ]
@@ -130,8 +171,8 @@
             ],
             "Children": [
                 {
-                    "UID": 1193372227,
-                    "ParentUID": 981689427,
+                    "UID": 202551071,
+                    "ParentUID": 1679403893,
                     "PrefabID": 13642032,
                     "IsPrefab": true,
                     "Name": "GroguCapsule",
@@ -212,8 +253,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1589740679,
-                    "ParentUID": 981689427,
+                    "UID": 1771962149,
+                    "ParentUID": 1679403893,
                     "PrefabID": 13642032,
                     "IsPrefab": true,
                     "Name": "GroguBody",

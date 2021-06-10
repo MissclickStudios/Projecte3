@@ -81,26 +81,30 @@ void PauseMenuManager::Start()
 	go = App->scene->GetGameObjectByName(optionsVsyncStr.c_str());
 	if (go != nullptr)
 		vsyncCheck = (C_UI_Checkbox*)go->GetComponent<C_UI_Checkbox>();
+	go = App->scene->GetGameObjectByName(optionsShakeStr.c_str());
+	if (go != nullptr)
+		shakeCheck = (C_UI_Checkbox*)go->GetComponent<C_UI_Checkbox>();
 	go = App->scene->GetGameObjectByName(backButtonStr.c_str());
 	if (go != nullptr)
 		backButton = (C_UI_Button*)go->GetComponent<C_UI_Button>();
 
+	go = App->scene->GetGameObjectByName(gameManagerName.c_str());
+	if (go != nullptr)
+		gameManager = (GameManager*)go->GetScript("GameManager");
 	mando = App->scene->GetGameObjectByName(mandoName.c_str());
-	gameManager = App->scene->GetGameObjectByName(gameManagerName.c_str());
 }
 
 void PauseMenuManager::Update()
 {
 	if (pauseMenuCanvas != nullptr && !onSettings)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(6) == ButtonState::BUTTON_DOWN)
+		if (gameManager && App->input->GetKey(SDL_SCANCODE_ESCAPE) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(6) == ButtonState::BUTTON_DOWN)
 		{
 			if (canvasActive)
 			{
 				App->uiSystem->RemoveActiveCanvas(pauseMenuCanvas);
 				canvasActive = false;
-				GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
-				gameManagerScript->Resume();
+				gameManager->Resume();
 
 				if (hudCanvas && hudScript && hudScript->enabled)
 					App->uiSystem->PushCanvas(hudCanvas);
@@ -113,21 +117,19 @@ void PauseMenuManager::Update()
 
 				App->uiSystem->PushCanvas(pauseMenuCanvas);
 				canvasActive = true;
-				GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
-				gameManagerScript->Pause();
+				gameManager->Pause();
 			}
 		}
 	}
 
 	//Continue Button
-	if (resumeButton != nullptr && pauseMenuCanvas != nullptr)
+	if (gameManager && resumeButton != nullptr && pauseMenuCanvas != nullptr)
 	{
 		if (resumeButton->GetState() == UIButtonState::RELEASED)
 		{
 			App->uiSystem->RemoveActiveCanvas(pauseMenuCanvas);
 			canvasActive = false;
-			GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
-			gameManagerScript->Resume();
+			gameManager->Resume();
 
 			if (hudCanvas && hudScript && hudScript->enabled)
 				App->uiSystem->PushCanvas(hudCanvas);
@@ -135,13 +137,10 @@ void PauseMenuManager::Update()
 	}
 
 	//Main Menu Button
-	if (mainMenuButton != nullptr && gameManager != nullptr)
+	if (gameManager && mainMenuButton != nullptr && gameManager != nullptr)
 	{
 		if (mainMenuButton->GetState() == UIButtonState::RELEASED)
-		{
-			GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
-			gameManagerScript->ReturnToMainMenu();
-		}
+			gameManager->ReturnToMainMenu();
 	}
 
 	//Settings Button
@@ -154,17 +153,18 @@ void PauseMenuManager::Update()
 			fullScreenCheck->SetChecked();
 		if (vsyncCheck && App->renderer->GetVsync())
 			vsyncCheck->SetChecked();
+		if (shakeCheck && gameManager->cameraShake)
+			shakeCheck->SetChecked();
 	}
 
 	//Abandon Run Button
-	if (abandonRunButton != nullptr && mando != nullptr)
+	if (gameManager && abandonRunButton != nullptr && mando != nullptr)
 	{
 		if (abandonRunButton->GetState() == UIButtonState::RELEASED)
 		{
 			Player* playerScript = (Player*)mando->GetScript("Player");
 			playerScript->health = 0;
-			GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
-			gameManagerScript->Resume();
+			gameManager->Resume();
 
 			App->uiSystem->RemoveActiveCanvas(pauseMenuCanvas);
 		}
@@ -204,6 +204,13 @@ void PauseMenuManager::Update()
 			App->renderer->SetVsync(true);
 		else if (vsyncCheck->GetState() == UICheckboxState::PRESSED_CHECKED_OUT)
 			App->renderer->SetVsync(false);
+	}
+	if (gameManager && shakeCheck)
+	{
+		if (shakeCheck->GetState() == UICheckboxState::PRESSED_UNCHECKED_OUT)
+			gameManager->cameraShake = true;
+		else if (shakeCheck->GetState() == UICheckboxState::PRESSED_CHECKED_OUT)
+			gameManager->cameraShake = false;
 	}
 	if (pauseMenuCanvas && optionsMenuCanvas && backButton && backButton->GetState() == UIButtonState::RELEASED) 
 	{

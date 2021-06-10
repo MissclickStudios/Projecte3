@@ -22,7 +22,6 @@
 #include "Player.h"
 
 #include "MathGeoLib/include/Math/float3.h"
-#include "CoreDllHelpers.h"
 
 Entity::Entity() : Object()
 {
@@ -37,7 +36,6 @@ Entity::~Entity()
 		delete *effects.begin();
 		effects.erase(effects.begin());
 	}
-	CoreCrossDllHelpers::CoreReleaseString(rightHandName);
 }
 
 void Entity::Awake()
@@ -171,6 +169,9 @@ void Entity::PreUpdate()
 			if (GetParticles("Hit") != nullptr)
 				GetParticles("Hit")->StopSpawn();
 		}
+
+		if (type == EntityType::TURRET && rigidBody != nullptr)
+			rigidBody->StopInertia();
 	}
 }
 
@@ -187,18 +188,10 @@ void Entity::Update()
 
 	switch (entityState) // problem?
 	{
-	case EntityState::NONE: 
-		Behavior(); 
-		break;
-	case EntityState::STUNED:
-		currentAnimation = &stunAnimation;
-		break;
-	case EntityState::KNOCKEDBACK:
-		currentAnimation = &knockbackAnimation;
-		break;
-	case EntityState::ELECTROCUTED:
-		currentAnimation = &electrocutedAnimation;
-		break;
+	case EntityState::NONE:			{ Behavior(); }									break;
+	case EntityState::STUNED:		{ currentAnimation = &stunAnimation; }			break;
+	case EntityState::KNOCKEDBACK:	{ currentAnimation = &knockbackAnimation; }		break;
+	case EntityState::ELECTROCUTED: { currentAnimation = &electrocutedAnimation; }	break;
 	}
 }
 
@@ -376,6 +369,9 @@ void Entity::Stun(Effect* effect)
 			agent->CancelDestination();
 		entityState = EntityState::ELECTROCUTED;
 	}
+
+	if (type == EntityType::PLAYER)
+		((Player*)this)->ForceManageInvincibility();
 }
 
 void Entity::KnockBack(Effect* effect)
@@ -394,6 +390,9 @@ void Entity::KnockBack(Effect* effect)
 		}
 	}
 
+	if (type == EntityType::PLAYER)
+		((Player*)this)->ForceManageInvincibility();
+
 	entityState = EntityState::KNOCKEDBACK;
 }
 
@@ -404,8 +403,13 @@ void Entity::Electrocute(Effect* effect)
 
 	if (rigidBody != nullptr)
 		rigidBody->StopInertia();
+
 	if (agent != nullptr)
 		agent->CancelDestination();
+
+	if (type == EntityType::PLAYER)
+		((Player*)this)->ForceManageInvincibility();
+
 	entityState = EntityState::ELECTROCUTED;
 }
 

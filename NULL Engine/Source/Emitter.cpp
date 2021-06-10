@@ -47,8 +47,11 @@ void Emitter::CleanUp()
 
 	modules.clear();
 	
-	if (emitterTexture != nullptr)
+	if (emitterTexture != nullptr) 
+	{
 		App->resourceManager->FreeResource(emitterTexture->GetUID());
+		emitterTexture = nullptr;
+	}
 }
 
 void Emitter::Save(ParsonNode& node)

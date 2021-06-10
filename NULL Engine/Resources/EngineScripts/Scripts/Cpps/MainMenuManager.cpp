@@ -23,6 +23,7 @@ MainMenuManager::~MainMenuManager()
 
 void MainMenuManager::Start()
 {
+	gameManager = (GameManager*)gameManagerObject->GetScript("GameManager");
 	//main
 	if (mainCanvasObject)
 	{
@@ -46,6 +47,8 @@ void MainMenuManager::Start()
 		fullScreenCheck = (C_UI_Checkbox*)fullScreenCheckObject->GetComponent<C_UI_Checkbox>();
 	if (vsyncCheckObject != nullptr)
 		vsyncCheck = (C_UI_Checkbox*)vsyncCheckObject->GetComponent<C_UI_Checkbox>();
+	if (shakeCheckObject != nullptr)
+		shakeCheck = (C_UI_Checkbox*)shakeCheckObject->GetComponent<C_UI_Checkbox>();
 	if (backButtonObject != nullptr)
 		backButton = (C_UI_Button*)backButtonObject->GetComponent<C_UI_Button>();
 	if (musicSliderObject) 
@@ -71,19 +74,16 @@ void MainMenuManager::Start()
 void MainMenuManager::Update()
 {
 	//main
-	if (playButton && playButton->GetState() == UIButtonState::RELEASED && gameManager != nullptr)
+	if (gameManager && playButton && playButton->GetState() == UIButtonState::RELEASED && gameManagerObject != nullptr)
 	{
-		GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
-		gameManagerScript->ResetArmorerItemsLvl();
-		gameManagerScript->GenerateNewRun(true);
-		gameManagerScript->InitiateLevel(1);
+		gameManager->ResetArmorerItemsLvl();
+		gameManager->GenerateNewRun(true);
+		gameManager->InitiateLevel(1);
 	}
-	if (continueButton && continueButton->GetState() == UIButtonState::RELEASED && gameManager != nullptr)
-	{
-		GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
-		gameManagerScript->Continue();
-	}
-	if (settingsButton && settingsButton->GetState() == UIButtonState::RELEASED)
+	if (gameManager && continueButton && continueButton->GetState() == UIButtonState::RELEASED && gameManagerObject != nullptr)
+		gameManager->Continue();
+
+	if (gameManager && settingsButton && settingsButton->GetState() == UIButtonState::RELEASED)
 	{
 		App->uiSystem->PopCanvas();
 		App->uiSystem->PushCanvas(settingsCanvas);
@@ -91,12 +91,11 @@ void MainMenuManager::Update()
 			fullScreenCheck->SetChecked();
 		if(vsyncCheck && App->renderer->GetVsync())
 			vsyncCheck->SetChecked();
+		if (shakeCheck && gameManager->cameraShake)
+			shakeCheck->SetChecked();
 	}
-	if (exitButton && exitButton->GetState() == UIButtonState::RELEASED && gameManager != nullptr)
-	{
-		GameManager* gameManagerScript = (GameManager*)gameManager->GetScript("GameManager");
+	if (gameManager && exitButton && exitButton->GetState() == UIButtonState::RELEASED && gameManagerObject != nullptr)
 		App->quit = true;
-	}
 
 	//settings
 	if (fullScreenCheck)
@@ -112,6 +111,13 @@ void MainMenuManager::Update()
 			App->renderer->SetVsync(true);
 		else if (vsyncCheck->GetState() == UICheckboxState::PRESSED_CHECKED_OUT)
 			App->renderer->SetVsync(false);
+	}
+	if (gameManager && shakeCheck)
+	{
+		if (shakeCheck->GetState() == UICheckboxState::PRESSED_UNCHECKED_OUT)
+			gameManager->cameraShake = true;
+		else if (shakeCheck->GetState() == UICheckboxState::PRESSED_CHECKED_OUT)
+			gameManager->cameraShake = false;
 	}
 	if (backButton && backButton->GetState() == UIButtonState::RELEASED)
 	{

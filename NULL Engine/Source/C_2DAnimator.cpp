@@ -25,7 +25,7 @@ C_2DAnimator::C_2DAnimator(GameObject* owner) : Component(owner, ComponentType::
 
 	playFromTheStartOnLoop = false;
 
-	name = "";
+	//name = "";
 
 	spritesheet = nullptr;
 	spritesheet2 = nullptr;
@@ -53,9 +53,7 @@ C_2DAnimator::C_2DAnimator(GameObject* owner) : Component(owner, ComponentType::
 C_2DAnimator::~C_2DAnimator()
 {
 	RELEASE(spritesheet);
-
 	RELEASE(spritesheet2);
-
 	RELEASE(spritesheet3);
 }
 

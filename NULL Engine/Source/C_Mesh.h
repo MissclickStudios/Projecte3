@@ -36,69 +36,72 @@ public:
 	static inline ComponentType GetType() { return ComponentType::MESH; }															// Required for templated methods such as GetComponent().
 
 public:																																// --- RESOURCE MESH METHODS
-	R_Mesh*		GetMesh					() const;																					// If there is no rMesh it returns nullptr.
-	void		SetMesh					(R_Mesh* rMesh);																			// rMesh will be normally set when a model is imported.
+	R_Mesh*		GetMesh() const;																									// If there is no rMesh it returns nullptr.
+	void		SetMesh(R_Mesh* rMesh);																								// rMesh will be normally set when a model is imported.
 
-	const char* GetMeshPath				() const;																					// 
-	const char* GetMeshFile				() const;																					// 
-	void		SetMeshPath				(const char* path);																			// 
+	const char* GetMeshPath() const;																								// 
+	const char* GetMeshFile() const;																								// 
+	void		SetMeshPath(const char* path);																						// 
 
 public:																																// --- MESH SKINNING METHODS
-	R_Mesh*		GetSkinnedMesh			() const;
-	void		GetBoneMapping			(std::map<std::string, GameObject*>& boneMapping);
-	void		GetBoneTranforms		(std::vector<float4x4>& boneTransforms);
-	std::vector<float4x4>* GetBoneTransformsAsPtr();
+	R_Mesh*		GetSkinnedMesh() const;																								// 
+	void		GetBoneMapping(std::map<std::string, GameObject*>& boneMapping);													// 
+	void		GetBoneTranforms(std::vector<float4x4>& boneTransforms);															// 
+	std::vector<float4x4>* GetBoneTransformsAsPtr();																				// 
 
-	bool		RefreshSkinning			();																							// 
-	void		AnimateMesh				();																							// 
+	bool		RefreshSkinning();																									// 
+	void		AnimateMesh();																										// 
 
-	void		RefreshBoneMapping		();
-	void		SetRootBone				(GameObject* rootBone);
-	void		SetAnimatorOwner		(GameObject* cAnimatorOwner);																// TMP. Ambiguous name. Change Later.
+	void		RefreshBoneMapping();																								// 
+	void		SetRootBone(GameObject* rootBone);																					// 
+	void		SetAnimatorOwner(GameObject* cAnimatorOwner);																		// TMP. Ambiguous name. Change Later.
 
 public:																																// --- C_MESH DEBUG METHODS
-	void		GetMeshData				(uint& numVertices, uint& numNormals, uint& numTexCoords, uint& numIndices, uint& numBones);
-	void		GetBoundingBoxVertices	(math::float3* bbVertices) const;															// TODO: Kinda dirty, should be done elsewhere (?).
+	void		GetMeshData(uint& numVertices, uint& numNormals, uint& numTexCoords, uint& numIndices, uint& numBones);
+	void		GetBoundingBoxVertices(math::float3* bbVertices) const;																// TODO: Kinda dirty, should be done elsewhere (?).
 
-	bool		GetDrawVertexNormals	() const;
-	bool		GetDrawFaceNormals		() const;
-	bool		GetShowWireframe		() const;
-	bool		GetShowBoundingBox		() const;
+	bool		GetDrawVertexNormals() const;																						// 
+	bool		GetDrawFaceNormals() const;																							// 
+	bool		GetShowWireframe() const;																							// 
+	bool		GetShowBoundingBox() const;																							// 
 	
 	
-	void		SetDrawVertexNormals	(bool setTo);
-	void		SetDrawFaceNormals		(bool setTo);
-	void		SetShowWireframe		(bool setTo);
-	void		SetShowBoundingBox		(bool setTo);
+	void		SetDrawVertexNormals(bool setTo);																					// 
+	void		SetDrawFaceNormals(bool setTo);																						// 
+	void		SetShowWireframe(bool setTo);																						// 
+	void		SetShowBoundingBox(bool setTo);																						// 
 	
-	bool		GetOutlineMesh() const;
-	void		SetOutlineMesh(bool setTo);
+	bool		GetOutlineMesh() const;																								// 
+	void		SetOutlineMesh(bool setTo);																							// 
 
-	Color		GetOutlineColor() const;
-	void		SetOutlineColor(Color color);
+	Color		GetOutlineColor() const;																							// 
+	void		SetOutlineColor(Color color);																						// 
 
-	float		GetOutlineThickness() const;
-	void		SetOutlineThickness(float outline);
+	float		GetOutlineThickness() const;																						// 
+	void		SetOutlineThickness(float outline);																					// 
+
+	bool		GetRenderLast() const;																								// 
+	void		SetRenderLast(bool setTo);																							// 
 
 private:
-	R_Mesh*		rMesh;
-	R_Mesh*		skinnedMesh;
+	R_Mesh*		rMesh;																												// 
+	R_Mesh*		skinnedMesh;																										// 
 
-	GameObject* rootBone;
-	GameObject* cAnimatorOwner;
+	GameObject* rootBone;																											// 
+	GameObject* cAnimatorOwner;																										// 
+	
+	std::vector<float4x4>				boneTransforms;																				// 
+	std::map<std::string, GameObject*>	boneMapping;																				// 
 
-	std::vector<float4x4>				boneTransforms;
-	std::map<std::string, GameObject*>	boneMapping;
+private:																															// --- COMPONENT MESH RENDER VARIABLES
+	bool	showWireframe;																											// 
+	bool	showBoundingBox;																										// 
 	
+	bool	outlineMesh;																											// 
+	Color	outlineColor;																											// 
+	float	outlineThickness;																										// 
 	
-
-private:																															// --- COMPONENT MESH DEBUG VARIABLES
-	bool	showWireframe;
-	bool	showBoundingBox;
-	
-	bool	outlineMesh;
-	Color	outlineColor;
-	float	outlineThickness;
+	bool	renderLast;																												// 
 };
 
 #endif // !__C_MESH_H__
