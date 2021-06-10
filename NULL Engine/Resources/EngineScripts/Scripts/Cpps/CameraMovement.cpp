@@ -95,13 +95,13 @@ void CameraMovement::Update()
 	if (!gameObject->transform->GetLocalRotation().Equals(initialRot))
 		gameObject->transform->SetLocalRotation(initialRot);
 	
-	if (playerScript != nullptr & playerScript->hitTimer.IsActive()) 
+	if (gameManagerScript && gameManagerScript->cameraShake && playerScript != nullptr && playerScript->hitTimer.IsActive())
 		CameraShake(shakeDuration, shakeMagnitude);
 
-	if (ig12Script != nullptr && ig12Script->bombExploding == true)
+	if (gameManagerScript && gameManagerScript->cameraShake && ig12Script != nullptr && ig12Script->bombExploding == true)
 		CameraShake(shakeDuration, shakeMagnitude);
 
-	if (gameManagerScript->dialogManager->GetDialogState() == DialogState::NO_DIALOG)
+	if (gameManagerScript && gameManagerScript->dialogManager->GetDialogState() == DialogState::NO_DIALOG)
 	{
 		nextPointProgress = 0;
 		nextPoint = 0;
