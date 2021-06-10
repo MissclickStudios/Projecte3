@@ -675,12 +675,21 @@ void M_Renderer3D::RenderScene()
 	if (renderWorldAxis)
 		DrawWorldAxis();
 	
-	RenderMeshes();
+	std::vector<MeshRenderer> lastRenderers;
+
+	RenderMeshes(lastRenderers);
 	RenderCuboids();
 	//RenderRays();
 	RenderSkeletons();
 	RenderParticles();
 	
+	for (uint i = 0; i < lastRenderers.size(); ++i)
+	{
+		lastRenderers[i].Render();
+	}
+
+	lastRenderers.clear();
+
 	if (App->camera->DrawLastRaycast())
 	{
 		RayRenderer last_ray = RayRenderer(App->camera->lastRaycast, rayColor, rayWidth);
@@ -885,23 +894,23 @@ void M_Renderer3D::AddRenderersBatch(const std::multimap<float, Renderer*>& rend
 	this->renderers = renderers;
 }
 
-void M_Renderer3D::RenderMeshes()
+void M_Renderer3D::RenderMeshes(std::vector<MeshRenderer>& lastRenderers)
 {	
 	std::sort(meshRenderers.begin(), meshRenderers.end(), [](MeshRenderer mRendererA, MeshRenderer mRendererB) { return ((mRendererA.cTransform->GetWorldPosition().y) < (mRendererB.cTransform->GetWorldPosition().y)); });
 	
-	std::vector<MeshRenderer> lastRenderers;
+	//std::vector<MeshRenderer> lastRenderers;
 
 	for (uint i = 0; i < meshRenderers.size(); ++i)
 	{
 		(!meshRenderers[i].renderLast) ? meshRenderers[i].Render() : lastRenderers.push_back(meshRenderers[i]);
 	}
 
-	for (uint i = 0; i < lastRenderers.size(); ++i)
+	/*for (uint i = 0; i < lastRenderers.size(); ++i)
 	{
 		lastRenderers[i].Render();
 	}
 
-	lastRenderers.clear();
+	lastRenderers.clear();*/
 	meshRenderers.clear();
 }
 
