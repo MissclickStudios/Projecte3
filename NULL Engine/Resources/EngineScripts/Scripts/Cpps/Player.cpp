@@ -27,8 +27,7 @@
 #define MAX_INPUT				32767.0f
 #define WALK_THRESHOLD			16384.0f
 #define AIM_THRESHOLD			8192.0f
-#define P_JOYSTICK_THRESHOLD	4096.0f
-#define WALKING_FACTOR			0.5f
+#define P_JOYSTICK_THRESHOLD	8192.0f
 
 Player* CreatePlayer()
 {
