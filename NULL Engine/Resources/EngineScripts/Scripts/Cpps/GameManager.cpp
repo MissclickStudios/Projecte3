@@ -57,6 +57,7 @@ void GameManager::Awake()
 			CoreCrossDllHelpers::CoreReleaseBuffer(&buffer);
 			currentLevel = jsonState.GetInteger("currentLevel");
 			roomNum = jsonState.GetInteger("roomNum");
+			cameraShake = jsonState.GetBool("cameraShake");
 			level1.clear();
 			//LEVEL2
 			level1Ruins.clear();
@@ -658,6 +659,7 @@ void GameManager::Continue()
 		CoreCrossDllHelpers::CoreReleaseBuffer(&buffer);
 		currentLevel = jsonState.GetInteger("currentLevel");
 		roomNum = jsonState.GetInteger("roomNum");
+		cameraShake = jsonState.GetBool("cameraShake");
 		level1.clear();
 		//LEVEL2
 		level1Ruins.clear();
@@ -874,6 +876,7 @@ void GameManager::SaveManagerState()
 	//release Json File
 	jsonState.SetInteger("currentLevel",currentLevel);
 	jsonState.SetInteger("roomNum",roomNum);
+	jsonState.SetBool("cameraShake", cameraShake);
 	ParsonArray levelArray = jsonState.SetArray("level1");
 	for (int i = 0; i < level1.size(); ++i)
 	{

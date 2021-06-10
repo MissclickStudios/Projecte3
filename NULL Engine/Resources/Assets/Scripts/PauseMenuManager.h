@@ -9,6 +9,7 @@ class C_UI_Checkbox;
 class C_UI_Slider;
 class C_Canvas;
 class HUDManager;
+class GameManager;
 
 class SCRIPTS_API PauseMenuManager : public Script {
 public:
@@ -28,6 +29,7 @@ public:
 	std::string optionsMenuCanvasStr = "PauseSettingsCanvas";
 	std::string optionsFullscreenStr = "FullscreenCheck";
 	std::string optionsVsyncStr = "VsyncCheck";
+	std::string optionsShakeStr = "ShakeCheck";
 	std::string backButtonStr = "BackButton";
 	std::string hudCanvasStr = "HUD";
 	std::string musicSliderStr = "MusicSlider";
@@ -47,10 +49,11 @@ private:
 	C_UI_Slider* fxSlider = nullptr;
 	C_UI_Checkbox* fullScreenCheck = nullptr;
 	C_UI_Checkbox* vsyncCheck = nullptr;
+	C_UI_Checkbox* shakeCheck = nullptr;
 	C_UI_Button* backButton = nullptr;
 
 	GameObject* mando = nullptr;
-	GameObject* gameManager = nullptr;
+	GameManager* gameManager = nullptr;
 
 	bool canvasActive = false;
 	bool onSettings = false;
@@ -72,6 +75,7 @@ SCRIPTS_FUNCTION PauseMenuManager* CreatePauseMenuManager() {
 	INSPECTOR_STRING(script->hudCanvasStr);
 	INSPECTOR_STRING(script->musicSliderStr);
 	INSPECTOR_STRING(script->fxSliderStr);
+	INSPECTOR_STRING(script->optionsShakeStr);
 
 	return script;
 }
