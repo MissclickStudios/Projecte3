@@ -574,15 +574,18 @@ void Player::TakeDamage(float damage)
 		float damageDealt = 0.0f;
 		if(Defense())
 		 damageDealt = 1.0f; // heehee
+		
 		health -= damageDealt;
 
 		if (health < 0.0f)
 			health = 0.0f;
-		invincibilityTimer.Start();
 
+		invincibilityTimer.Start();
 		hitTimer.Start();
+		
 		if (GetParticles("Hit") != nullptr)
 			GetParticles("Hit")->ResumeSpawn();
+		
 		if (material != nullptr)
 		{
 			material->SetAlternateColour(Color(1, 0, 0, 1));
@@ -670,8 +673,8 @@ void Player::SetPlayerInteraction(InteractionType type, float duration)
 		interactionTimer.Stop();
 		interactionDuration = 0.0f;
 		
-		if (rigidBody != nullptr)																				// Making the player dynamic again once the interaction has finished.
-			//rigidBody->MakeDynamic();
+		/*if (rigidBody != nullptr)																				// Making the player dynamic again once the interaction has finished.
+			rigidBody->MakeDynamic();*/
 
 		if (dashTimer.IsActive())																				// In case the interaction was set while the player was dashing.
 			moveState = PlayerState::DASH;
@@ -694,6 +697,11 @@ void Player::SetPlayerInteraction(InteractionType type, float duration)
 	case InteractionType::OPEN_CHEST:		{ OpenChest(); }	break;
 	case InteractionType::SIGNAL_GROGU:		{ SignalGrogu(); }	break;
 	}
+}
+
+void Player::ForceManageInvincibility()
+{
+	ManageInvincibility();
 }
 
 void Player::AnimatePlayer()
@@ -752,24 +760,10 @@ void Player::AnimatePlayer()
 			preview->Stop();
 
 		if ((torsoClip == nullptr) || (torsoClip->GetName() != torsoInfo->name))
-		{
 			animator->PlayClip(torsoTrack->GetName(), torsoInfo->name.c_str(), torsoInfo->blendTime);
 
-			/*if (torsoTrack->GetTrackState() == TrackState::STOP)
-			{
-				torsoTrack->Play();
-			}*/
-		}
-
 		if ((legsClip == nullptr) || (legsClip->GetName() != legsInfo->name))
-		{
 			animator->PlayClip(legsTrack->GetName(), legsInfo->name.c_str(), legsInfo->blendTime);
-
-			/*if (legsTrack->GetTrackState() == TrackState::STOP)
-			{
-				legsTrack->Play();
-			}*/
-		}
 	}
 }
 
@@ -1063,14 +1057,10 @@ void Player::ManageInvincibility()
 		
 		if (mesh != nullptr)
 			mesh->SetIsActive(!mesh->IsActive());
-
-		//LOG("start int timer");
 	}
 	else if (intermitentMeshTimer.ReadSec() >= intermitentMesh)
 	{
 		intermitentMeshTimer.Stop();
-
-		//LOG("stop int timer");
 	}
 }
 
@@ -1212,6 +1202,8 @@ void Player::Dead()
 // --- AIM STATE METHODS
 void Player::AimIdle()
 {
+	//LOG("AIM IDLE");
+	
 	if (currentWeapon != nullptr)
 	{
 		currentWeapon->defPosition = currentWeapon->position;
@@ -1221,11 +1213,15 @@ void Player::AimIdle()
 
 void Player::OnGuard()
 {
+	//LOG("ON GUARD");
+	
 	aimState = AimState::IDLE;
 }
 
 void Player::Aiming()
 {
+	//LOG("AIMING");
+	
 	currentAnimation = GetAimAnimation();
 	
 	if (currentWeapon != nullptr)
@@ -1237,6 +1233,8 @@ void Player::Aiming()
 
 void Player::ShootIn()
 {
+	//LOG("SHOOT IN");
+	
 	currentAnimation	= GetShootAnimation();
 	aimState			= AimState::SHOOT;
 	primaryWeaponImage->PlayAnimation(false, 1);
@@ -1244,6 +1242,8 @@ void Player::ShootIn()
 
 void Player::Shoot()
 {
+	//LOG("SHOOT");
+	
 	if (currentWeapon == nullptr)
 		return;
 	
@@ -1273,7 +1273,7 @@ void Player::Shoot()
 
 void Player::ReloadIn()
 {
-	LOG("RELOADIN");
+	//LOG("RELOAD IN");
 	
 	currentAnimation = GetReloadAnimation();
 
@@ -1283,12 +1283,16 @@ void Player::ReloadIn()
 
 void Player::Reload()
 {
+	//LOG("RELOAD");
+	
 	if (currentWeapon != nullptr && currentWeapon->Reload())	
 		aimState = AimState::ON_GUARD;
 }
 
 void Player::ChangeIn()
 {
+	//LOG("CHANGE IN");
+	
 	changeTimer.Start();
 	
 	currentAnimation = &changeWeaponAnimation;
@@ -1301,7 +1305,9 @@ void Player::ChangeIn()
 
 void Player::Change()
 {
-	LOG("Change Weapon Time %.3f", ChangeTime());
+	LOG("CHANGE");
+	
+	//LOG("Change Weapon Time %.3f", ChangeTime());
 	
 	if (changeTimer.ReadSec() < ChangeTime())
 		return;
@@ -1398,6 +1404,8 @@ void Player::GatherMoveInputs()
 
 void Player::GatherAimInputs()
 {
+	//LOG("THE GATHERING");
+	
 	// Controller aim
 	aimInput.x = (float)App->input->GetGameControllerAxisRaw(RIGHT_JOYSTICK_X_AXIS);							// x right joystick
 	aimInput.y = (float)App->input->GetGameControllerAxisRaw(RIGHT_JOYSTICK_Y_AXIS);							// y right joystick
@@ -1405,11 +1413,21 @@ void Player::GatherAimInputs()
 	aimInputThreshold.x = (float)App->input->GetGameControllerAxisValue(RIGHT_JOYSTICK_X_AXIS);					// x right joystick with threshhold
 	aimInputThreshold.y = (float)App->input->GetGameControllerAxisValue(RIGHT_JOYSTICK_Y_AXIS);					// y right joystick with threshhold
 
-	// LOG("AIM INPUT		--> [%.3f]::[%.3f]", aimInput.x, aimInput.y);
+	//LOG("AIM INPUT		--> [%.3f]::[%.3f]", aimInput.x, aimInput.y);
 	// LOG("AIM THRESHOLD	--> [%.3f]::[%.3f]", aimInputThreshold.x, aimInputThreshold.y);
 
 	if (aimState != AimState::IDLE && aimState != AimState::AIMING && aimState != AimState::ON_GUARD)			// If the player is in this states, ignore action inputs (shoot, reload, etc.)
 	{
+		if (usingKeyboard && !usingGameController)																// If there was keyboard input and no controller input
+		{
+			aimInput = float2::zero;																			// Re-setting the vector to clear any noise generated by the game controller.
+
+			if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT)	{ aimInput.y = -MAX_INPUT; }
+			if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT)	{ aimInput.y = MAX_INPUT; }
+			if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT)	{ aimInput.x = MAX_INPUT; }
+			if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT)	{ aimInput.x = -MAX_INPUT; }
+		}
+		
 		return;
 	}
 	
@@ -1449,8 +1467,6 @@ void Player::GatherAimInputs()
 	{
 		aimState = AimState::IDLE;
 	}
-
-	SetAimDirection();
 
 	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(SDL_CONTROLLER_BUTTON_Y) == ButtonState::BUTTON_DOWN)
 	{
@@ -1563,6 +1579,10 @@ void Player::Movement()
 
 void Player::Aim()
 {
+	LOG("AIM");
+	
+	SetAimDirection();
+	
 	float2 oldAim = aimVector;
 
 	if (aimState == AimState::IDLE || moveState == PlayerState::DASH)												// AimState::IDLE means not aiming
@@ -1588,7 +1608,8 @@ void Player::Aim()
 			aimingAimPlane->SetIsActive(true);
 	}
 
-	// MECAGO EN TI LOG("AIM VECTOR: [{ %.3f, %.3f }]::[%.3f]", aimVector.x, aimVector.y, aimVector.AimedAngle() * RADTODEG);
+	LOG("AIM INPUT:{ %.3f, %.3f }", aimInput.x, aimInput.y);
+	LOG("AIM VECTOR: [{ %.3f, %.3f }]::[%.3f]", aimVector.x, aimVector.y, aimVector.AimedAngle() * RADTODEG);
 
 	//gameObject->transform->SetLocalRotation(float3(0.0f, 0.0f, 0.0f));
 
