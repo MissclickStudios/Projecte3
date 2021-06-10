@@ -1392,7 +1392,7 @@ void Player::GatherAimInputs()
 	aimInputThreshold.y = (float)App->input->GetGameControllerAxisValue(RIGHT_JOYSTICK_Y_AXIS);					// y right joystick with threshhold
 
 	//LOG("AIM INPUT		--> [%.3f]::[%.3f]", aimInput.x, aimInput.y);
-	// LOG("AIM THRESHOLD	--> [%.3f]::[%.3f]", aimInputThreshold.x, aimInputThreshold.y);
+	//LOG("AIM THRESHOLD	--> [%.3f]::[%.3f]", aimInputThreshold.x, aimInputThreshold.y);
 
 	if (aimState != AimState::IDLE && aimState != AimState::AIMING && aimState != AimState::ON_GUARD)			// If the player is in this states, ignore action inputs (shoot, reload, etc.)
 	{
@@ -1557,7 +1557,7 @@ void Player::Movement()
 
 void Player::Aim()
 {
-	LOG("AIM");
+	//LOG("AIM");
 	
 	SetAimDirection();
 	
@@ -1586,8 +1586,8 @@ void Player::Aim()
 			aimingAimPlane->SetIsActive(true);
 	}
 
-	LOG("AIM INPUT:{ %.3f, %.3f }", aimInput.x, aimInput.y);
-	LOG("AIM VECTOR: [{ %.3f, %.3f }]::[%.3f]", aimVector.x, aimVector.y, aimVector.AimedAngle() * RADTODEG);
+	//LOG("AIM INPUT:{ %.3f, %.3f }", aimInput.x, aimInput.y);
+	//LOG("AIM VECTOR: [{ %.3f, %.3f }]::[%.3f]", aimVector.x, aimVector.y, aimVector.AimedAngle() * RADTODEG);
 
 	//gameObject->transform->SetLocalRotation(float3(0.0f, 0.0f, 0.0f));
 
