@@ -29,6 +29,8 @@ Grogu* CreateGrogu()
 	INSPECTOR_DRAGABLE_FLOAT(script->speed);
 	INSPECTOR_DRAGABLE_FLOAT(script->minDistanceToMando);
 	INSPECTOR_DRAGABLE_FLOAT(script->maxDistanceToMando);
+	INSPECTOR_DRAGABLE_FLOAT(script->sprintDistance);
+	INSPECTOR_DRAGABLE_FLOAT(script->slowDistance);
 
 	INSPECTOR_DRAGABLE_FLOAT(script->power);
 	INSPECTOR_DRAGABLE_FLOAT(script->cooldown);
@@ -36,6 +38,9 @@ Grogu* CreateGrogu()
 
 	INSPECTOR_PREFAB(script->ParticlePrefab);
 	INSPECTOR_DRAGABLE_FLOAT(script->particleTime);
+
+	INSPECTOR_DRAGABLE_FLOAT(script->circleTime);
+	INSPECTOR_DRAGABLE_FLOAT(script->radius);
 
 	return script;
 }
@@ -96,6 +101,10 @@ void Grogu::Behavior()
 		particleTimer.Stop();
 		if (particles != nullptr)
 			particles->StopSpawn();
+
+		if (attackCollider != nullptr)
+			attackCollider->SetIsActive(false);
+		cooldownTimer.Start();
 	}
 
 	switch (state)
@@ -112,20 +121,19 @@ void Grogu::Behavior()
 		Move();
 		break;
 	case GroguState::ATTACK_IN:
-		state = GroguState::ATTACK;
+		//state = GroguState::ATTACK;
+		state = GroguState::IDLE;
 		if (attackCollider != nullptr)
 			attackCollider->SetIsActive(true);
 		particleTimer.Start();
 		if (particles != nullptr)
 			particles->ResumeSpawn();
-		stopAttack = false;
 		break;
 	case GroguState::ATTACK:
-		state = GroguState::IDLE;
-		if (attackCollider != nullptr)
-			attackCollider->SetIsActive(false);
-		stopAttack = true;
-		cooldownTimer.Start();
+		//state = GroguState::IDLE;
+		//if (attackCollider != nullptr)
+		//	attackCollider->SetIsActive(false);
+		//cooldownTimer.Start();
 		break;
 	}
 
@@ -140,9 +148,6 @@ void Grogu::CleanUp()
 
 void Grogu::OnTriggerRepeat(GameObject* object)
 {
-	if (stopAttack)
-		return;
-
 	Entity* entity = (Entity*)GetObjectScript(object, ObjectType::ENTITY);
 	if (entity != nullptr)
 	{
@@ -162,7 +167,7 @@ void Grogu::OnTriggerRepeat(GameObject* object)
 		direction.Normalize();
 		direction *= currentPower;
 
-		entity->AddEffect(EffectType::KNOCKBACK, 0.75f, false, 0.0f, 0.0f, float3(direction.x, -10.0f, direction.y));
+		entity->AddEffect(EffectType::KNOCKBACK, 0.5f, false, 0.0f, 0.0f, float3(direction.x, 0.0f, direction.y));
 
 		return;
 	}
@@ -177,8 +182,8 @@ void Grogu::OnTriggerRepeat(GameObject* object)
 			if (bulletRigidBody != nullptr)
 			{
 				float3 velocity = bulletRigidBody->GetLinearVelocity();
-				velocity *= -0.15f;
-				velocity.y = 20.0f;
+				velocity /= 1.10f;
+				velocity.y = 0.0f;
 
 				bulletRigidBody->SetLinearVelocity(velocity);
 				bulletRigidBody->UseGravity(true);
@@ -204,7 +209,14 @@ void Grogu::Move()
 		return;
 
 	direction.Normalize();
-	direction *= Speed();
+
+	if (distance > sprintDistance)
+		direction *= Speed() * 2.0f;
+	else if (distance < slowDistance)
+		direction *= Speed() / 4.0f;
+	else
+		direction *= Speed();
+
 	rigidBody->SetLinearVelocity(direction);
 }
 
@@ -213,12 +225,11 @@ void Grogu::Rotate()
 	if (mesh == nullptr)
 		return;
 
-	float3 direction = player->transform->GetWorldPosition() - gameObject->transform->GetWorldPosition();
 	direction.Normalize();
 	float2 aimDirection = { direction.x, direction.z };
 	float rad = aimDirection.AimedAngle();
 
-	mesh->transform->SetLocalRotation(float3(0, -rad - DegToRad(60), 0));
+	mesh->transform->SetLocalRotation(float3(0, -rad + DegToRad(180), 0));
 }
 
 void Grogu::Levitate()
@@ -238,10 +249,36 @@ void Grogu::GetDistance()
 
 	float3 position = gameObject->transform->GetWorldPosition();
 	float3 playerPosition = player->transform->GetWorldPosition();
-	playerPosition.y += 5.0f;
 
-	direction = playerPosition - position;
+	if (!circleTimer.IsActive())
+	{
+		circleTimer.Start();
+	}
+	float seconds = circleTimer.ReadSec();
+	if (seconds > circleTime)
+	{
+		circleTimer.Start();
+		circleMultiplier *= -1;
+	}
+
+	float w = (2 * PI) / circleTime;
+	float rad = w * seconds;
+	if (0 < rad && rad < PI)
+		circleMultiplier = 1.0f;
+	else
+		circleMultiplier = -1.0f;
+
+	float x = radius * Cos(rad);
+	float y = 2.0f * Sin((circleTime / 2.0f) * seconds);
+	float z = sqrt(radius * radius - x * x) * circleMultiplier;
+
+	float3 movePosition = float3(x + playerPosition.x, y + 5.0f, z + playerPosition.z);
+
+	direction = movePosition - position;
 	distance = direction.Length();
 	if (attackCollider != nullptr)
-		attackCollider->SetCenter(direction.x, direction.y, direction.z);
+	{
+		float3 colliderPosition = playerPosition - position;
+		attackCollider->SetCenter(colliderPosition.x, colliderPosition.y, colliderPosition.z);
+	}
 }

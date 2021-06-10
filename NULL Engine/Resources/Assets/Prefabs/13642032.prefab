@@ -1,6 +1,6 @@
 {
-    "ModTime": 1623165931,
-    "UID": 1830683599,
+    "ModTime": 1623358500,
+    "UID": 1091623488,
     "ParentUID": 888400124,
     "PrefabID": 13642032,
     "IsPrefab": true,
@@ -18,9 +18,9 @@
         {
             "Type": 1,
             "LocalPosition": [
-                -129.1517333984375,
-                7.0000696182250977,
-                -6.7689361572265625
+                -121.65496826171875,
+                3.1322164535522461,
+                -27.06773567199707
             ],
             "LocalRotation": [
                 0,
@@ -44,32 +44,42 @@
                 {
                     "Type": 2,
                     "Name": "speed",
-                    "float": 30
+                    "float": 40
                 },
                 {
                     "Type": 2,
                     "Name": "minDistanceToMando",
-                    "float": 7
+                    "float": 1
                 },
                 {
                     "Type": 2,
                     "Name": "maxDistanceToMando",
-                    "float": 10
+                    "float": 0.5
+                },
+                {
+                    "Type": 2,
+                    "Name": "sprintDistance",
+                    "float": 30
+                },
+                {
+                    "Type": 2,
+                    "Name": "slowDistance",
+                    "float": 5
                 },
                 {
                     "Type": 2,
                     "Name": "power",
-                    "float": 150
+                    "float": 250
                 },
                 {
                     "Type": 2,
                     "Name": "cooldown",
-                    "float": 1
+                    "float": 5
                 },
                 {
                     "Type": 1,
                     "Name": "deflectBullets",
-                    "bool": true
+                    "bool": false
                 },
                 {
                     "Type": 4,
@@ -80,6 +90,16 @@
                     "Type": 2,
                     "Name": "particleTime",
                     "float": 0.5
+                },
+                {
+                    "Type": 2,
+                    "Name": "circleTime",
+                    "float": 5
+                },
+                {
+                    "Type": 2,
+                    "Name": "radius",
+                    "float": 5
                 }
             ]
         },
@@ -107,15 +127,15 @@
             "Size X": 70,
             "Size Y": 20,
             "Size Z": 70,
-            "Center X": -0.76873779296875,
-            "Center Y": -1.621246337890625e-05,
-            "Center Z": -1.6959381103515625
+            "Center X": -3.4004745483398438,
+            "Center Y": -1.4356489181518555,
+            "Center Z": 3.5492992401123047
         }
     ],
     "Children": [
         {
-            "UID": 1436336023,
-            "ParentUID": 1830683599,
+            "UID": 1679403893,
+            "ParentUID": 1091623488,
             "PrefabID": 13642032,
             "IsPrefab": true,
             "Name": "Grogu Mesh",
@@ -133,14 +153,14 @@
                     "Type": 1,
                     "LocalPosition": [
                         -0.22191619873046875,
-                        -31.329498291015625,
+                        -26.329000473022461,
                         -0.1151885986328125
                     ],
                     "LocalRotation": [
                         0,
-                        0.45697310566902161,
+                        0.92230570316314697,
                         0,
-                        0.88948053121566772
+                        0.38646113872528076
                     ],
                     "LocalScale": [
                         1.0004415512084961,
@@ -151,8 +171,8 @@
             ],
             "Children": [
                 {
-                    "UID": 1696123283,
-                    "ParentUID": 1436336023,
+                    "UID": 202551071,
+                    "ParentUID": 1679403893,
                     "PrefabID": 13642032,
                     "IsPrefab": true,
                     "Name": "GroguCapsule",
@@ -233,8 +253,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 2146207206,
-                    "ParentUID": 1436336023,
+                    "UID": 1771962149,
+                    "ParentUID": 1679403893,
                     "PrefabID": 13642032,
                     "IsPrefab": true,
                     "Name": "GroguBody",
