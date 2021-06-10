@@ -574,15 +574,18 @@ void Player::TakeDamage(float damage)
 		float damageDealt = 0.0f;
 		if(Defense())
 		 damageDealt = 1.0f; // heehee
+		
 		health -= damageDealt;
 
 		if (health < 0.0f)
 			health = 0.0f;
-		invincibilityTimer.Start();
 
+		invincibilityTimer.Start();
 		hitTimer.Start();
+		
 		if (GetParticles("Hit") != nullptr)
 			GetParticles("Hit")->ResumeSpawn();
+		
 		if (material != nullptr)
 		{
 			material->SetAlternateColour(Color(1, 0, 0, 1));
@@ -694,6 +697,11 @@ void Player::SetPlayerInteraction(InteractionType type, float duration)
 	case InteractionType::OPEN_CHEST:		{ OpenChest(); }	break;
 	case InteractionType::SIGNAL_GROGU:		{ SignalGrogu(); }	break;
 	}
+}
+
+void Player::ForceManageInvincibility()
+{
+	ManageInvincibility();
 }
 
 void Player::AnimatePlayer()
@@ -1049,14 +1057,10 @@ void Player::ManageInvincibility()
 		
 		if (mesh != nullptr)
 			mesh->SetIsActive(!mesh->IsActive());
-
-		//LOG("start int timer");
 	}
 	else if (intermitentMeshTimer.ReadSec() >= intermitentMesh)
 	{
 		intermitentMeshTimer.Stop();
-
-		//LOG("stop int timer");
 	}
 }
 

@@ -88,6 +88,7 @@ public:
 	// Interactions
 	void TakeDamage(float damage) override;
 	void SetPlayerInteraction(InteractionType type, float duration = 0.0f);		// If duration is 0.0f, then the duration will be set with the duration of the clip.
+	void ForceManageInvincibility();
 
 	// Movement
 	float walkSpeed			= DEFAULT_MODIFIER;									// Speed at which the player will move the moment they enter the WALK State.
