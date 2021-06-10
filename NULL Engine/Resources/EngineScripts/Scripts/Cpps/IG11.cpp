@@ -469,7 +469,7 @@ void IG11::ManageMovement()
 
 		if(healthBarCanvas)
 			App->uiSystem->RemoveActiveCanvas(healthBarCanvas);
-		gameManager->KilledIG11();
+		gameManager->KilledIG11(0);
 
 	case IG11State::DEAD:
 		if (deathTimer.ReadSec() >= deathDuration)

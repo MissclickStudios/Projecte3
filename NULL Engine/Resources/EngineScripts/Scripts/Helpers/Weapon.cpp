@@ -147,7 +147,7 @@ ShootState Weapon::Shoot(float2 direction)
 			FireProjectile(direction);
 		}
 		
-		ammo -= projectilesPerShot;
+		ammo -= 1;
 		if (ammo < 0)
 			ammo = 0;
 
@@ -159,6 +159,8 @@ ShootState Weapon::Shoot(float2 direction)
 
 bool Weapon::Reload()
 {
+	if (ammo == MaxAmmo())
+		return true;
 	if (!reloadTimer.IsActive())
 		reloadTimer.Start();
 	else if (reloadTimer.ReadSec() >= reloadTime)

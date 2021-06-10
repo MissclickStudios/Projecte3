@@ -651,6 +651,8 @@ void IG12::ManageMovement()
 		if (tmp)
 			tmp->GiveBeskar(beskarValue);
 
+		gameManager->KilledIG11(1); //This will trigger timer to start to leave room
+
 	case IG12State::DEAD:
 		if (deathTimer.ReadSec() >= deathDuration)
 			Deactivate();
