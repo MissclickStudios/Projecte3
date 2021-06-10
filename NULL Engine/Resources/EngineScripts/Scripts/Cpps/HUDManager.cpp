@@ -148,7 +148,7 @@ void HUDManager::Update()
 			{
 				std::string tmp = std::to_string(weapon->ammo);
 				tmp += " / ";
-				tmp += std::to_string(weapon->maxAmmo);
+				tmp += std::to_string(weapon->MaxAmmo());
 				ammoText->SetText(tmp.c_str());
 			}
 		}
@@ -236,12 +236,11 @@ void HUDManager::Update()
 					creditsImage->PlayAnimation(false, 1);
 			}
 			//Dash animation
-	 //	if (dashImage != nullptr)
-	 //	{
-	 //		if (App->input->GetGameControllerTrigger(0) == ButtonState::BUTTON_DOWN)
-	 //			dashImage->PlayAnimation(false, 1);
-	 //	}
-
+			 //	if (dashImage != nullptr)
+			 //	{
+			 //		if (App->input->GetGameControllerTrigger(0) == ButtonState::BUTTON_DOWN)
+			 //			dashImage->PlayAnimation(false, 1);
+			 //	}
 		}
 	}
 }

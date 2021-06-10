@@ -1214,6 +1214,8 @@ void Player::ShootIn()
 	//LOG("SHOOT IN");
 	
 	currentAnimation	= GetShootAnimation();
+	if (currentAnimation != nullptr)
+		currentAnimation->duration = currentWeapon->FireRate();
 	aimState			= AimState::SHOOT;
 	primaryWeaponImage->PlayAnimation(false, 1);
 }
@@ -1252,11 +1254,19 @@ void Player::Shoot()
 void Player::ReloadIn()
 {
 	//LOG("RELOAD IN");
-	
-	currentAnimation = GetReloadAnimation();
+	if (currentWeapon->ammo < currentWeapon->MaxAmmo())
+	{
+		currentAnimation = GetReloadAnimation();
+		if (currentAnimation != nullptr)
+			currentAnimation->duration = currentWeapon->ReloadTime();
 
-	aimState = AimState::RELOAD;
-	primaryWeaponImage->PlayAnimation(false, 3);
+		aimState = AimState::RELOAD;
+
+		primaryWeaponImage->GetOwner()->GetComponent<C_2DAnimator>()->SetAnimationStepTime(currentWeapon->ReloadTime() * 1000 / 35); // 35 is the amount of frames the reload 2D animation has
+		primaryWeaponImage->PlayAnimation(false, 3);
+	}
+	else
+		aimState = AimState::ON_GUARD;
 }
 
 void Player::Reload()

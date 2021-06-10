@@ -212,7 +212,13 @@ void Entity::PostUpdate()
 			AnimatorClip* clip = preview->GetCurrentClip();
 
 			if (clip == nullptr || clip->GetName() != currentAnimation->name)										// If no clip playing or animation/clip changed
+			{
+				//if (currentAnimation->duration > 0.0f)
+				//	clip->SetSpeed(currentAnimation->duration / clip->GetDuration());
+
 				animator->PlayClip(currentAnimation->track.c_str(), currentAnimation->name.c_str(), currentAnimation->blendTime);
+
+			}
 		}
 		else
 		{
@@ -368,6 +374,7 @@ void Entity::Stun(Effect* effect)
 		if (agent != nullptr)
 			agent->CancelDestination();
 		entityState = EntityState::ELECTROCUTED;
+		electrocutedAnimation.duration = effect->Duration();
 	}
 
 	if (type == EntityType::PLAYER)
@@ -388,6 +395,8 @@ void Entity::KnockBack(Effect* effect)
 			rigidBody->StopInertia();
 			rigidBody->AddForce(effect->Direction());
 		}
+
+		knockbackAnimation.duration = effect->Duration();
 	}
 
 	if (type == EntityType::PLAYER)
@@ -399,7 +408,10 @@ void Entity::KnockBack(Effect* effect)
 void Entity::Electrocute(Effect* effect)
 {
 	if (effect->start)
+	{
 		effect->start = false;
+		electrocutedAnimation.duration = effect->Duration();
+	}
 
 	if (rigidBody != nullptr)
 		rigidBody->StopInertia();
