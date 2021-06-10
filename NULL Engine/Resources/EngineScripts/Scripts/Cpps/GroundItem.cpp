@@ -7,6 +7,7 @@
 #include "M_ResourceManager.h"
 #include "R_Texture.h"
 
+#include "GameManager.h"
 #include "GameObject.h"
 #include "C_Transform.h"
 #include "C_Material.h"
@@ -104,6 +105,8 @@ void GroundItem::PickUp(Player* player)
 	if (item->toSave)
 		player->AddItem(item->data);
 	Deactivate();
+
+	//pick item game manager
 }
 
 bool GroundItem::AddItem(const std::vector<ItemData*> items, int num, bool toBuy)
