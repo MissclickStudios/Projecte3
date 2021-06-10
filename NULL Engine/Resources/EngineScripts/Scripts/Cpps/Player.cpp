@@ -94,6 +94,9 @@ Player* CreatePlayer()
 	INSPECTOR_STRING(script->torsoName);
 	INSPECTOR_STRING(script->legsName);
 
+	// Jet-Pack
+	INSPECTOR_STRING(script->jetpackName);
+
 	// Particles & SFX
 	INSPECTOR_VECTOR_STRING(script->particleNames);
 
@@ -138,6 +141,13 @@ void Player::SetUp()
 	if (hip == nullptr)				{ LOG("[ERROR] Player Script: Could not retrieve { %s }! Error: GameObject* FindChild() failed.", hipName.c_str()); }
 	if (torso == nullptr)			{ LOG("[ERROR] Player Script: Could not retrieve { %s }! Error: GameObject* FindChild() failed.", torsoName.c_str()); }
 	if (legs == nullptr)			{ LOG("[ERROR] Player Script: Could not retrieve { %s }! Error: GameObject* FindChild() failed.", legsName.c_str()); }
+	
+	// --- MESHES
+	GameObject* jetpackGO = gameObject->FindChild(jetpackName.c_str());
+	if (jetpackGO != nullptr)
+		jetpack = jetpackGO->GetComponent<C_Mesh>();
+
+	if (jetpack == nullptr)			{ LOG("[ERROR] Player Script: Could not retrieve { %s }! Error: GameObject* GetComponent() failed.", jetpackName.c_str()); }
 
 	// --- ANIMATIONS
 	if (animator != nullptr)
@@ -1028,6 +1038,9 @@ void Player::ManageInvincibility()
 		
 		if (mesh != nullptr)
 			mesh->SetIsActive(true);
+
+		if (jetpack != nullptr)
+			jetpack->SetIsActive(true);
 	}
 	else if (!intermitentMeshTimer.IsActive())
 	{
@@ -1035,6 +1048,9 @@ void Player::ManageInvincibility()
 		
 		if (mesh != nullptr)
 			mesh->SetIsActive(!mesh->IsActive());
+
+		if (jetpack != nullptr)
+			jetpack->SetIsActive(!jetpack->IsActive());
 	}
 	else if (intermitentMeshTimer.ReadSec() >= intermitentMesh)
 	{

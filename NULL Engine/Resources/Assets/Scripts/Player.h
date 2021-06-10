@@ -233,6 +233,9 @@ public:
 	std::string torsoName					= "";
 	std::string legsName					= "";
 
+	// Jet-Pack
+	std::string jetpackName					= "";
+
 	// Items
 	void AddItem(ItemData* item);
 	const std::vector<std::pair<bool, ItemData*>>* const GetItems() const { return &items; }
@@ -356,6 +359,8 @@ private:
 	GameObject* torso					= nullptr;
 	GameObject* legs					= nullptr;
 
+	// Jet-Pack
+	C_Mesh* jetpack						= nullptr;
 
 	// Utilities
 	float GetAnimatorClipDuration(const char* clipName);
