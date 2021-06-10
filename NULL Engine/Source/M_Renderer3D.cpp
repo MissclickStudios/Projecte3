@@ -690,7 +690,7 @@ void M_Renderer3D::RenderScene()
 	if (App->detour->debugDraw && App->detour->navMeshResource != nullptr && App->detour->navMeshResource->navMesh != nullptr) {
 		if (App->detour->renderMeshes.data() != nullptr)
 		{
-			R_Shader* shaderProgram = App->resourceManager->GetShader("DefaultShader");;
+			R_Shader* shaderProgram = App->resourceManager->GetShader("DefaultShader");
 
 			for (int i = 0; i < App->detour->renderMeshes.size(); ++i)
 			{
