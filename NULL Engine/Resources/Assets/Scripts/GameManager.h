@@ -90,7 +90,7 @@ public:
     std::vector<ItemData*> GetHubItemPool() const { return hubItemPool; };
 
     //Dialog & Story funtions
-    void KilledIG11();
+    void KilledIG11(int bossNum);
     void TalkedToArmorer();
     void BoughtFromArmorer();
 
@@ -149,13 +149,25 @@ public:
 
     DialogManager* dialogManager = nullptr;
 
-
     Prefab chestPrefab;
     int chestSpawnChance = 60;
 
     std::string cameraName = "GameCameraVS2";
 
     bool doCameraCutscene = false;
+
+    //Leave boss rooms timer
+    void PickedItemUp();
+
+    void UpdateLeaveBoss();
+
+    bool awaitingChestDrop = true;
+    bool killedBoss = false;
+    bool pickedItemUp = false; //If it has picked the item up
+    bool wantToLeaveBoss = false; //When it starts timer to leave
+    bool droppedChest = false; //If boss has dropped chest or not
+    float leaveBossTimer = 0.f;
+    float leaveBossDelay = 5.f;
 
     //Story & dialog vars
     StoryDialogData storyDialogState;

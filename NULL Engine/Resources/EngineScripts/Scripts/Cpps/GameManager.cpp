@@ -264,6 +264,8 @@ void GameManager::Update()
 
 	runStats.runTime += MC_Time::Game::GetDT();
 
+	UpdateLeaveBoss();
+
 	//S'ha de fer alguna manera de avisar l'scene que volem canviar de scene pero no fer-ho imediatament ??? -> si (wtf is this (Pau))
 	//--
 }
@@ -976,6 +978,7 @@ void GameManager::GateUpdate()
 					lastEnemyDead = (*enemy).second;
 				}
 			}
+
 			if (alive > 0)
 				return;
 
@@ -989,6 +992,7 @@ void GameManager::GateUpdate()
 
 void GameManager::DropChest()
 {
+	awaitingChestDrop = false;
 	uint num = Random::LCG::GetBoundedRandomUint(0, 100);
 	if (num <= chestSpawnChance && chestPrefab.uid != NULL)
 	{
@@ -1013,6 +1017,7 @@ void GameManager::DropChest()
 
 			chest->GetComponent<C_RigidBody>()->TransformMovesRigidBody(false);
 		}
+		droppedChest = true;
 	}
 }
 
@@ -1041,6 +1046,34 @@ void GameManager::HandleBackgroundMusic()
 			App->audio->aSourceBackgroundMusic->SetEvent("rooms_music", true);
 		}
 
+	}
+}
+
+void GameManager::PickedItemUp()
+{
+	//start timer to go to next scene
+	pickedItemUp = true;
+}
+
+void GameManager::UpdateLeaveBoss()
+{
+	LOG("Killed boss is %d",killedBoss);
+	if (killedBoss)
+		if(!awaitingChestDrop)
+			if (droppedChest)
+				if (pickedItemUp)
+					wantToLeaveBoss = true;
+			else
+				wantToLeaveBoss = true;
+
+	if (wantToLeaveBoss)
+	{
+		leaveBossTimer += MC_Time::Game::GetDT();
+
+		if (leaveBossTimer >= leaveBossDelay)
+		{
+			GoNextRoom();
+		}
 	}
 }
 
@@ -1079,16 +1112,22 @@ void GameManager::LoadItemPool(std::vector<ItemData*>& pool, std::string path)
 	}
 }
 
-void GameManager::KilledIG11()
+void GameManager::KilledIG11(int bossNum)
 {
-	
-	LOG("Killed IG11");
-	if (!storyDialogState.defeatedIG11FirstTime)
+	if (bossNum == 0)
 	{
-		storyDialogState.defeatedIG11FirstTime = true;
-		groguGameObject = App->scene->InstantiatePrefab(groguPrefab.uid, App->scene->GetSceneRoot(), float3::zero, Quat::identity);
-		dialogManager->StartDialog("1st Conversation Grogu");
+		LOG("Killed IG11");
+		if (!storyDialogState.defeatedIG11FirstTime)
+		{
+			storyDialogState.defeatedIG11FirstTime = true;
+			groguGameObject = App->scene->InstantiatePrefab(groguPrefab.uid, App->scene->GetSceneRoot(), float3::zero, Quat::identity);
+			dialogManager->StartDialog("1st Conversation Grogu");
+		}
 	}
+
+	killedBoss = true;
+	
+	//awaitingChestDrop = true;
 }
 
 void GameManager::TalkedToArmorer()

@@ -179,7 +179,14 @@ void Player::SetUp()
 	}
 
 	// UI ELEMENTS
-	(idleAimPlane != nullptr)	? idleAimPlane->SetIsActive(true)		: LOG("COULD NOT RETRIEVE IDLE PLANE");
+	if (idleAimPlane != nullptr)
+	{
+		if (inHub) 
+			idleAimPlane->SetIsActive(true);
+	}
+	else
+		LOG("COULD NOT RETRIEVE IDLE PLANE");
+
 	(aimingAimPlane != nullptr) ? aimingAimPlane->SetIsActive(false)	: LOG("COULD NOT RETRIEVE AIMING PLANE");
 
 	GameObject* uiImageGO	= App->scene->GetGameObjectByName(mandoImageName.c_str());
@@ -1585,18 +1592,17 @@ void Player::Aim()
 		//	LOG("USING MOVE VECTOR: moveVector --> { %.3f, %.3f } || aimInput --> { %.3f, %.3f }", moveVector.x, moveVector.y, aimInput.x, aimInput.y);
 	}
 
-	if (abs(aimInput.x) < WALK_THRESHOLD && abs(aimInput.y) < WALK_THRESHOLD)										// Only works with this specific threshold. If it works it works.
+	if (abs(aimInput.x) < WALK_THRESHOLD && abs(aimInput.y) < WALK_THRESHOLD)										// Only works with this specific threshold. If it works it works. bruh moment
 	{
-		if (aimingAimPlane != nullptr)
+		if (aimingAimPlane != nullptr && !inHub)
 			aimingAimPlane->SetIsActive(false);
 	}
 	else
 	{
-		if (aimingAimPlane != nullptr)
+		if (aimingAimPlane != nullptr && !inHub)
 			aimingAimPlane->SetIsActive(true);
 	}
 
-	//LOG("AIM INPUT:{ %.3f, %.3f }", aimInput.x, aimInput.y);
 	//LOG("AIM VECTOR: [{ %.3f, %.3f }]::[%.3f]", aimVector.x, aimVector.y, aimVector.AimedAngle() * RADTODEG);
 
 	//gameObject->transform->SetLocalRotation(float3(0.0f, 0.0f, 0.0f));

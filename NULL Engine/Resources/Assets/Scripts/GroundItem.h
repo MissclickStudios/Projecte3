@@ -10,6 +10,7 @@
 class C_Material;
 class C_ParticleSystem;
 class ItemMenuManager;
+class GameManager;
 
 class Item;
 struct ItemData;
@@ -47,6 +48,8 @@ protected:
 	C_ParticleSystem* particle = nullptr;
 
 	ItemMenuManager* itemMenu = nullptr;
+
+	GameManager* gameManager = nullptr;
 };
 
 SCRIPTS_FUNCTION GroundItem* CreateGroundItem();
