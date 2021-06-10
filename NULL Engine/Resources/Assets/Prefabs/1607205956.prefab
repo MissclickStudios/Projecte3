@@ -1,14 +1,13 @@
 {
-    "ModTime": 1622894808,
-    "UID": 1962798198,
-    "ParentUID": 109137252,
+    "ModTime": 1623353712,
+    "UID": 1556074385,
+    "ParentUID": 888400124,
     "PrefabID": 1607205956,
     "IsPrefab": true,
     "Name": "Blurrg",
     "IsActive": true,
     "IsStatic": false,
     "IsSceneRoot": false,
-    "MaintainThroughScenes": false,
     "ShowBoundingBoxes": true,
     "NavigationInfo": {
         "isNavigable": false,
@@ -18,9 +17,9 @@
         {
             "Type": 1,
             "LocalPosition": [
-                -189.0496826171875,
-                -22.989021301269531,
-                1679.36328125
+                0,
+                0,
+                0
             ],
             "LocalRotation": [
                 0,
@@ -29,9 +28,9 @@
                 1
             ],
             "LocalScale": [
-                1,
-                1,
-                1
+                0.12999999523162842,
+                0.12999999523162842,
+                0.12999999523162842
             ]
         },
         {
@@ -136,7 +135,7 @@
                 {
                     "Type": 2,
                     "Name": "speed",
-                    "float": 12
+                    "float": 15
                 },
                 {
                     "Type": 2,
@@ -211,12 +210,12 @@
                 {
                     "Type": 2,
                     "Name": "chargeDistance",
-                    "float": 50
+                    "float": 80
                 },
                 {
                     "Type": 2,
                     "Name": "chargeDuration",
-                    "float": 1
+                    "float": 0.5
                 },
                 {
                     "Type": 2,
@@ -226,17 +225,17 @@
                 {
                     "Type": 2,
                     "Name": "dashSpeed",
-                    "float": 75
+                    "float": 100
                 },
                 {
                     "Type": 2,
                     "Name": "dashDuration",
-                    "float": 0.69999998807907104
+                    "float": 1
                 },
                 {
                     "Type": 2,
                     "Name": "dashCooldown",
-                    "float": 4
+                    "float": 2
                 },
                 {
                     "Type": 2,
@@ -310,15 +309,14 @@
     ],
     "Children": [
         {
-            "UID": 256290295,
-            "ParentUID": 1962798198,
+            "UID": 601752422,
+            "ParentUID": 1556074385,
             "PrefabID": 1607205956,
             "IsPrefab": true,
             "Name": "Skeleton",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
             "ShowBoundingBoxes": false,
             "NavigationInfo": {
                 "isNavigable": false,
@@ -347,15 +345,14 @@
             ],
             "Children": [
                 {
-                    "UID": 279486505,
-                    "ParentUID": 256290295,
+                    "UID": 1700825563,
+                    "ParentUID": 601752422,
                     "PrefabID": 1607205956,
                     "IsPrefab": true,
                     "Name": "joint7",
                     "IsActive": true,
                     "IsStatic": false,
                     "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
                     "ShowBoundingBoxes": false,
                     "NavigationInfo": {
                         "isNavigable": false,
@@ -384,15 +381,14 @@
                     ],
                     "Children": [
                         {
-                            "UID": 160597180,
-                            "ParentUID": 279486505,
+                            "UID": 934922814,
+                            "ParentUID": 1700825563,
                             "PrefabID": 1607205956,
                             "IsPrefab": true,
                             "Name": "RightLeg",
                             "IsActive": true,
                             "IsStatic": false,
                             "IsSceneRoot": false,
-                            "MaintainThroughScenes": false,
                             "ShowBoundingBoxes": false,
                             "NavigationInfo": {
                                 "isNavigable": false,
@@ -421,15 +417,14 @@
                             ],
                             "Children": [
                                 {
-                                    "UID": 751231405,
-                                    "ParentUID": 160597180,
+                                    "UID": 1145323313,
+                                    "ParentUID": 934922814,
                                     "PrefabID": 1607205956,
                                     "IsPrefab": true,
                                     "Name": "RightKnee",
                                     "IsActive": true,
                                     "IsStatic": false,
                                     "IsSceneRoot": false,
-                                    "MaintainThroughScenes": false,
                                     "ShowBoundingBoxes": false,
                                     "NavigationInfo": {
                                         "isNavigable": false,
@@ -458,15 +453,14 @@
                                     ],
                                     "Children": [
                                         {
-                                            "UID": 2008761146,
-                                            "ParentUID": 751231405,
+                                            "UID": 1859099610,
+                                            "ParentUID": 1145323313,
                                             "PrefabID": 1607205956,
                                             "IsPrefab": true,
                                             "Name": "joint3",
                                             "IsActive": true,
                                             "IsStatic": false,
                                             "IsSceneRoot": false,
-                                            "MaintainThroughScenes": false,
                                             "ShowBoundingBoxes": false,
                                             "NavigationInfo": {
                                                 "isNavigable": false,
@@ -495,15 +489,14 @@
                                             ],
                                             "Children": [
                                                 {
-                                                    "UID": 1593136381,
-                                                    "ParentUID": 2008761146,
+                                                    "UID": 761291360,
+                                                    "ParentUID": 1859099610,
                                                     "PrefabID": 1607205956,
                                                     "IsPrefab": true,
                                                     "Name": "joint4",
                                                     "IsActive": true,
                                                     "IsStatic": false,
                                                     "IsSceneRoot": false,
-                                                    "MaintainThroughScenes": false,
                                                     "ShowBoundingBoxes": false,
                                                     "NavigationInfo": {
                                                         "isNavigable": false,
@@ -532,15 +525,14 @@
                                                     ],
                                                     "Children": [
                                                         {
-                                                            "UID": 786447343,
-                                                            "ParentUID": 1593136381,
+                                                            "UID": 226706235,
+                                                            "ParentUID": 761291360,
                                                             "PrefabID": 1607205956,
                                                             "IsPrefab": true,
                                                             "Name": "joint5",
                                                             "IsActive": true,
                                                             "IsStatic": false,
                                                             "IsSceneRoot": false,
-                                                            "MaintainThroughScenes": false,
                                                             "ShowBoundingBoxes": false,
                                                             "NavigationInfo": {
                                                                 "isNavigable": false,
@@ -569,15 +561,14 @@
                                                             ],
                                                             "Children": [
                                                                 {
-                                                                    "UID": 1820416138,
-                                                                    "ParentUID": 786447343,
+                                                                    "UID": 847236626,
+                                                                    "ParentUID": 226706235,
                                                                     "PrefabID": 1607205956,
                                                                     "IsPrefab": true,
                                                                     "Name": "joint6",
                                                                     "IsActive": true,
                                                                     "IsStatic": false,
                                                                     "IsSceneRoot": false,
-                                                                    "MaintainThroughScenes": false,
                                                                     "ShowBoundingBoxes": false,
                                                                     "NavigationInfo": {
                                                                         "isNavigable": false,
@@ -617,15 +608,14 @@
                             ]
                         },
                         {
-                            "UID": 490424086,
-                            "ParentUID": 279486505,
+                            "UID": 1283295433,
+                            "ParentUID": 1700825563,
                             "PrefabID": 1607205956,
                             "IsPrefab": true,
                             "Name": "joint8",
                             "IsActive": true,
                             "IsStatic": false,
                             "IsSceneRoot": false,
-                            "MaintainThroughScenes": false,
                             "ShowBoundingBoxes": false,
                             "NavigationInfo": {
                                 "isNavigable": false,
@@ -654,15 +644,14 @@
                             ],
                             "Children": [
                                 {
-                                    "UID": 1129904408,
-                                    "ParentUID": 490424086,
+                                    "UID": 774819580,
+                                    "ParentUID": 1283295433,
                                     "PrefabID": 1607205956,
                                     "IsPrefab": true,
                                     "Name": "LeftShoulder",
                                     "IsActive": true,
                                     "IsStatic": false,
                                     "IsSceneRoot": false,
-                                    "MaintainThroughScenes": false,
                                     "ShowBoundingBoxes": false,
                                     "NavigationInfo": {
                                         "isNavigable": false,
@@ -691,15 +680,14 @@
                                     ],
                                     "Children": [
                                         {
-                                            "UID": 1076959805,
-                                            "ParentUID": 1129904408,
+                                            "UID": 2009450811,
+                                            "ParentUID": 774819580,
                                             "PrefabID": 1607205956,
                                             "IsPrefab": true,
                                             "Name": "joint28",
                                             "IsActive": true,
                                             "IsStatic": false,
                                             "IsSceneRoot": false,
-                                            "MaintainThroughScenes": false,
                                             "ShowBoundingBoxes": false,
                                             "NavigationInfo": {
                                                 "isNavigable": false,
@@ -728,15 +716,14 @@
                                             ],
                                             "Children": [
                                                 {
-                                                    "UID": 411382451,
-                                                    "ParentUID": 1076959805,
+                                                    "UID": 1720156027,
+                                                    "ParentUID": 2009450811,
                                                     "PrefabID": 1607205956,
                                                     "IsPrefab": true,
                                                     "Name": "joint29",
                                                     "IsActive": true,
                                                     "IsStatic": false,
                                                     "IsSceneRoot": false,
-                                                    "MaintainThroughScenes": false,
                                                     "ShowBoundingBoxes": false,
                                                     "NavigationInfo": {
                                                         "isNavigable": false,
@@ -765,15 +752,14 @@
                                                     ],
                                                     "Children": [
                                                         {
-                                                            "UID": 1209871147,
-                                                            "ParentUID": 411382451,
+                                                            "UID": 147842210,
+                                                            "ParentUID": 1720156027,
                                                             "PrefabID": 1607205956,
                                                             "IsPrefab": true,
                                                             "Name": "joint30",
                                                             "IsActive": true,
                                                             "IsStatic": false,
                                                             "IsSceneRoot": false,
-                                                            "MaintainThroughScenes": false,
                                                             "ShowBoundingBoxes": false,
                                                             "NavigationInfo": {
                                                                 "isNavigable": false,
@@ -802,15 +788,14 @@
                                                             ],
                                                             "Children": [
                                                                 {
-                                                                    "UID": 464322111,
-                                                                    "ParentUID": 1209871147,
+                                                                    "UID": 2043795549,
+                                                                    "ParentUID": 147842210,
                                                                     "PrefabID": 1607205956,
                                                                     "IsPrefab": true,
                                                                     "Name": "joint31",
                                                                     "IsActive": true,
                                                                     "IsStatic": false,
                                                                     "IsSceneRoot": false,
-                                                                    "MaintainThroughScenes": false,
                                                                     "ShowBoundingBoxes": false,
                                                                     "NavigationInfo": {
                                                                         "isNavigable": false,
@@ -848,15 +833,14 @@
                                     ]
                                 },
                                 {
-                                    "UID": 1474183208,
-                                    "ParentUID": 490424086,
+                                    "UID": 1101748036,
+                                    "ParentUID": 1283295433,
                                     "PrefabID": 1607205956,
                                     "IsPrefab": true,
                                     "Name": "RightShoulder",
                                     "IsActive": true,
                                     "IsStatic": false,
                                     "IsSceneRoot": false,
-                                    "MaintainThroughScenes": false,
                                     "ShowBoundingBoxes": false,
                                     "NavigationInfo": {
                                         "isNavigable": false,
@@ -885,15 +869,14 @@
                                     ],
                                     "Children": [
                                         {
-                                            "UID": 1066459649,
-                                            "ParentUID": 1474183208,
+                                            "UID": 1678435812,
+                                            "ParentUID": 1101748036,
                                             "PrefabID": 1607205956,
                                             "IsPrefab": true,
                                             "Name": "joint22",
                                             "IsActive": true,
                                             "IsStatic": false,
                                             "IsSceneRoot": false,
-                                            "MaintainThroughScenes": false,
                                             "ShowBoundingBoxes": false,
                                             "NavigationInfo": {
                                                 "isNavigable": false,
@@ -922,15 +905,14 @@
                                             ],
                                             "Children": [
                                                 {
-                                                    "UID": 811408206,
-                                                    "ParentUID": 1066459649,
+                                                    "UID": 960521591,
+                                                    "ParentUID": 1678435812,
                                                     "PrefabID": 1607205956,
                                                     "IsPrefab": true,
                                                     "Name": "joint23",
                                                     "IsActive": true,
                                                     "IsStatic": false,
                                                     "IsSceneRoot": false,
-                                                    "MaintainThroughScenes": false,
                                                     "ShowBoundingBoxes": false,
                                                     "NavigationInfo": {
                                                         "isNavigable": false,
@@ -959,15 +941,14 @@
                                                     ],
                                                     "Children": [
                                                         {
-                                                            "UID": 423140176,
-                                                            "ParentUID": 811408206,
+                                                            "UID": 1867442658,
+                                                            "ParentUID": 960521591,
                                                             "PrefabID": 1607205956,
                                                             "IsPrefab": true,
                                                             "Name": "joint24",
                                                             "IsActive": true,
                                                             "IsStatic": false,
                                                             "IsSceneRoot": false,
-                                                            "MaintainThroughScenes": false,
                                                             "ShowBoundingBoxes": false,
                                                             "NavigationInfo": {
                                                                 "isNavigable": false,
@@ -996,15 +977,14 @@
                                                             ],
                                                             "Children": [
                                                                 {
-                                                                    "UID": 561880047,
-                                                                    "ParentUID": 423140176,
+                                                                    "UID": 791702989,
+                                                                    "ParentUID": 1867442658,
                                                                     "PrefabID": 1607205956,
                                                                     "IsPrefab": true,
                                                                     "Name": "joint25",
                                                                     "IsActive": true,
                                                                     "IsStatic": false,
                                                                     "IsSceneRoot": false,
-                                                                    "MaintainThroughScenes": false,
                                                                     "ShowBoundingBoxes": false,
                                                                     "NavigationInfo": {
                                                                         "isNavigable": false,
@@ -1042,15 +1022,14 @@
                                     ]
                                 },
                                 {
-                                    "UID": 1778919524,
-                                    "ParentUID": 490424086,
+                                    "UID": 1493119667,
+                                    "ParentUID": 1283295433,
                                     "PrefabID": 1607205956,
                                     "IsPrefab": true,
                                     "Name": "joint9",
                                     "IsActive": true,
                                     "IsStatic": false,
                                     "IsSceneRoot": false,
-                                    "MaintainThroughScenes": false,
                                     "ShowBoundingBoxes": false,
                                     "NavigationInfo": {
                                         "isNavigable": false,
@@ -1079,15 +1058,14 @@
                                     ],
                                     "Children": [
                                         {
-                                            "UID": 615598507,
-                                            "ParentUID": 1778919524,
+                                            "UID": 1439740252,
+                                            "ParentUID": 1493119667,
                                             "PrefabID": 1607205956,
                                             "IsPrefab": true,
                                             "Name": "joint10",
                                             "IsActive": true,
                                             "IsStatic": false,
                                             "IsSceneRoot": false,
-                                            "MaintainThroughScenes": false,
                                             "ShowBoundingBoxes": false,
                                             "NavigationInfo": {
                                                 "isNavigable": false,
@@ -1116,15 +1094,14 @@
                                             ],
                                             "Children": [
                                                 {
-                                                    "UID": 460705444,
-                                                    "ParentUID": 615598507,
+                                                    "UID": 2010570563,
+                                                    "ParentUID": 1439740252,
                                                     "PrefabID": 1607205956,
                                                     "IsPrefab": true,
                                                     "Name": "joint32",
                                                     "IsActive": true,
                                                     "IsStatic": false,
                                                     "IsSceneRoot": false,
-                                                    "MaintainThroughScenes": false,
                                                     "ShowBoundingBoxes": false,
                                                     "NavigationInfo": {
                                                         "isNavigable": false,
@@ -1160,15 +1137,14 @@
                             ]
                         },
                         {
-                            "UID": 969662716,
-                            "ParentUID": 279486505,
+                            "UID": 1591774512,
+                            "ParentUID": 1700825563,
                             "PrefabID": 1607205956,
                             "IsPrefab": true,
                             "Name": "Tail",
                             "IsActive": true,
                             "IsStatic": false,
                             "IsSceneRoot": false,
-                            "MaintainThroughScenes": false,
                             "ShowBoundingBoxes": false,
                             "NavigationInfo": {
                                 "isNavigable": false,
@@ -1197,15 +1173,14 @@
                             ],
                             "Children": [
                                 {
-                                    "UID": 1881518520,
-                                    "ParentUID": 969662716,
+                                    "UID": 259949278,
+                                    "ParentUID": 1591774512,
                                     "PrefabID": 1607205956,
                                     "IsPrefab": true,
                                     "Name": "joint18",
                                     "IsActive": true,
                                     "IsStatic": false,
                                     "IsSceneRoot": false,
-                                    "MaintainThroughScenes": false,
                                     "ShowBoundingBoxes": false,
                                     "NavigationInfo": {
                                         "isNavigable": false,
@@ -1234,15 +1209,14 @@
                                     ],
                                     "Children": [
                                         {
-                                            "UID": 777815230,
-                                            "ParentUID": 1881518520,
+                                            "UID": 948170341,
+                                            "ParentUID": 259949278,
                                             "PrefabID": 1607205956,
                                             "IsPrefab": true,
                                             "Name": "joint19",
                                             "IsActive": true,
                                             "IsStatic": false,
                                             "IsSceneRoot": false,
-                                            "MaintainThroughScenes": false,
                                             "ShowBoundingBoxes": false,
                                             "NavigationInfo": {
                                                 "isNavigable": false,
@@ -1271,15 +1245,14 @@
                                             ],
                                             "Children": [
                                                 {
-                                                    "UID": 674101258,
-                                                    "ParentUID": 777815230,
+                                                    "UID": 1257468546,
+                                                    "ParentUID": 948170341,
                                                     "PrefabID": 1607205956,
                                                     "IsPrefab": true,
                                                     "Name": "joint20",
                                                     "IsActive": true,
                                                     "IsStatic": false,
                                                     "IsSceneRoot": false,
-                                                    "MaintainThroughScenes": false,
                                                     "ShowBoundingBoxes": false,
                                                     "NavigationInfo": {
                                                         "isNavigable": false,
@@ -1308,15 +1281,14 @@
                                                     ],
                                                     "Children": [
                                                         {
-                                                            "UID": 1174406905,
-                                                            "ParentUID": 674101258,
+                                                            "UID": 1443210320,
+                                                            "ParentUID": 1257468546,
                                                             "PrefabID": 1607205956,
                                                             "IsPrefab": true,
                                                             "Name": "joint21",
                                                             "IsActive": true,
                                                             "IsStatic": false,
                                                             "IsSceneRoot": false,
-                                                            "MaintainThroughScenes": false,
                                                             "ShowBoundingBoxes": false,
                                                             "NavigationInfo": {
                                                                 "isNavigable": false,
@@ -1354,15 +1326,14 @@
                             ]
                         },
                         {
-                            "UID": 1916889621,
-                            "ParentUID": 279486505,
+                            "UID": 779259335,
+                            "ParentUID": 1700825563,
                             "PrefabID": 1607205956,
                             "IsPrefab": true,
                             "Name": "LeftLeg",
                             "IsActive": true,
                             "IsStatic": false,
                             "IsSceneRoot": false,
-                            "MaintainThroughScenes": false,
                             "ShowBoundingBoxes": false,
                             "NavigationInfo": {
                                 "isNavigable": false,
@@ -1391,15 +1362,14 @@
                             ],
                             "Children": [
                                 {
-                                    "UID": 275843235,
-                                    "ParentUID": 1916889621,
+                                    "UID": 2136955644,
+                                    "ParentUID": 779259335,
                                     "PrefabID": 1607205956,
                                     "IsPrefab": true,
                                     "Name": "LeftKnee",
                                     "IsActive": true,
                                     "IsStatic": false,
                                     "IsSceneRoot": false,
-                                    "MaintainThroughScenes": false,
                                     "ShowBoundingBoxes": false,
                                     "NavigationInfo": {
                                         "isNavigable": false,
@@ -1428,15 +1398,14 @@
                                     ],
                                     "Children": [
                                         {
-                                            "UID": 879174187,
-                                            "ParentUID": 275843235,
+                                            "UID": 975858649,
+                                            "ParentUID": 2136955644,
                                             "PrefabID": 1607205956,
                                             "IsPrefab": true,
                                             "Name": "joint13",
                                             "IsActive": true,
                                             "IsStatic": false,
                                             "IsSceneRoot": false,
-                                            "MaintainThroughScenes": false,
                                             "ShowBoundingBoxes": false,
                                             "NavigationInfo": {
                                                 "isNavigable": false,
@@ -1465,15 +1434,14 @@
                                             ],
                                             "Children": [
                                                 {
-                                                    "UID": 335278454,
-                                                    "ParentUID": 879174187,
+                                                    "UID": 1858799756,
+                                                    "ParentUID": 975858649,
                                                     "PrefabID": 1607205956,
                                                     "IsPrefab": true,
                                                     "Name": "joint14",
                                                     "IsActive": true,
                                                     "IsStatic": false,
                                                     "IsSceneRoot": false,
-                                                    "MaintainThroughScenes": false,
                                                     "ShowBoundingBoxes": false,
                                                     "NavigationInfo": {
                                                         "isNavigable": false,
@@ -1502,15 +1470,14 @@
                                                     ],
                                                     "Children": [
                                                         {
-                                                            "UID": 1869661136,
-                                                            "ParentUID": 335278454,
+                                                            "UID": 1829502116,
+                                                            "ParentUID": 1858799756,
                                                             "PrefabID": 1607205956,
                                                             "IsPrefab": true,
                                                             "Name": "joint15",
                                                             "IsActive": true,
                                                             "IsStatic": false,
                                                             "IsSceneRoot": false,
-                                                            "MaintainThroughScenes": false,
                                                             "ShowBoundingBoxes": false,
                                                             "NavigationInfo": {
                                                                 "isNavigable": false,
@@ -1539,15 +1506,14 @@
                                                             ],
                                                             "Children": [
                                                                 {
-                                                                    "UID": 1090799181,
-                                                                    "ParentUID": 1869661136,
+                                                                    "UID": 1021747362,
+                                                                    "ParentUID": 1829502116,
                                                                     "PrefabID": 1607205956,
                                                                     "IsPrefab": true,
                                                                     "Name": "joint16",
                                                                     "IsActive": true,
                                                                     "IsStatic": false,
                                                                     "IsSceneRoot": false,
-                                                                    "MaintainThroughScenes": false,
                                                                     "ShowBoundingBoxes": false,
                                                                     "NavigationInfo": {
                                                                         "isNavigable": false,
@@ -1591,15 +1557,14 @@
             ]
         },
         {
-            "UID": 393387127,
-            "ParentUID": 1962798198,
+            "UID": 487653998,
+            "ParentUID": 1556074385,
             "PrefabID": 1607205956,
             "IsPrefab": true,
             "Name": "BlurrgGoldMesh",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
             "ShowBoundingBoxes": true,
             "NavigationInfo": {
                 "isNavigable": false,
@@ -1640,7 +1605,8 @@
                         0,
                         0,
                         1
-                    ]
+                    ],
+                    "RenderLast": false
                 },
                 {
                     "Type": 3,

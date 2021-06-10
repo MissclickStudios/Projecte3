@@ -83,9 +83,6 @@ public:																									// --- GAME OBJECT GETTERS AND SETTERS
 	void			SetChildsIsActive					(const bool setTo, GameObject* parent);			// 
 	void			SetChildsIsStatic					(const bool setTo, GameObject* parent);			// 
 
-	bool			GetMaintainThroughScenes			() const;										// 
-	void			SetMaintainThroughScenes			(const bool setTo);								// 
-
 	uint32			GetParentUID						() const;										// 
 	void			SetParentUID						(const uint32& parentUID);						// 
 
@@ -181,7 +178,6 @@ public:
 	GameObject*		parent;																				// GameObject to which this GameObject is parented to.
 	C_Transform*	transform;																			// Transform of this GO. Maybe like Unity? Or have it like the rest of components?
 
-
 	bool			isMasterRoot;																		// Will be set to true if this GameObject is M_Scenes's master root object.
 	bool			isSceneRoot;																		// Will be set to true if this GameObject is M_Scene's scene root object.
 	bool			isBone;																				// Will be set to true if this GameObject is an 3D Animation bone.
@@ -198,7 +194,7 @@ public:
 	bool			isPrefab = false;																	// Defines if the object is part of a prefav
 	uint			prefabID = 0;																		// Id of the prefab the game object is part of
 
-	//Navigation
+	// Navigation
 	uint			navigationArea = 0;																	// Describes the navigation of the current game object
 	bool			isNavigable = false;																// Defines is the object is navigable.
 
@@ -209,11 +205,6 @@ private:
 	bool			isStatic;																			// Will determine whether or not this GameObject will be subject of transformations.
 
 	uint32			parent_uid;																			// Only for Serialization purposes. Maybe will be repurposed later.
-
-	bool			maintainThroughScenes;																// Will determine whether or not the GO will be deleted when changing scenes.
-
-
-
 };
 
 #endif // !__GAME_OBJECT_H__
