@@ -27,8 +27,7 @@
 #define MAX_INPUT				32767.0f
 #define WALK_THRESHOLD			16384.0f
 #define AIM_THRESHOLD			8192.0f
-#define P_JOYSTICK_THRESHOLD	4096.0f
-#define WALKING_FACTOR			0.5f
+#define P_JOYSTICK_THRESHOLD	8192.0f
 
 Player* CreatePlayer()
 {
@@ -97,27 +96,6 @@ Player* CreatePlayer()
 
 	// Particles & SFX
 	INSPECTOR_VECTOR_STRING(script->particleNames);
-
-	//// Animations ---
-	//// Movement
-	//INSPECTOR_STRING(script->idleAnimation.name);
-	//INSPECTOR_DRAGABLE_FLOAT(script->idleAnimation.blendTime);
-	//INSPECTOR_STRING(script->runAnimation.name);
-	//INSPECTOR_DRAGABLE_FLOAT(script->runAnimation.blendTime);
-	//INSPECTOR_STRING(script->dashAnimation.name);
-	//INSPECTOR_DRAGABLE_FLOAT(script->dashAnimation.blendTime);
-	//INSPECTOR_STRING(script->deathAnimation.name);
-	//INSPECTOR_DRAGABLE_FLOAT(script->deathAnimation.blendTime);
-	//
-	//// Aim
-	//INSPECTOR_STRING(script->shootAnimation.name);
-	//INSPECTOR_DRAGABLE_FLOAT(script->shootAnimation.blendTime);
-	//INSPECTOR_STRING(script->reloadAnimation.name);
-	//INSPECTOR_DRAGABLE_FLOAT(script->reloadAnimation.blendTime);
-	//INSPECTOR_STRING(script->changeAnimation.name);
-	//INSPECTOR_DRAGABLE_FLOAT(script->changeAnimation.blendTime);
-	//INSPECTOR_STRING(script->onGuardAnimation.name);
-	//INSPECTOR_DRAGABLE_FLOAT(script->onGuardAnimation.blendTime);
 
 	return script;
 }

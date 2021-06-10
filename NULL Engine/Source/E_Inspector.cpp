@@ -35,12 +35,7 @@
 #include "C_BoxCollider.h"
 #include "C_SphereCollider.h"
 #include "C_CapsuleCollider.h"
-//#include "C_PlayerController.h"
-//#include "C_BulletBehavior.h"
 #include "C_ParticleSystem.h"
-//#include "C_PropBehavior.h"
-//#include "C_CameraBehavior.h"
-//#include "C_GateBehavior.h"
 #include "C_Canvas.h"
 #include "C_UI.h"
 #include "C_UI_Image.h"
@@ -225,11 +220,6 @@ void E_Inspector::DrawGameObjectInfo(GameObject* selectedGameObject)
 			App->resourceManager->UpdatePrefab(selectedGameObject);
 	}
 
-	ImGui::SameLine(ImGui::GetWindowWidth() * 0.51f);
-
-	bool maintain = selectedGameObject->GetMaintainThroughScenes();
-	if (ImGui::Checkbox("Maintain Through Scenes", &maintain)) { selectedGameObject->SetMaintainThroughScenes(maintain); }
-
 	ImGui::Separator();
 }
 
@@ -392,6 +382,8 @@ void E_Inspector::DrawMeshComponent(C_Mesh* cMesh)
 		bool outlineMesh			= cMesh->GetOutlineMesh();
 		float outlineThickness		= cMesh->GetOutlineThickness();
 		Color outlineColor			= cMesh->GetOutlineColor();
+
+		bool renderLast				= cMesh->GetRenderLast();
 		
 		static std::map<std::string, ResourceBase> meshBases;
 
@@ -431,12 +423,19 @@ void E_Inspector::DrawMeshComponent(C_Mesh* cMesh)
 
 		ImGui::Separator();
 
-		// --- OUTLINE MODE ---
+		// --- OUTLINE MESH ---
 		ImGui::TextColored(Green.C_Array(), "Outline Mesh:");
 
 		if (ImGui::Checkbox("Outline Mesh", &outlineMesh))								{ cMesh->SetOutlineMesh(outlineMesh); }
 		if (ImGui::SliderFloat("Outline Thickness", &outlineThickness, 0.0f , 4.0f))	{ cMesh->SetOutlineThickness(outlineThickness); }
 		if (ImGui::ColorEdit4("Outline Color", outlineColor.C_Array()))					{ cMesh->SetOutlineColor(outlineColor); }
+
+		ImGui::Separator();
+
+		// --- RENDER MODE ---
+		ImGui::TextColored(Green.C_Array(), "Render Mode:");
+
+		if (ImGui::Checkbox("Render Last", &renderLast))								{ cMesh->SetRenderLast(renderLast); }
 
 		ImGui::Separator();
 	}
