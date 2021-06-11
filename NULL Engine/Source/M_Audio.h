@@ -88,6 +88,8 @@ public:
 	float maxMusicVolume = 50.0f;
 
 	C_AudioSource* aSourceBackgroundMusic = nullptr;
+
+	C_AudioSource* aSourceUi = nullptr;
 	
 };
 

@@ -6,6 +6,7 @@ class GameObject;
 class C_BoxCollider;
 class C_Animator;
 class C_ParticleSystem;
+class C_AudioSource;
 
 enum class SarlaacState
 {
@@ -40,6 +41,7 @@ private:
 
 	float animationTimer = 0.0f;
 
+	C_AudioSource* sarlaacAudio = nullptr;
 	C_Animator* sarlaacAnimator = nullptr;
 
 	SarlaacState state = SarlaacState::IDLE;

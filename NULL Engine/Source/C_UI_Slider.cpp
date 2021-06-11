@@ -8,6 +8,8 @@
 #include "M_Input.h"
 #include "Dependencies/glew/include/glew.h"
 #include "JSONParser.h"
+#include "M_Audio.h"
+#include "C_AudioSource.h"
 
 C_UI_Slider::C_UI_Slider(GameObject* owner, Rect2D rect) : C_UI(owner, ComponentType::UI_SLIDER, true, rect)
 {
@@ -350,6 +352,8 @@ float C_UI_Slider::InputValue(float value, float maxValue, int numSquares)
 
 float C_UI_Slider::IncrementOneSquare()
 {
+	App->audio->aSourceUi->SetEvent("ui_navigate");
+	App->audio->aSourceUi->PlayFx(App->audio->aSourceUi->GetEventId());
 	if(value < maxValue)
 		value += (float)maxValue / (float)numRects;
 	return value;
@@ -357,6 +361,8 @@ float C_UI_Slider::IncrementOneSquare()
 
 float C_UI_Slider::DecrementOneSquare()
 {
+	App->audio->aSourceUi->SetEvent("ui_navigate");
+	App->audio->aSourceUi->PlayFx(App->audio->aSourceUi->GetEventId());
 	if (value > 0) //min 0??
 		value -= (float)maxValue / (float)numRects;
 	return value;

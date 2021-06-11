@@ -24,7 +24,10 @@ MoistureVaporator::~MoistureVaporator()
 
 void MoistureVaporator::Start()
 {
-	explosion = new C_AudioSource(gameObject);
+	moistureAudio = new C_AudioSource(gameObject);
+
+	if (moistureAudio != nullptr)
+		moistureAudio->SetEvent("moisture_active");
 
 	gameManager = App->scene->GetGameObjectByName(gameManagerName.c_str());
 	vaporatorObject = gameObject->FindChild(vaporatorObjectName.c_str());
@@ -58,9 +61,8 @@ void MoistureVaporator::Update()
 			cooldownTimer.Start();
 
 			// Audio
-			explosion->SetEvent("item_barrel_explosion");
-			explosion->SetVolume(5.0f);
-			explosion->PlayFx(explosion->GetEventId());
+			if(moistureAudio != nullptr)
+				moistureAudio->PlayFx(moistureAudio->GetEventId());
 
 			// Particles and particle timer 
 			idleParticles->StopSpawn();
@@ -142,7 +144,8 @@ void MoistureVaporator::Update()
 
 void MoistureVaporator::CleanUp()
 {
-	delete explosion;
+	if (moistureAudio != nullptr)
+		delete moistureAudio;
 }
 
 void MoistureVaporator::OnCollisionEnter(GameObject* object)

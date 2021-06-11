@@ -9,12 +9,14 @@
 //#include <list> included by module uiSystem
 #include "M_Scene.h"
 #include "M_Input.h"
+#include "M_Audio.h"
 
 #include "GameObject.h"
 #include "C_Transform.h"
 #include "C_Canvas.h"
 #include "C_UI.h"
 #include "C_UI_Button.h"
+#include "C_AudioSource.h"
 
 #include "Dependencies/glew/include/glew.h"
 //#include "OpenGL.h"
@@ -96,6 +98,8 @@ void C_Canvas::HandleInput()
 				break;
 			}
 		}
+		App->audio->aSourceUi->SetEvent("ui_navigate");
+		App->audio->aSourceUi->PlayFx(App->audio->aSourceUi->GetEventId());
 	}
 	else if ((App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(1) == AxisState::NEGATIVE_AXIS_DOWN))
 	{
@@ -120,6 +124,8 @@ void C_Canvas::HandleInput()
 				break;
 			}
 		}
+		App->audio->aSourceUi->SetEvent("ui_navigate");
+		App->audio->aSourceUi->PlayFx(App->audio->aSourceUi->GetEventId());
 	}
 
 	for (std::vector<C_UI*>::const_iterator it = uiElements.cbegin(); it != uiElements.cend(); ++it)
