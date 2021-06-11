@@ -112,7 +112,7 @@ void Trooper::SetUp()
 	damageAudio = new C_AudioSource(gameObject);
 	deathAudio = new C_AudioSource(gameObject);
 	if (damageAudio != nullptr)
-		damageAudio->SetEvent("sandrooper_damaged");
+		damageAudio->SetEvent("sandtrooper_damaged");
 	if (deathAudio != nullptr)
 		deathAudio->SetEvent("sandtrooper_death");		
 }
