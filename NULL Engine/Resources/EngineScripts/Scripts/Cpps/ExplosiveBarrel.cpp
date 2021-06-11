@@ -26,7 +26,7 @@ ExplosiveBarrel::~ExplosiveBarrel()
 
 void ExplosiveBarrel::Start()
 {
-	explosion = new C_AudioSource(gameObject);
+	explosionAudio = new C_AudioSource(gameObject);
 
 	explosionParticles = gameObject->GetComponent<C_ParticleSystem>();
 	GameObject* particleGameObject = gameObject->FindChild(particleName.c_str());
@@ -76,9 +76,23 @@ void ExplosiveBarrel::Update()
 		if (explosionMarker != nullptr)
 			explosionMarker->SetIsActive(true);
 
-		explosion->SetEvent(explosionAudio.c_str());
-		explosion->SetVolume(5.0f);
-		explosion->PlayFx(explosion->GetEventId());
+		if (reload == true)
+		{
+			if (explosionAudio != nullptr)
+			{
+				explosionAudio->SetEvent("moisture_active");
+				explosionAudio->PlayFx(explosionAudio->GetEventId());
+			}
+		}
+		else
+		{
+			if (explosionAudio != nullptr)
+			{
+				explosionAudio->SetEvent("barrel_active");
+				explosionAudio->PlayFx(explosionAudio->GetEventId());
+			}
+
+		}
 
 		exploded = true;
 	} 
@@ -105,7 +119,8 @@ void ExplosiveBarrel::Update()
 
 void ExplosiveBarrel::CleanUp()
 {
-	delete explosion;
+	if (explosionAudio != nullptr)	
+		delete explosionAudio;
 }
 
 void ExplosiveBarrel::OnCollisionEnter(GameObject* object)
@@ -140,7 +155,6 @@ ExplosiveBarrel* CreateExplosiveBarrel()
 
 	INSPECTOR_INPUT_FLOAT(script->particleEmitttingTime);
 	INSPECTOR_STRING(script->explosionName);
-	INSPECTOR_STRING(script->explosionAudio);
 	INSPECTOR_STRING(script->markerName);
 	INSPECTOR_STRING(script->particleName);
 	INSPECTOR_CHECKBOX_BOOL(script->reload);

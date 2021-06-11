@@ -80,6 +80,8 @@ bool M_Audio::Start()
 
 	aSourceBackgroundMusic->SetEvent("rooms_music", true);
 
+	aSourceUi = new C_AudioSource(App->scene->GetMasterRoot());
+
 	//aSourceBackgroundMusic->PlayFx(aSourceBackgroundMusic->GetEventId());
 	
 	return true;
@@ -115,6 +117,7 @@ bool M_Audio::CleanUp()
 {
 	TermSoundEngine();
 	delete aSourceBackgroundMusic;
+	delete aSourceUi;
 	return true;
 }
 

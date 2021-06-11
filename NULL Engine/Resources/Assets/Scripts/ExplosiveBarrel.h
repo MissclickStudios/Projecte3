@@ -37,8 +37,7 @@ public:
 	float cooldown = 5.0f;
 
 	// Audio
-	C_AudioSource* explosion = nullptr;
-	std::string explosionAudio = "item_barrel_explosion";
+	C_AudioSource* explosionAudio = nullptr;
 
 	bool toExplode = false;
 	bool exploded = false;

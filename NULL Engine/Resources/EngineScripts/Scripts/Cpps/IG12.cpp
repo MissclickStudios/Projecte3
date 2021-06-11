@@ -97,6 +97,7 @@ IG12* CreateIG12()
 	//Health Bar
 	INSPECTOR_GAMEOBJECT(script->healthBarCanvasObject);
 	INSPECTOR_STRING(script->lifeBarImageStr);
+	INSPECTOR_STRING(script->bossIconStr);
 
 	//Beskar
 	INSPECTOR_INPUT_INT(script->beskarValue);
@@ -185,7 +186,15 @@ void IG12::SetUp()
 				healthBarImage = healthBarCanvasObject->childs[i]->GetComponent<C_UI_Image>();
 				if (healthBarImage)
 					healthMaxW = healthBarImage->GetRect().w;
-				break;
+				continue;
+			}
+			else if (!strcmp(healthBarCanvasObject->childs[i]->GetName(), bossIconStr.c_str()))
+			{
+
+				C_UI_Image* bossIcon = healthBarCanvasObject->childs[i]->GetComponent<C_UI_Image>();
+				if (bossIcon)
+					bossIcon->SetTextureCoordinates(-1372, -1821, 320, 320);
+				continue;
 			}
 		}
 	}

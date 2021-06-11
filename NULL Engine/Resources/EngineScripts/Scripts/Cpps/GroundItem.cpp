@@ -14,6 +14,7 @@
 #include "C_Canvas.h"
 #include "C_ParticleSystem.h"
 #include "Emitter.h"
+#include "C_AudioSource.h"
 
 #include "Player.h"
 #include "ItemMenuManager.h"
@@ -35,6 +36,10 @@ void GroundItem::Awake()
 	if (menuGameObject != nullptr)
 		itemMenu = (ItemMenuManager*)menuGameObject->GetScript("ItemMenuManager");
 
+	menuGameObject = App->scene->GetGameObjectByName("Game Manager");
+	if (menuGameObject != nullptr)
+		gameManager = (GameManager*)menuGameObject->GetScript("GameManager");
+
 	for (uint i = 0; i < gameObject->components.size(); ++i) // CANT GETCOMPONENT() OF PARTICLE SYSTEM
 	{
 		if (gameObject->components[i]->GetType() == ComponentType::PARTICLE_SYSTEM)
@@ -53,6 +58,8 @@ void GroundItem::Awake()
 			break;
 		}
 	}
+
+	itemAudio = new C_AudioSource(gameObject);
 }
 
 void GroundItem::Update()
@@ -80,6 +87,9 @@ void GroundItem::CleanUp()
 {
 	if (item != nullptr)
 		delete item;
+
+	if (itemAudio != nullptr)
+		delete itemAudio;
 }
 
 void GroundItem::OnPause()
@@ -106,7 +116,23 @@ void GroundItem::PickUp(Player* player)
 		player->AddItem(item->data);
 	Deactivate();
 
+	if (itemAudio != nullptr)
+	{
+		if (item->price == 0)
+		{
+			itemAudio->SetEvent("item_pickup");
+			itemAudio->PlayFx(itemAudio->GetEventId());
+		}
+		else
+		{
+			itemAudio->SetEvent("item_buy");
+			itemAudio->PlayFx(itemAudio->GetEventId());
+		}
+	}
+
 	//pick item game manager
+	if(gameManager != nullptr)
+		gameManager->PickedItemUp();
 }
 
 bool GroundItem::AddItem(const std::vector<ItemData*> items, int num, bool toBuy)

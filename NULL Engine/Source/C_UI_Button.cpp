@@ -3,6 +3,7 @@
 
 #include "M_Scene.h"
 #include "M_Input.h"
+#include "M_Audio.h"
 
 #include "C_Material.h"
 #include "C_Transform.h"
@@ -14,6 +15,7 @@
 
 #include "C_UI_Button.h"
 #include "C_Canvas.h"
+#include "C_AudioSource.h"
 
 #include "Dependencies/glew/include/glew.h"
 //#include "OpenGL.h"
@@ -112,6 +114,8 @@ void C_UI_Button::HandleInput(C_UI** selectedUi)
 		}
 		break;
 	case UIButtonState::PRESSEDIN:
+		App->audio->aSourceUi->SetEvent("ui_click");
+		App->audio->aSourceUi->PlayFx(App->audio->aSourceUi->GetEventId());
 		state = UIButtonState::PRESSED;
 		break;
 	case UIButtonState::PRESSED:

@@ -113,6 +113,7 @@ public:
 
 	GameObject* healthBarCanvasObject = nullptr;
 	std::string lifeBarImageStr = "BossLife";
+	std::string bossIconStr = "BossIcon";
 	
 	//partiles and SFX
 	C_ParticleSystem* bombingParticles;
@@ -120,7 +121,7 @@ public:
 	bool bombExploding = false;
 
 
-	int beskarValue = 10;
+	int beskarValue = 4;
 
 private:
 
@@ -188,9 +189,8 @@ private:
 
 	C_Canvas* healthBarCanvas = nullptr;
 	C_UI_Image* healthBarImage = nullptr;
+	C_UI_Image* bossIcon = nullptr;
 	float healthMaxW = 0.0f;
-
-	
 };
 
 SCRIPTS_FUNCTION IG12* CreateIG12();

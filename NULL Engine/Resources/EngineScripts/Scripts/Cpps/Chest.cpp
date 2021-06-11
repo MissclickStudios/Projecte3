@@ -11,6 +11,7 @@
 #include "Player.h"
 #include "GroundItem.h"
 #include "Items.h"
+#include "C_AudioSource.h"
 
 #include "Random.h"
 
@@ -24,6 +25,10 @@ Chest::~Chest()
 
 void Chest::Awake()
 {
+	chestAudio = new C_AudioSource(gameObject);
+	
+	if (chestAudio != nullptr)
+		chestAudio->SetEvent("chest_open");
 }
 
 void Chest::Update()
@@ -36,6 +41,8 @@ void Chest::Update()
 
 void Chest::CleanUp()
 {
+	if (chestAudio != nullptr)
+		delete chestAudio;
 }
 
 void Chest::OnPause()
@@ -116,6 +123,9 @@ void Chest::OnCollisionEnter(GameObject* object)
 	}
 	if (searches >= rollAttempts)
 		item->Deactivate();
+
+	if (chestAudio != nullptr)
+		chestAudio->PlayFx(chestAudio->GetEventId());
 
 	open = true;
 }

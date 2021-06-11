@@ -42,7 +42,7 @@ public:
 
 	// Audio
 
-	C_AudioSource* explosion = nullptr;
+	C_AudioSource* moistureAudio = nullptr;
 
 	float cooldown = 1.0f;
 	float particleEmitttingTime = 1.0f;

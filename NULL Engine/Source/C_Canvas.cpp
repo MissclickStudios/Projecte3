@@ -9,12 +9,14 @@
 //#include <list> included by module uiSystem
 #include "M_Scene.h"
 #include "M_Input.h"
+#include "M_Audio.h"
 
 #include "GameObject.h"
 #include "C_Transform.h"
 #include "C_Canvas.h"
 #include "C_UI.h"
 #include "C_UI_Button.h"
+#include "C_AudioSource.h"
 
 #include "Dependencies/glew/include/glew.h"
 //#include "OpenGL.h"
@@ -88,6 +90,8 @@ void C_Canvas::HandleInput()
 					if (uiElements[j]->Interactuable())
 					{
 						selectedUi = uiElements[j];
+						App->audio->aSourceUi->SetEvent("ui_navigate");
+						App->audio->aSourceUi->PlayFx(App->audio->aSourceUi->GetEventId());
 						break;
 					}
 					if (j == uiElements.size() -1)
@@ -112,6 +116,8 @@ void C_Canvas::HandleInput()
 					if (uiElements[j]->Interactuable()) 
 					{
 						selectedUi = uiElements[j];
+						App->audio->aSourceUi->SetEvent("ui_navigate");
+						App->audio->aSourceUi->PlayFx(App->audio->aSourceUi->GetEventId());
 						break;
 					}
 					if (j == 0)
