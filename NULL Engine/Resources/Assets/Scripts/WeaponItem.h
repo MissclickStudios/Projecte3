@@ -1,14 +1,14 @@
-#pragma once
+#include <vector>
+#include <string>
+
+#include "MathGeoLib/include/Math/float3.h";
+
 #include "Object.h"
 #include "ScriptMacros.h"
 
 #include "Prefab.h"
 
-#include <vector>
-#include <string>
-
 class ItemMenuManager;
-
 class Player;
 
 class SCRIPTS_API WeaponItem : public Object ALLOWED_INHERITANCE
@@ -35,6 +35,11 @@ public:
 	Prefab weapon;
 
 	std::string itemMenuName = "Item Menu";
+
+	float hoverSpeed		= 0.0f;
+	float hoverRange		= 0.0f;
+
+	float3 rotationSpeed	= float3::zero;
 
 protected:
 

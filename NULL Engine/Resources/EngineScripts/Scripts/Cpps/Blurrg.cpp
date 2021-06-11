@@ -99,24 +99,6 @@ void Blurrg::SetUp()
 
 	player = App->scene->GetGameObjectByName(playerName.c_str());
 
-	for (uint i = 0; i < gameObject->components.size(); ++i)
-	{
-		if (gameObject->components[i]->GetType() == ComponentType::AUDIOSOURCE)
-		{
-			C_AudioSource* source = (C_AudioSource*)gameObject->components[i];
-			std::string name = source->GetEventName();
-
-			if (name == "blurrg_walking")
-				walkAudio = source;
-			else if (name == "blurrg_growl")
-				chargeAudio = source;
-			else if (name == "blurrg_hit")
-				damageAudio = source;
-			else if (name == "blurrg_death")
-				deathAudio = source;
-		}
-	}
-
 	agent = gameObject->GetComponent<C_NavMeshAgent>();
 
 	if (agent != nullptr)
