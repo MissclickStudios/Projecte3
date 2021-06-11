@@ -199,6 +199,14 @@ void IG12::SetUp()
 		}
 	}
 
+	//Audios
+	damageAudio = new C_AudioSource(gameObject);
+	deathAudio = new C_AudioSource(gameObject);
+	if (damageAudio != nullptr)
+		damageAudio->SetEvent("ig11_damaged");
+	if (deathAudio != nullptr)
+		deathAudio->SetEvent("ig11_death");
+
 	//Particles and SFX
 	bombingParticles = crosshair->GetComponent<C_ParticleSystem>();
 	(bombingParticles != nullptr) ? bombingParticles->StopSpawn() : LOG("[ERROR] IG12 Script: Could not find { BOMBING } Particle System!");
@@ -227,6 +235,11 @@ void IG12::CleanUp()
 		sniperGameObject->toDelete = true;
 	sniperGameObject = nullptr;
 	sniperWeapon = nullptr;
+
+	if (damageAudio != nullptr)
+		delete damageAudio;
+	if (deathAudio != nullptr)
+		delete deathAudio;
 }
 
 void IG12::OnCollisionEnter(GameObject* object)

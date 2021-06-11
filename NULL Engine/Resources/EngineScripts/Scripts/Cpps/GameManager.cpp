@@ -992,7 +992,7 @@ void GameManager::GateUpdate()
 
 			gate->Unlock();
 
-			if(clearedRoomAudio!= nullptr)
+			if(clearedRoomAudio != nullptr)
 				clearedRoomAudio->PlayFx("room_cleared");
 
 			DropChest();

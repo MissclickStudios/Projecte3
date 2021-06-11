@@ -126,8 +126,6 @@ void SarlaacTrap::OnTriggerRepeat(GameObject* object)
 			break;
 	}
 	
-	
-
 }
 
 void SarlaacTrap::StartMoving()

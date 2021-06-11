@@ -16,6 +16,7 @@ class GameManager;
 class C_Canvas;
 class C_UI_Image;
 class CameraMovement;
+class C_AudioSource;
 
 enum class IG12State
 {
@@ -191,6 +192,9 @@ private:
 	C_UI_Image* healthBarImage = nullptr;
 	C_UI_Image* bossIcon = nullptr;
 	float healthMaxW = 0.0f;
+
+	//Audio
+	C_AudioSource* deathAudio = nullptr;
 };
 
 SCRIPTS_FUNCTION IG12* CreateIG12();

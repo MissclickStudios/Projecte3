@@ -182,7 +182,7 @@ void Player::SetUp()
 
 			if (name == "mando_walking")		{ walkAudio = source; }
 			else if (name == "mando_dash")		{ dashAudio = source; }
-			else if (name == "weapon_change")	{ changeWeaponAudio = source; }
+			else if (name == "weapon_swap_weapon")	{ changeWeaponAudio = source; }
 			else if (name == "mando_damaged")	{ damageAudio = source; }
 			else if (name == "mando_death")		{ deathAudio = source; }
 		}

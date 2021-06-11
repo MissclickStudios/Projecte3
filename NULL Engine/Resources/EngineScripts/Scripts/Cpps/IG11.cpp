@@ -140,6 +140,14 @@ void IG11::Start()
 			}
 		}
 	}
+
+	//Audios
+	damageAudio = new C_AudioSource(gameObject);
+	deathAudio = new C_AudioSource(gameObject);
+	if (damageAudio != nullptr)
+		damageAudio->SetEvent("ig11_damaged");
+	if (deathAudio != nullptr)
+		deathAudio->SetEvent("ig11_death");
 }
 
 void IG11::SetUp()
@@ -213,6 +221,11 @@ void IG11::CleanUp()
 		sniperGameObject->toDelete = true;
 	sniperGameObject = nullptr;
 	sniperWeapon = nullptr;
+
+	if (damageAudio != nullptr)
+		delete damageAudio;
+	if (deathAudio != nullptr)
+		delete deathAudio;
 }
 
 void IG11::EntityPause()
@@ -468,6 +481,9 @@ void IG11::ManageMovement()
 		}
 		break;
 	case IG11State::DEAD_IN:
+		if (deathAudio != nullptr)
+			deathAudio->PlayFx(deathAudio->GetEventId());
+
 		currentAnimation = &deathAnimation;
 		deathTimer.Start();
 		moveState = IG11State::DEAD;
