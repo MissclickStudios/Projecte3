@@ -38,7 +38,10 @@ void HUBGate::Update()
 	if (gameManager && player && triggered && yesButton /*&& noButton*/)
 	{
 		if (yesButton->GetState() == UIButtonState::RELEASED)
+		{
 			gameManager->GoNextRoom();
+			App->uiSystem->RemoveActiveCanvas(popUpCanvas);
+		}
 		//else if (noButton->GetState() == UIButtonState::RELEASED)
 		//{
 		//	//TODO: apartar el player del collider pk no es faci insta trigger ???

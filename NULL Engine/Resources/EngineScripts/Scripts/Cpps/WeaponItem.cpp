@@ -1,3 +1,5 @@
+#include "MC_Time.h"
+
 #include "WeaponItem.h"
 
 #include "Application.h"
@@ -30,6 +32,8 @@ void WeaponItem::Awake()
 
 void WeaponItem::Update()
 {
+	//gameObject->transform->Translate(float3::one * sin(MC_Time::Game::GetTimeSinceStart()));
+	gameObject->transform->Rotate(rotationSpeed * MC_Time::Game::GetDT());
 }
 
 void WeaponItem::CleanUp()
@@ -61,6 +65,11 @@ void WeaponItem::PickUp(Player* player)
 SCRIPTS_FUNCTION WeaponItem* CreateWeaponItem()
 {
 	WeaponItem* script = new WeaponItem();
+	
+	INSPECTOR_INPUT_FLOAT(script->hoverSpeed);
+	INSPECTOR_INPUT_FLOAT(script->hoverRange);
+	
+	INSPECTOR_INPUT_FLOAT3(script->rotationSpeed);
 
 	INSPECTOR_STRING(script->gunName);
 	INSPECTOR_STRING(script->gunDescription);
