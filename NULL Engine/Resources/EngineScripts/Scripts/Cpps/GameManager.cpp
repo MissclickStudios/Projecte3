@@ -1061,19 +1061,26 @@ void GameManager::UpdateLeaveBoss()
 	if (killedBoss)
 		if(!awaitingChestDrop)
 			if (droppedChest)
+			{
 				if (pickedItemUp)
 					wantToLeaveBoss = true;
+			}
 			else
 				wantToLeaveBoss = true;
 
 	if (wantToLeaveBoss)
 	{
-		leaveBossTimer += MC_Time::Game::GetDT();
+		if(dialogManager != nullptr)
+			if (dialogManager->GetDialogState() == DialogState::NO_DIALOG)
+			{
+				leaveBossTimer += MC_Time::Game::GetDT();
 
-		if (leaveBossTimer >= leaveBossDelay)
-		{
-			GoNextRoom();
-		}
+				if (leaveBossTimer >= leaveBossDelay)
+				{
+					GoNextRoom();
+					wantToLeaveBoss = false;
+				}
+			}
 	}
 }
 
@@ -1127,7 +1134,6 @@ void GameManager::KilledIG11(int bossNum)
 
 	killedBoss = true;
 	
-	//awaitingChestDrop = true;
 }
 
 void GameManager::TalkedToArmorer()
