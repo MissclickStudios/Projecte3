@@ -1,5 +1,5 @@
 {
-    "ModTime": 1623406134,
+    "ModTime": 1623408618,
     "Models In Scene": [
         {
             "GameObjectUID": 11338331,
@@ -10,11 +10,6 @@
             "GameObjectUID": 289651677,
             "ModelResourceUID": 704660741,
             "ModelAssetsPath": "Assets\/Models\/Blockouts\/Decorations\/DarkTrooperAnims\/HappySit_DarkTrooper.fbx"
-        },
-        {
-            "GameObjectUID": 1315604115,
-            "ModelResourceUID": 242093151,
-            "ModelAssetsPath": "Assets\/Models\/Blockouts\/Decorations\/Armorer\/Armorer_Idle.fbx"
         },
         {
             "GameObjectUID": 1497291995,
@@ -14903,58 +14898,6 @@
             ]
         },
         {
-            "UID": 697697518,
-            "ParentUID": 988231811,
-            "PrefabID": 0,
-            "IsPrefab": false,
-            "Name": "Stairs",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        116.71333312988281,
-                        -0.27150201797485352,
-                        -70.205482482910156
-                    ],
-                    "LocalRotation": [
-                        0.23785239458084106,
-                        0,
-                        0,
-                        0.97130131721496582
-                    ],
-                    "LocalScale": [
-                        1,
-                        0.9999995231628418,
-                        0.9999995231628418
-                    ]
-                },
-                {
-                    "Type": 8,
-                    "Is Static": true,
-                    "Filter": "default"
-                },
-                {
-                    "Type": 9,
-                    "Is Trigger": false,
-                    "Show Collider": true,
-                    "Size X": 30,
-                    "Size Y": 5,
-                    "Size Z": 10,
-                    "Center X": 0,
-                    "Center Y": 0,
-                    "Center Z": 0
-                }
-            ]
-        },
-        {
             "UID": 698219759,
             "ParentUID": 2101370077,
             "PrefabID": 561082104,
@@ -27827,17 +27770,9 @@
                 },
                 {
                     "Type": 6,
-                    "Animations": [
-                        {
-                            "UID": 1626234104,
-                            "Name": "mixamo.com.neanimat",
-                            "Path": "Library\/Animations\/1626234104.neanimat",
-                            "File": "1626234104.neanimat"
-                        }
-                    ],
+                    "Animations": [],
                     "Clips": [
                         {
-                            "AnimationUID": 1626234104,
                             "Name": "idleNPC",
                             "Start": 0,
                             "End": 575,
@@ -28500,37 +28435,10 @@
                     ]
                 },
                 {
-                    "Type": 2,
-                    "UID": 715894186,
-                    "Name": "Armorer.nemesh",
-                    "Path": "Library\/Meshes\/715894186.nemesh",
-                    "File": "715894186.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false,
-                    "Outline": false,
-                    "OutlineThickness": 1,
-                    "OutlineColor": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "RenderLast": false
+                    "Type": 2
                 },
                 {
                     "Type": 3,
-                    "Material": {
-                        "UID": 321160283,
-                        "Color": [
-                            0.50196081399917603,
-                            0.50196081399917603,
-                            0.50196081399917603,
-                            1
-                        ],
-                        "Name": "Armorer.nemat",
-                        "Path": "Library\/Materials\/321160283.nemat",
-                        "File": "321160283.nemat"
-                    },
                     "Texture": {
                         "AssetsPath": "Assets\/Textures\/\/Characters\/Armorer_Texture.png",
                         "AssetsName": "Armorer_Texture.png",
@@ -30910,7 +30818,7 @@
         },
         {
             "UID": 1474137658,
-            "ParentUID": 1162537040,
+            "ParentUID": 2062120736,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -37611,7 +37519,7 @@
                     "LocalPosition": [
                         130.36019897460938,
                         -0.79274654388427734,
-                        -93.540451049804688
+                        -86.824081420898438
                     ],
                     "LocalRotation": [
                         0,
@@ -37635,7 +37543,7 @@
                     "Is Trigger": false,
                     "Show Collider": true,
                     "Size X": 60,
-                    "Size Y": 10,
+                    "Size Y": 40,
                     "Size Z": 40,
                     "Center X": 0,
                     "Center Y": 0,
@@ -40407,6 +40315,11 @@
                             "Type": 5,
                             "Name": "fxSliderStr",
                             "string": "EffectsSlider"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "optionsShakeStr",
+                            "string": "ShakeCheck"
                         }
                     ]
                 }
@@ -42691,7 +42604,7 @@
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "NavigationInfo": {
                 "isNavigable": false,
                 "navigationArea": 0
@@ -42700,9 +42613,9 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        146.88191223144531,
+                        145.24008178710938,
                         -0.82692670822143555,
-                        -45.490024566650391
+                        -44.514976501464844
                     ],
                     "LocalRotation": [
                         0,
@@ -42726,7 +42639,7 @@
                     "Is Trigger": false,
                     "Show Collider": true,
                     "Size X": 30,
-                    "Size Y": 10,
+                    "Size Y": 40,
                     "Size Z": 56,
                     "Center X": 0,
                     "Center Y": 0,
