@@ -72,6 +72,7 @@ public:
     void Awake() override;
     void Start()override;
     void Update()override; 
+    void CleanUp() override;
 
     void OnCollisionEnter(GameObject* object) override;
 

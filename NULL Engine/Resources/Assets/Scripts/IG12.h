@@ -121,7 +121,7 @@ public:
 	bool bombExploding = false;
 
 
-	int beskarValue = 10;
+	int beskarValue = 4;
 
 private:
 

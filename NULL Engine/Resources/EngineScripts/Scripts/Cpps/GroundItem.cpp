@@ -35,6 +35,10 @@ void GroundItem::Awake()
 	if (menuGameObject != nullptr)
 		itemMenu = (ItemMenuManager*)menuGameObject->GetScript("ItemMenuManager");
 
+	menuGameObject = App->scene->GetGameObjectByName("Game Manager");
+	if (menuGameObject != nullptr)
+		gameManager = (GameManager*)menuGameObject->GetScript("GameManager");
+
 	for (uint i = 0; i < gameObject->components.size(); ++i) // CANT GETCOMPONENT() OF PARTICLE SYSTEM
 	{
 		if (gameObject->components[i]->GetType() == ComponentType::PARTICLE_SYSTEM)
@@ -107,6 +111,8 @@ void GroundItem::PickUp(Player* player)
 	Deactivate();
 
 	//pick item game manager
+	if(gameManager != nullptr)
+		gameManager->PickedItemUp();
 }
 
 bool GroundItem::AddItem(const std::vector<ItemData*> items, int num, bool toBuy)
