@@ -581,6 +581,7 @@ void M_Scene::UpdateSceneFromRoot(GameObject* root)
 
 void M_Scene::RefreshSceneTransforms()
 {
+	if(sceneRoot != nullptr)
 	sceneRoot->GetComponent<C_Transform>()->RefreshTransformsChain();
 }
 
