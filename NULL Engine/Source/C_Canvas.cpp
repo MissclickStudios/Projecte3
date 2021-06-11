@@ -75,7 +75,7 @@ void C_Canvas::HandleInput()
 	//if (!IsActive()) //poder fer tmbe un unable input??
 		//return;
 
-	if ((App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(1) == AxisState::POSITIVE_AXIS_DOWN))
+	if ((App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(3) == AxisState::POSITIVE_AXIS_DOWN))
 	{
 		for (int i = 0; i < uiElements.size(); ++i)
 		{
@@ -101,7 +101,7 @@ void C_Canvas::HandleInput()
 			}
 		}
 	}
-	else if ((App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(1) == AxisState::NEGATIVE_AXIS_DOWN))
+	else if ((App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(3) == AxisState::NEGATIVE_AXIS_DOWN))
 	{
 		for (int i = uiElements.size() - 1; i >= 0; --i)
 		{

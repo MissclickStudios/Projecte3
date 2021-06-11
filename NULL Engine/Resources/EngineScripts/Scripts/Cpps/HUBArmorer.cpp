@@ -98,13 +98,29 @@ void HUBArmorer::Start()
 		}
 	}
 	if (armorTextObject != nullptr)
+	{
 		armorPriceText = (C_UI_Text*)armorTextObject->GetComponent<C_UI_Text>();
+		if (armorPriceText != nullptr)
+			armorPriceText->SetText(std::to_string(gameManager->armorLvl + 1).c_str());
+	}
 	if (bootsTextObject != nullptr)
+	{
 		bootsPriceText = (C_UI_Text*)bootsTextObject->GetComponent<C_UI_Text>();
+		if (bootsPriceText != nullptr)
+			bootsPriceText->SetText(std::to_string(gameManager->bootsLvl + 1).c_str());
+	}
 	if (ticketTextObject != nullptr)
+	{
 		ticketPriceText = (C_UI_Text*)ticketTextObject->GetComponent<C_UI_Text>();
+		if (ticketPriceText != nullptr)
+			ticketPriceText->SetText(std::to_string(gameManager->ticketLvl + 1).c_str());
+	}
 	if (bottleTextObject != nullptr)
+	{
 		bottlePriceText = (C_UI_Text*)bottleTextObject->GetComponent<C_UI_Text>();
+		if (bottlePriceText != nullptr)
+			bottlePriceText->SetText(std::to_string(gameManager->bottleLvl + 1).c_str());
+	}
 	if (titleTextObject != nullptr)
 		titleText = (C_UI_Text*)titleTextObject->GetComponent<C_UI_Text>();
 	if (descriptionTextObject != nullptr)

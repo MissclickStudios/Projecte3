@@ -269,7 +269,7 @@ void Grogu::GetDistance()
 	float y = 2.0f * Sin((circleTime / 2.0f) * seconds);
 	float z = sqrt(radius * radius - x * x) * circleMultiplier;
 
-	float3 movePosition = float3(x + playerPosition.x, y + playerPosition.y, z + playerPosition.z);
+	float3 movePosition = float3(x + playerPosition.x, y + 5.0f + playerPosition.y, z + playerPosition.z);
 
 	direction = movePosition - position;
 	distance = direction.Length();
