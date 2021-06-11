@@ -162,14 +162,16 @@ bool Weapon::Reload()
 	if (ammo == MaxAmmo())
 		return true;
 	if (!reloadTimer.IsActive())
+	{
 		reloadTimer.Start();
+		if (reloadAudio)
+			reloadAudio->PlayFx(reloadAudio->GetEventId());
+	}
+
 	else if (reloadTimer.ReadSec() >= reloadTime)
 	{
 		reloadTimer.Stop();
 		ammo = MaxAmmo();
-
-		if (reloadAudio)
-			reloadAudio->PlayFx(reloadAudio->GetEventId());
 
 		return true;
 	}
