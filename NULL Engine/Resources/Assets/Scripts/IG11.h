@@ -98,7 +98,7 @@ public:
 	float minCredits = 0.f;
 	float maxCredits = 0.f;
 
-	int beskarValue = 10;
+	int beskarValue = 2;
 
 	GameObject* healthBarCanvasObject = nullptr;
 	std::string lifeBarImageStr = "BossLife";

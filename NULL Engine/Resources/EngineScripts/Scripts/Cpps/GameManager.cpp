@@ -236,6 +236,9 @@ void GameManager::Update()
 			instantiatedSandstorm = true;
 		}
 
+	//if(groguGameObject != nullptr)
+		//LOG("Grogu Pos: x %d, y %d, z %d", groguGameObject->transform->GetLocalPosition().x, groguGameObject->transform->GetLocalPosition().y, groguGameObject->transform->GetLocalPosition().z);
+
 	// --- Handle Camera cutscene
 	if (dialogManager != nullptr)
 	{
@@ -268,6 +271,11 @@ void GameManager::Update()
 
 	//S'ha de fer alguna manera de avisar l'scene que volem canviar de scene pero no fer-ho imediatament ??? -> si (wtf is this (Pau))
 	//--
+}
+
+void GameManager::CleanUp()
+{
+	RELEASE(clearedRoomAudio);
 }
 
 void GameManager::OnCollisionEnter(GameObject* object)
@@ -984,7 +992,8 @@ void GameManager::GateUpdate()
 
 			gate->Unlock();
 
-			clearedRoomAudio->PlayFx("room_cleared");
+			if(clearedRoomAudio!= nullptr)
+				clearedRoomAudio->PlayFx("room_cleared");
 
 			DropChest();
 		}
@@ -1053,6 +1062,7 @@ void GameManager::PickedItemUp()
 {
 	//start timer to go to next scene
 	pickedItemUp = true;
+	LOG("Picked Item Up");
 }
 
 void GameManager::UpdateLeaveBoss()
@@ -1131,9 +1141,7 @@ void GameManager::KilledIG11(int bossNum)
 			dialogManager->StartDialog("1st Conversation Grogu");
 		}
 	}
-
 	killedBoss = true;
-	
 }
 
 void GameManager::TalkedToArmorer()

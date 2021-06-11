@@ -90,6 +90,8 @@ void C_Canvas::HandleInput()
 					if (uiElements[j]->Interactuable())
 					{
 						selectedUi = uiElements[j];
+						App->audio->aSourceUi->SetEvent("ui_navigate");
+						App->audio->aSourceUi->PlayFx(App->audio->aSourceUi->GetEventId());
 						break;
 					}
 					if (j == uiElements.size() -1)
@@ -98,8 +100,6 @@ void C_Canvas::HandleInput()
 				break;
 			}
 		}
-		App->audio->aSourceUi->SetEvent("ui_navigate");
-		App->audio->aSourceUi->PlayFx(App->audio->aSourceUi->GetEventId());
 	}
 	else if ((App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(1) == AxisState::NEGATIVE_AXIS_DOWN))
 	{
@@ -116,6 +116,8 @@ void C_Canvas::HandleInput()
 					if (uiElements[j]->Interactuable()) 
 					{
 						selectedUi = uiElements[j];
+						App->audio->aSourceUi->SetEvent("ui_navigate");
+						App->audio->aSourceUi->PlayFx(App->audio->aSourceUi->GetEventId());
 						break;
 					}
 					if (j == 0)
@@ -124,8 +126,6 @@ void C_Canvas::HandleInput()
 				break;
 			}
 		}
-		App->audio->aSourceUi->SetEvent("ui_navigate");
-		App->audio->aSourceUi->PlayFx(App->audio->aSourceUi->GetEventId());
 	}
 
 	for (std::vector<C_UI*>::const_iterator it = uiElements.cbegin(); it != uiElements.cend(); ++it)
