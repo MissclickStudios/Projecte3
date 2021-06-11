@@ -92,6 +92,8 @@ void Entity::Start()
 	hitTimer.Stop();
 	stepTimer.Stop();
 
+	walkAudio = (C_AudioSource*)gameObject->CreateComponent(ComponentType::AUDIOSOURCE);
+
 	SetUp();
 }
 
@@ -365,6 +367,11 @@ void Entity::Stun(Effect* effect)
 		float num = Random::LCG::GetBoundedRandomFloat(0, 100);
 		if (num > effect->Chance())
 			effect->End();
+		else if (walkAudio != nullptr)
+		{
+			walkAudio->SetEvent("moisture_active");
+			walkAudio->PlayFx(walkAudio->GetEventId());
+		}
 	}
 	else
 	{
@@ -410,6 +417,12 @@ void Entity::Electrocute(Effect* effect)
 	{
 		effect->start = false;
 		electrocutedAnimation.duration = effect->Duration();
+
+		if (walkAudio != nullptr)
+		{
+			walkAudio->SetEvent("moisture_active");
+			walkAudio->PlayFx(walkAudio->GetEventId());
+		}
 	}
 
 	if (rigidBody != nullptr)
