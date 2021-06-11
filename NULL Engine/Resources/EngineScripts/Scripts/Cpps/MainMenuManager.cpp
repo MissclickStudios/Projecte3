@@ -135,12 +135,12 @@ void MainMenuManager::Update()
 		App->audio->SetRtcp("maxMusicVolume", App->audio->maxMusicVolume);
 	}
 
-	if (fxSlider && fxSlider->Hovered() && (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::POSITIVE_AXIS_DOWN))
+	if (fxSlider && fxSlider->Hovered() && (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(3) == AxisState::POSITIVE_AXIS_DOWN))
 	{
 		App->audio->maxSfxVolume = fxSlider->IncrementOneSquare();
 		App->audio->SetRtcp("maxSfxVolume", App->audio->maxSfxVolume);
 	}
-	else if (fxSlider && fxSlider->Hovered() && (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::NEGATIVE_AXIS_DOWN))
+	else if (fxSlider && fxSlider->Hovered() && (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(3) == AxisState::NEGATIVE_AXIS_DOWN))
 	{
 		App->audio->maxSfxVolume = fxSlider->DecrementOneSquare();
 		App->audio->SetRtcp("maxSfxVolume", App->audio->maxSfxVolume);
