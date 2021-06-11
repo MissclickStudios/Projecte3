@@ -88,6 +88,15 @@ void Turret::SetUp()
 		blasterWeapon = (Weapon*)GetObjectScript(blasterGameObject, ObjectType::WEAPON);
 	if (blasterWeapon)
 		blasterWeapon->SetOwnership(type, hand);
+
+
+	//Audios
+	damageAudio = new C_AudioSource(gameObject);
+	deathAudio = new C_AudioSource(gameObject);
+	if (deathAudio != nullptr)
+		deathAudio->SetEvent("turret_death");
+	if (damageAudio != nullptr)
+		damageAudio->SetEvent("turret_damaged");
 }
 
 void Turret::Behavior()
@@ -151,6 +160,11 @@ void Turret::CleanUp()
 		blasterGameObject->toDelete = true;
 	blasterGameObject = nullptr;
 	blasterWeapon = nullptr;
+
+	if (damageAudio != nullptr)
+		delete damageAudio;
+	if (deathAudio != nullptr)
+		delete deathAudio;
 }
 
 void Turret::OnCollisionEnter(GameObject* object)

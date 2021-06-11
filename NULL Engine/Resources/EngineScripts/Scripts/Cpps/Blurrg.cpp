@@ -117,7 +117,6 @@ void Blurrg::SetUp()
 		}
 	}
 
-
 	agent = gameObject->GetComponent<C_NavMeshAgent>();
 
 	if (agent != nullptr)
@@ -125,7 +124,18 @@ void Blurrg::SetUp()
 		agent->origin = gameObject->GetComponent<C_Transform>()->GetWorldPosition();
 		agent->velocity = ChaseSpeed();
 	}
-	
+
+	//Audios
+	damageAudio = new C_AudioSource(gameObject);
+	deathAudio = new C_AudioSource(gameObject);
+	chargeAudio = new C_AudioSource(gameObject);
+	if (damageAudio != nullptr)
+		damageAudio->SetEvent("blurrg_damaged");
+	if (deathAudio != nullptr)
+		deathAudio->SetEvent("blurrg_death");
+	if (chargeAudio != nullptr)
+		chargeAudio->SetEvent("blurrg_charge");
+
 	// Particles & SFX
 	hitParticles = gameObject->GetComponent<C_ParticleSystem>();
 	(hitParticles != nullptr) ? hitParticles->StopSpawn() : LOG("[ERROR] Blurg Script: Could not find { HIT } Particle System!");
@@ -231,7 +241,7 @@ void Blurrg::Behavior()
 			}
 			break;
 		case BlurrgState::DEAD_IN:
-			if (deathAudio)
+			if (deathAudio != nullptr)
 				deathAudio->PlayFx(deathAudio->GetEventId());
 
 			currentAnimation = &deathAnimation;
@@ -255,6 +265,13 @@ void Blurrg::Behavior()
 
 void Blurrg::CleanUp()
 {
+
+	if (damageAudio != nullptr)
+		delete damageAudio;
+	if (deathAudio != nullptr)
+		delete deathAudio;
+	if (chargeAudio != nullptr)
+		delete chargeAudio;
 }
 
 void Blurrg::OnCollisionEnter(GameObject* object)

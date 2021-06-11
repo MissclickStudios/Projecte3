@@ -14,6 +14,7 @@
 class GameManager;
 class C_Canvas;
 class C_UI_Image;
+class C_AudioSource;
 
 enum class IG11State
 {
@@ -165,6 +166,9 @@ private:
 	C_Canvas* healthBarCanvas = nullptr;
 	C_UI_Image* healthBarImage = nullptr;
 	float healthMaxW = 0.0f;
+
+	//Auido
+	C_AudioSource* deathAudio = nullptr;
 };
 
 SCRIPTS_FUNCTION IG11* CreateIG11();

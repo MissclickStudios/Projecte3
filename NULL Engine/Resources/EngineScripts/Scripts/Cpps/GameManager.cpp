@@ -984,7 +984,8 @@ void GameManager::GateUpdate()
 
 			gate->Unlock();
 
-			clearedRoomAudio->PlayFx("room_cleared");
+			if(clearedRoomAudio != nullptr)
+				clearedRoomAudio->PlayFx("room_cleared");
 
 			DropChest();
 		}

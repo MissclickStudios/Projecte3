@@ -109,22 +109,6 @@ void DarkTrooper::SetUp()
 	if (shotgunWeapon)
 		shotgunWeapon->SetOwnership(type, hand, rightHandName);
 
-	for (uint i = 0; i < gameObject->components.size(); ++i)
-	{
-		if (gameObject->components[i]->GetType() == ComponentType::AUDIOSOURCE)
-		{
-			C_AudioSource* source = (C_AudioSource*)gameObject->components[i];
-			std::string name = source->GetEventName();
-
-			if (name == "sandstormtrooper_walking")
-				walkAudio = source;
-			else if (name == "sandstormtrooper_idle")
-				damageAudio = source;
-			else if (name == "sandstormtrooper_death")
-				deathAudio = source;
-		}
-	}
-
 	currentWeapon = blasterWeapon;
 
 	agent = gameObject->GetComponent<C_NavMeshAgent>();
@@ -134,6 +118,14 @@ void DarkTrooper::SetUp()
 		agent->origin = gameObject->GetComponent<C_Transform>()->GetWorldPosition();
 		agent->velocity = ChaseSpeed();
 	}
+
+	//Audios
+	damageAudio = new C_AudioSource(gameObject);
+	deathAudio = new C_AudioSource(gameObject);
+	if (damageAudio != nullptr)
+		damageAudio->SetEvent("darktrooper_damaged");
+	if (deathAudio != nullptr)
+		deathAudio->SetEvent("darktrooper_death");
 }
 
 void DarkTrooper::Behavior()
@@ -149,6 +141,11 @@ void DarkTrooper::CleanUp()
 		blasterGameObject->toDelete = true;
 	blasterGameObject = nullptr;
 	blasterWeapon = nullptr;
+
+	if (damageAudio != nullptr)
+		delete damageAudio;
+	if (deathAudio != nullptr)
+		delete deathAudio;
 }
 
 void DarkTrooper::OnCollisionEnter(GameObject* object)
