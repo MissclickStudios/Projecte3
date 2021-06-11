@@ -89,7 +89,7 @@ void Grogu::Behavior()
 	GetDistance();
 	if (!cooldownTimer.IsActive())
 	{
-		if (App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_DOWN
+		if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN
 			|| App->input->GetGameControllerButton(SDL_CONTROLLER_BUTTON_LEFTSHOULDER) == ButtonState::BUTTON_DOWN)
 		{
 			state = GroguState::ATTACK_IN;
