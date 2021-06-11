@@ -14,6 +14,7 @@
 #include "C_Canvas.h"
 #include "C_ParticleSystem.h"
 #include "Emitter.h"
+#include "C_AudioSource.h"
 
 #include "Player.h"
 #include "ItemMenuManager.h"
@@ -53,6 +54,8 @@ void GroundItem::Awake()
 			break;
 		}
 	}
+
+	itemAudio = new C_AudioSource(gameObject);
 }
 
 void GroundItem::Update()
@@ -80,6 +83,9 @@ void GroundItem::CleanUp()
 {
 	if (item != nullptr)
 		delete item;
+
+	if (itemAudio != nullptr)
+		delete itemAudio;
 }
 
 void GroundItem::OnPause()
@@ -105,6 +111,20 @@ void GroundItem::PickUp(Player* player)
 	if (item->toSave)
 		player->AddItem(item->data);
 	Deactivate();
+
+	if (itemAudio != nullptr)
+	{
+		if (item->price == 0)
+		{
+			itemAudio->SetEvent("item_pickup");
+			itemAudio->PlayFx(itemAudio->GetEventId());
+		}
+		else
+		{
+			itemAudio->SetEvent("item_buy");
+			itemAudio->PlayFx(itemAudio->GetEventId());
+		}
+	}
 
 	//pick item game manager
 }

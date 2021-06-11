@@ -8,6 +8,7 @@
 #include "C_Animator.h"
 #include "C_ParticleSystem.h"
 #include "C_BoxCollider.h"
+#include "C_AudioSource.h"
 
 #include "SarlaacTrap.h"
 
@@ -24,6 +25,11 @@ void SarlaacTrap::Start()
 {
 	sarlaacAnimator = gameObject->GetComponent<C_Animator>();
 	sarlaacAnimator->PlayClip("Preview", animationName.c_str(), 0u);
+
+	sarlaacAudio = new C_AudioSource(gameObject);
+
+	if (sarlaacAudio != nullptr)
+		sarlaacAudio->SetEvent("sarlacc_active");
 }
 
 void SarlaacTrap::Update()
@@ -78,6 +84,8 @@ void SarlaacTrap::Update()
 
 void SarlaacTrap::CleanUp()
 {
+	if (sarlaacAudio != nullptr)
+		delete sarlaacAudio;
 }
 
 void SarlaacTrap::OnTriggerRepeat(GameObject* object)
@@ -101,8 +109,6 @@ void SarlaacTrap::OnTriggerRepeat(GameObject* object)
 			break;
 
 		case SarlaacState::DAMAGING:
-
-			
 
 			if(entity->type == EntityType::PLAYER)
 				entity->TakeDamage(mandoDamage);
@@ -130,6 +136,9 @@ void SarlaacTrap::StartMoving()
 
 	//Animator play clip
 	sarlaacAnimator->PlayClip("Preview",animationName.c_str(), 0u);
+
+	if (sarlaacAudio != nullptr)
+		sarlaacAudio->PlayFx(sarlaacAudio->GetEventId());
 }
 
 SarlaacTrap* CreateSarlaacTrap() {

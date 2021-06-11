@@ -8,6 +8,7 @@
 #include <string>
 
 class GameManager;
+class C_AudioSource;
 
 class SCRIPTS_API Chest : public Object ALLOWED_INHERITANCE
 {
@@ -38,6 +39,7 @@ public:
 protected:
 
 	bool open = false;
+	C_AudioSource* chestAudio = nullptr;
 
 	GameManager* gameManager = nullptr;
 };

@@ -11,6 +11,7 @@ class C_Material;
 class C_ParticleSystem;
 class ItemMenuManager;
 class GameManager;
+class C_AudioSource;
 
 class Item;
 struct ItemData;
@@ -46,6 +47,7 @@ protected:
 
 	C_Material* material = nullptr;
 	C_ParticleSystem* particle = nullptr;
+	C_AudioSource* itemAudio = nullptr;
 
 	ItemMenuManager* itemMenu = nullptr;
 

@@ -8,6 +8,8 @@
 #include "M_ResourceManager.h"
 #include "R_Shader.h"
 #include "JSONParser.h"
+#include "M_Audio.h"
+#include "C_AudioSource.h"
 
 C_UI_Checkbox::C_UI_Checkbox(GameObject* owner, Rect2D rect) : C_UI(owner, ComponentType::UI_CHECKBOX, true, rect), state(UICheckboxState::UNCHECKED)
 {
@@ -246,6 +248,8 @@ void C_UI_Checkbox::HandleInput(C_UI** selectedUi)
 		break;
 
 	case UICheckboxState::PRESSED_CHECKED_IN:
+		App->audio->aSourceUi->SetEvent("ui_click");
+		App->audio->aSourceUi->PlayFx(App->audio->aSourceUi->GetEventId());
 		state = UICheckboxState::PRESSED_CHECKED;
 		break;
 
@@ -266,6 +270,8 @@ void C_UI_Checkbox::HandleInput(C_UI** selectedUi)
 		break;
 
 	case UICheckboxState::PRESSED_UNCHECKED_IN:
+		App->audio->aSourceUi->SetEvent("ui_click");
+		App->audio->aSourceUi->PlayFx(App->audio->aSourceUi->GetEventId());
 		state = UICheckboxState::PRESSED_UNCHECKED;
 		break;
 
