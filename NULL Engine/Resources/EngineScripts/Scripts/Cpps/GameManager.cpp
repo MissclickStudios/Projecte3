@@ -1070,31 +1070,27 @@ void GameManager::PickedItemUp()
 
 void GameManager::UpdateLeaveBoss()
 {
-	LOG("Killed boss is %d",killedBoss);
-	if (killedBoss)
-		if(!awaitingChestDrop)
-			if (droppedChest)
-			{
-				if (pickedItemUp)
-					wantToLeaveBoss = true;
-			}
-			else
+	if (killedBoss && !tooBad && !awaitingChestDrop)
+		if (droppedChest)
+		{
+			if (pickedItemUp)
 				wantToLeaveBoss = true;
+		}
+		else
+			wantToLeaveBoss = true;
 
-	if (wantToLeaveBoss)
-	{
-		if(dialogManager != nullptr)
-			if (dialogManager->GetDialogState() == DialogState::NO_DIALOG)
+	if(dialogManager != nullptr)
+		if (wantToLeaveBoss &&  dialogManager->GetDialogState() == DialogState::NO_DIALOG)
+		{
+			leaveBossTimer += MC_Time::Game::GetDT();
+
+			if (leaveBossTimer >= leaveBossDelay)
 			{
-				leaveBossTimer += MC_Time::Game::GetDT();
-
-				if (leaveBossTimer >= leaveBossDelay)
-				{
-					GoNextRoom();
-					wantToLeaveBoss = false;
-				}
+				GoNextRoom();
+				wantToLeaveBoss = false;
+				tooBad = true;
 			}
-	}
+		}
 }
 
 void GameManager::LoadItemPool(std::vector<ItemData*>& pool, std::string path)
