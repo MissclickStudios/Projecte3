@@ -564,6 +564,9 @@ void Player::DisableInput()
 
 void Player::TakeDamage(float damage)
 {
+	if (currentInteraction != InteractionType::NONE && currentInteraction != InteractionType::SIGNAL_GROGU)
+		return;
+	
 	if (!invincibilityTimer.IsActive())
 	{
 		float damageDealt = 0.0f;
