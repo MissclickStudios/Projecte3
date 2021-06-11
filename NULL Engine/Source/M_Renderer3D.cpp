@@ -900,19 +900,11 @@ void M_Renderer3D::RenderMeshes(std::vector<MeshRenderer>& lastRenderers)
 {	
 	std::sort(meshRenderers.begin(), meshRenderers.end(), [](MeshRenderer mRendererA, MeshRenderer mRendererB) { return ((mRendererA.cTransform->GetWorldPosition().y) < (mRendererB.cTransform->GetWorldPosition().y)); });
 	
-	//std::vector<MeshRenderer> lastRenderers;
-
 	for (uint i = 0; i < meshRenderers.size(); ++i)
 	{
 		(!meshRenderers[i].renderLast) ? meshRenderers[i].Render() : lastRenderers.push_back(meshRenderers[i]);
 	}
 
-	/*for (uint i = 0; i < lastRenderers.size(); ++i)
-	{
-		lastRenderers[i].Render();
-	}
-
-	lastRenderers.clear();*/
 	meshRenderers.clear();
 }
 
