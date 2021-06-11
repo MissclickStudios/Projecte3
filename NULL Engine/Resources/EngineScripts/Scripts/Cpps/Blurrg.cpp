@@ -348,7 +348,7 @@ void Blurrg::Wander()
 		float z = Random::LCG::GetBoundedRandomFloat(-wanderRadius, wanderRadius);
 		agent->SetDestination(float3(x, gameObject->transform->GetWorldPosition().y, z));
 	
-		walkAnimation.duration = 3.9f * (speedModifier);
+		walkAnimation.duration = 3.9f / speedModifier;
 	}
 }
 

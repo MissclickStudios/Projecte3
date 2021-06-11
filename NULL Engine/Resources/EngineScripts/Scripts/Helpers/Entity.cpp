@@ -217,7 +217,6 @@ void Entity::PostUpdate()
 					clip->SetSpeed(clip->GetDurationInSeconds() / currentAnimation->duration);
 
 				animator->PlayClip(currentAnimation->track.c_str(), currentAnimation->name.c_str(), currentAnimation->blendTime);
-
 			}
 		}
 		else

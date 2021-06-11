@@ -1499,11 +1499,12 @@ void Player::GatherAimInputs()
 		return;
 	}
 
-	if ((App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(SDL_CONTROLLER_BUTTON_X) == ButtonState::BUTTON_DOWN))
-	{
-		aimState = AimState::RELOAD_IN;
-		return;
-	}
+	if (currentWeapon != nullptr && currentWeapon->ammo < currentWeapon->MaxAmmo())
+		if ((App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(SDL_CONTROLLER_BUTTON_X) == ButtonState::BUTTON_DOWN))
+		{
+			aimState = AimState::RELOAD_IN;
+			return;
+		}
 
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_REPEAT || App->input->GetGameControllerTrigger(RIGHT_TRIGGER) == ButtonState::BUTTON_REPEAT)
 	{
