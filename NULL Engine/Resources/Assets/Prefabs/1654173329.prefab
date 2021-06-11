@@ -1,6 +1,6 @@
 {
-    "ModTime": 1623017831,
-    "UID": 2025476349,
+    "ModTime": 1623452848,
+    "UID": 1611972384,
     "ParentUID": 888400124,
     "PrefabID": 1654173329,
     "IsPrefab": true,
@@ -8,7 +8,6 @@
     "IsActive": true,
     "IsStatic": false,
     "IsSceneRoot": false,
-    "MaintainThroughScenes": false,
     "ShowBoundingBoxes": true,
     "NavigationInfo": {
         "isNavigable": false,
@@ -18,9 +17,9 @@
         {
             "Type": 1,
             "LocalPosition": [
-                100.533447265625,
-                8.8278312683105469,
-                32.987522125244141
+                -178.36808776855469,
+                -4.5006685256958008,
+                -239.99446105957031
             ],
             "LocalRotation": [
                 0,
@@ -38,8 +37,8 @@
             "Type": 8,
             "Is Static": false,
             "Filter": " enemy",
-            "Mass": 1000,
-            "Density": 100,
+            "Mass": 10000,
+            "Density": 1000,
             "Linear Damping": 0,
             "Angular Damping": 0,
             "Use Gravity": true,
@@ -169,15 +168,14 @@
     ],
     "Children": [
         {
-            "UID": 901060846,
-            "ParentUID": 2025476349,
+            "UID": 641400998,
+            "ParentUID": 1611972384,
             "PrefabID": 1654173329,
             "IsPrefab": true,
             "Name": "Skeleton",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
             "ShowBoundingBoxes": false,
             "NavigationInfo": {
                 "isNavigable": false,
@@ -206,15 +204,14 @@
             ],
             "Children": [
                 {
-                    "UID": 1139973327,
-                    "ParentUID": 901060846,
+                    "UID": 1245559599,
+                    "ParentUID": 641400998,
                     "PrefabID": 1654173329,
                     "IsPrefab": true,
                     "Name": "Hand",
                     "IsActive": true,
                     "IsStatic": false,
                     "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
                     "ShowBoundingBoxes": false,
                     "NavigationInfo": {
                         "isNavigable": false,
@@ -244,15 +241,14 @@
                     "Children": []
                 },
                 {
-                    "UID": 1716491371,
-                    "ParentUID": 901060846,
+                    "UID": 1080744612,
+                    "ParentUID": 641400998,
                     "PrefabID": 1654173329,
                     "IsPrefab": true,
                     "Name": "Head",
                     "IsActive": true,
                     "IsStatic": false,
                     "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
                     "ShowBoundingBoxes": false,
                     "NavigationInfo": {
                         "isNavigable": false,
@@ -264,7 +260,7 @@
                             "LocalPosition": [
                                 0,
                                 3.2654428482055664,
-                                -1.9073486328125e-06
+                                1.8325634002685547
                             ],
                             "LocalRotation": [
                                 0,
@@ -281,15 +277,14 @@
                     ],
                     "Children": [
                         {
-                            "UID": 60515327,
-                            "ParentUID": 1716491371,
+                            "UID": 1990855343,
+                            "ParentUID": 1080744612,
                             "PrefabID": 1654173329,
                             "IsPrefab": true,
                             "Name": "HeadMesh",
                             "IsActive": true,
                             "IsStatic": false,
                             "IsSceneRoot": false,
-                            "MaintainThroughScenes": false,
                             "ShowBoundingBoxes": false,
                             "NavigationInfo": {
                                 "isNavigable": false,
@@ -330,7 +325,8 @@
                                         0,
                                         0,
                                         1
-                                    ]
+                                    ],
+                                    "RenderLast": false
                                 },
                                 {
                                     "Type": 3,
@@ -363,15 +359,14 @@
                             "Children": []
                         },
                         {
-                            "UID": 1340252692,
-                            "ParentUID": 1716491371,
+                            "UID": 911288028,
+                            "ParentUID": 1080744612,
                             "PrefabID": 1654173329,
                             "IsPrefab": true,
                             "Name": "Barrel",
                             "IsActive": true,
                             "IsStatic": false,
                             "IsSceneRoot": false,
-                            "MaintainThroughScenes": false,
                             "ShowBoundingBoxes": false,
                             "NavigationInfo": {
                                 "isNavigable": false,
@@ -405,15 +400,14 @@
             ]
         },
         {
-            "UID": 1781443526,
-            "ParentUID": 2025476349,
+            "UID": 2117359217,
+            "ParentUID": 1611972384,
             "PrefabID": 1654173329,
             "IsPrefab": true,
             "Name": "Base",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
             "ShowBoundingBoxes": false,
             "NavigationInfo": {
                 "isNavigable": false,
@@ -454,7 +448,8 @@
                         0,
                         0,
                         1
-                    ]
+                    ],
+                    "RenderLast": false
                 },
                 {
                     "Type": 3,
@@ -469,6 +464,12 @@
                         "Name": "turret_base.nemat",
                         "Path": "Library\/Materials\/1886986290.nemat",
                         "File": "1886986290.nemat"
+                    },
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/\/Enemies\/Turet\/turret_droid_texture.png",
+                        "AssetsName": "turret_droid_texture.png",
+                        "LibaryPath": "Library\/Textures\/1100532012.netex",
+                        "LibraryFile": "1100532012.netex"
                     },
                     "Shader": {
                         "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
