@@ -564,6 +564,9 @@ void Player::DisableInput()
 
 void Player::TakeDamage(float damage)
 {
+	if (currentInteraction != InteractionType::NONE && currentInteraction != InteractionType::SIGNAL_GROGU)
+		return;
+	
 	if (!invincibilityTimer.IsActive())
 	{
 		float damageDealt = 0.0f;
@@ -1510,11 +1513,12 @@ void Player::GatherAimInputs()
 		return;
 	}
 
-	if ((App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(SDL_CONTROLLER_BUTTON_X) == ButtonState::BUTTON_DOWN))
-	{
-		aimState = AimState::RELOAD_IN;
-		return;
-	}
+	if (currentWeapon != nullptr && currentWeapon->ammo < currentWeapon->MaxAmmo())
+		if ((App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(SDL_CONTROLLER_BUTTON_X) == ButtonState::BUTTON_DOWN))
+		{
+			aimState = AimState::RELOAD_IN;
+			return;
+		}
 
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_REPEAT || App->input->GetGameControllerTrigger(RIGHT_TRIGGER) == ButtonState::BUTTON_REPEAT)
 	{

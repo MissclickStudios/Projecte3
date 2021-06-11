@@ -351,7 +351,7 @@ void DarkTrooper::Chase()
 		agent->SetDestination(player->transform->GetWorldPosition());
 		moveDirection = float2(agent->direction.x, agent->direction.z);
 
-		runAnimation.duration = 4 * (speedModifier);
+		runAnimation.duration = 4 / speedModifier;
 	}
 }
 

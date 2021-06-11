@@ -139,10 +139,12 @@ void E_Project::CheckFlags()
 			{
 				assetTexture = (R_Texture*)EngineApp->resourceManager->GetResourceFromLibrary(path);
 			}
-			
+
 			assetsToDisplay.push_back({ path, file, type, assetTexture });
 			CoreCrossDllHelpers::CoreReleaseString(file);
 		}
+
+		//std::sort(assetsToDisplay.begin(), assetsToDisplay.end(), [](AssetDisplay displayA, AssetDisplay displayB) { return (displayA.file < displayB.file); });
 
 		refreshDirectoryToDisplay = false;
 	}

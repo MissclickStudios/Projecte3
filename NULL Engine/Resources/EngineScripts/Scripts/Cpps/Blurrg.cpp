@@ -353,7 +353,7 @@ void Blurrg::Chase()
 	agent->velocity = ChaseSpeed();
 	agent->SetDestination(player->transform->GetWorldPosition());
 
-	walkAnimation.duration = 3.9f * (speedModifier);
+	walkAnimation.duration = 3.9f / speedModifier;
 }
 
 void Blurrg::Dash()

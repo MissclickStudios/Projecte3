@@ -341,7 +341,7 @@ void Trooper::Chase()
 		agent->SetDestination(player->transform->GetWorldPosition());
 		moveDirection = float2(agent->direction.x, agent->direction.z);
 
-		runAnimation.duration = 2 * (speedModifier);
+		runAnimation.duration = 2 / speedModifier;
 	}
 }
 
