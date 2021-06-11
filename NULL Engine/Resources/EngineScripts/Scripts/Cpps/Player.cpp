@@ -1048,6 +1048,12 @@ void Player::ManageInvincibility()
 
 		if (jetpack != nullptr)
 			jetpack->SetIsActive(true);
+
+		if (currentWeapon != nullptr)
+		{
+			if (currentWeapon->weaponModel != nullptr)
+				currentWeapon->weaponModel->SetIsActive(true);
+		}
 	}
 	else if (!intermitentMeshTimer.IsActive())
 	{
@@ -1058,6 +1064,12 @@ void Player::ManageInvincibility()
 
 		if (jetpack != nullptr)
 			jetpack->SetIsActive(!jetpack->IsActive());
+
+		if (currentWeapon != nullptr)
+		{
+			if (currentWeapon->weaponModel != nullptr)
+				currentWeapon->weaponModel->SetIsActive(!currentWeapon->weaponModel->IsActive());
+		}
 	}
 	else if (intermitentMeshTimer.ReadSec() >= intermitentMesh)
 	{
