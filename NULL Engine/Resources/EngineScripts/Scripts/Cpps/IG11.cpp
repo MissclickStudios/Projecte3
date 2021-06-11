@@ -85,6 +85,7 @@ IG11* CreateIG11()
 	//Health Bar
 	INSPECTOR_GAMEOBJECT(script->healthBarCanvasObject);
 	INSPECTOR_STRING(script->lifeBarImageStr);
+	INSPECTOR_STRING(script->bossIconStr);
 
 	return script;
 }
@@ -127,7 +128,15 @@ void IG11::Start()
 				healthBarImage = healthBarCanvasObject->childs[i]->GetComponent<C_UI_Image>();
 				if (healthBarImage) 
 					healthMaxW = healthBarImage->GetRect().w;
-				break;
+				continue;
+			}
+			else if (!strcmp(healthBarCanvasObject->childs[i]->GetName(), bossIconStr.c_str()))
+			{
+
+				C_UI_Image* bossIcon = healthBarCanvasObject->childs[i]->GetComponent<C_UI_Image>();
+				if (bossIcon)
+					bossIcon->SetTextureCoordinates(-1692, -1821, 320, 320);
+				continue;
 			}
 		}
 	}

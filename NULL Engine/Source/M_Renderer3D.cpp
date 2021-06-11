@@ -100,6 +100,7 @@ bool M_Renderer3D::Init(ParsonNode& configuration)
 	LoadDebugTexture();
 
 	SetVsync(configuration.GetBool("Vsync"));
+	App->frameCap = configuration.GetInteger("FrameCap");
 
 	renderWorldGrid		= configuration.GetBool("renderWorldGrid");
 	renderWorldAxis		= configuration.GetBool("renderWorldAxis");
@@ -258,6 +259,7 @@ bool M_Renderer3D::LoadConfiguration(ParsonNode& root)
 bool M_Renderer3D::SaveConfiguration(ParsonNode& root) const
 {
 	root.SetBool("Vsync", vsync);
+	root.SetInteger("FrameCap", App->frameCap);
 
 	uint	worldGridSize;																		//
 	
