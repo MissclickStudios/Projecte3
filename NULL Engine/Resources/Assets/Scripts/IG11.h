@@ -102,6 +102,7 @@ public:
 
 	GameObject* healthBarCanvasObject = nullptr;
 	std::string lifeBarImageStr = "BossLife";
+	std::string bossIconStr = "BossIcon";
 
 private:
 
