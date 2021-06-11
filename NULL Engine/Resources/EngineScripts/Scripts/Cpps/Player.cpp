@@ -182,7 +182,7 @@ void Player::SetUp()
 
 			if (name == "mando_walking")			{ walkAudio = source; }
 			else if (name == "mando_dash")			{ dashAudio = source; }
-			else if (name == "weapon_swap_weapon")	{ changeWeaponAudio = source; }
+			else if (name == "mando_swap_weapon")	{ changeWeaponAudio = source; }
 			else if (name == "mando_damaged")		{ damageAudio = source; }
 			else if (name == "mando_death")			{ deathAudio = source; }
 		}
@@ -708,9 +708,9 @@ void Player::AnimatePlayer()
 	AnimationInfo* torsoInfo	= GetAimStateAnimation();
 	AnimationInfo* legsInfo		= GetMoveStateAnimation();
 
-	LOG("CURRENT:	{ %s }",	(currentAnimation != nullptr) ? currentAnimation->name.c_str() : "NONE");
-	LOG("TORSO:	  { %s }",		(torsoInfo != nullptr) ? torsoInfo->name.c_str() : "NONE");
-	LOG("LEGS:	   { %s }",		(legsInfo != nullptr) ? legsInfo->name.c_str() : "NONE");
+	//LOG("CURRENT:	{ %s }",	(currentAnimation != nullptr) ? currentAnimation->name.c_str() : "NONE");
+	//LOG("TORSO:	  { %s }",		(torsoInfo != nullptr) ? torsoInfo->name.c_str() : "NONE");
+	//LOG("LEGS:	   { %s }",		(legsInfo != nullptr) ? legsInfo->name.c_str() : "NONE");
 
 	if (GetEntityState() != EntityState::NONE || aimState == AimState::IDLE || torsoInfo == nullptr || legsInfo == nullptr)		// TAKE INTO ACCOUNT STUN AND KNOCKBACK + LOOK INTO DASH PROBLEMS 
 	{	
@@ -1253,14 +1253,13 @@ void Player::Aiming()
 
 void Player::ShootIn()
 {
-	LOG("SHOOT IN");
+	//LOG("SHOOT IN");
 
 	currentAnimation = GetShootAnimation();
 	if (currentAnimation != nullptr)
 		currentAnimation->duration = currentWeapon->FireRate();
 
 	//animator->PlayClip("Preview", idleAnimation.name.c_str(), idleAnimation.blendTime);
-	animator->PlayClip("Torso", GetAimAnimation()->name.c_str(), GetAimAnimation()->blendTime);
 
 	overrideShootAnimation = true;
 
