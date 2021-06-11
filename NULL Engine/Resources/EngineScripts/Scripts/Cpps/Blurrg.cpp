@@ -342,14 +342,7 @@ void Blurrg::Wander()
 	if (agent == nullptr)
 		return;
 	
-	if (!agent->HasDestination())
-	{
-		float x = Random::LCG::GetBoundedRandomFloat(-wanderRadius, wanderRadius);
-		float z = Random::LCG::GetBoundedRandomFloat(-wanderRadius, wanderRadius);
-		agent->SetDestination(float3(x, gameObject->transform->GetWorldPosition().y, z));
-	
-		walkAnimation.duration = 3.9f / speedModifier;
-	}
+	agent->StopAndCancelDestination();
 }
 
 void Blurrg::Chase()
@@ -360,7 +353,7 @@ void Blurrg::Chase()
 	agent->velocity = ChaseSpeed();
 	agent->SetDestination(player->transform->GetWorldPosition());
 
-	walkAnimation.duration = 3.9f * (speedModifier);
+	walkAnimation.duration = 3.9f / speedModifier;
 }
 
 void Blurrg::Dash()

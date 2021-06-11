@@ -68,7 +68,7 @@ void PauseMenuManager::Start()
 		fxSlider = (C_UI_Slider*)go->GetComponent<C_UI_Slider>();
 		if (fxSlider)
 		{
-			App->audio->maxSfxVolume = fxSlider->InputValue(App->audio->maxMusicVolume, 100.0f, 10);
+			App->audio->maxSfxVolume = fxSlider->InputValue(App->audio->maxSfxVolume, 100.0f, 10);
 			App->audio->SetRtcp("maxSfxVolume", App->audio->maxSfxVolume);
 		}
 	}

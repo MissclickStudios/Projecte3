@@ -123,6 +123,8 @@ public:
 
 	AnimationInfo mainMenuAnimation			= { "MainMenu" };
 
+	bool overrideShootAnimation				= false;
+
 	// -- Status Effects
 	AnimationInfo stunnedAnimation			= { "Stun" };
 	AnimationInfo knockedbackAnimation		= { "Knockback"};

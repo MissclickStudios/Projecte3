@@ -1,5 +1,5 @@
 {
-    "ModTime": 1623151718,
+    "ModTime": 1623434816,
     "UID": 2021693977,
     "ParentUID": 1474137658,
     "PrefabID": 768441083,
@@ -8,8 +8,7 @@
     "IsActive": true,
     "IsStatic": false,
     "IsSceneRoot": false,
-    "MaintainThroughScenes": false,
-    "ShowBoundingBoxes": false,
+    "ShowBoundingBoxes": true,
     "NavigationInfo": {
         "isNavigable": false,
         "navigationArea": 0
@@ -286,7 +285,7 @@
                 {
                     "Type": 0,
                     "Name": "beskarValue",
-                    "int": 10
+                    "int": 2
                 },
                 {
                     "Type": 6,
@@ -297,6 +296,11 @@
                     "Type": 5,
                     "Name": "lifeBarImageStr",
                     "string": "BossLife"
+                },
+                {
+                    "Type": 5,
+                    "Name": "bossIconStr",
+                    "string": "BossIcon"
                 }
             ]
         }
@@ -311,7 +315,6 @@
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
             "ShowBoundingBoxes": false,
             "NavigationInfo": {
                 "isNavigable": false,
@@ -348,7 +351,6 @@
                     "IsActive": true,
                     "IsStatic": false,
                     "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
                     "ShowBoundingBoxes": false,
                     "NavigationInfo": {
                         "isNavigable": false,
@@ -388,7 +390,6 @@
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
             "ShowBoundingBoxes": false,
             "NavigationInfo": {
                 "isNavigable": false,
@@ -429,7 +430,8 @@
                         0,
                         0,
                         1
-                    ]
+                    ],
+                    "RenderLast": false
                 },
                 {
                     "Type": 3,
@@ -470,7 +472,6 @@
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
             "ShowBoundingBoxes": false,
             "NavigationInfo": {
                 "isNavigable": false,
@@ -507,7 +508,6 @@
                     "IsActive": true,
                     "IsStatic": false,
                     "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
                     "ShowBoundingBoxes": false,
                     "NavigationInfo": {
                         "isNavigable": false,
@@ -545,7 +545,6 @@
                     "IsActive": true,
                     "IsStatic": false,
                     "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
                     "ShowBoundingBoxes": false,
                     "NavigationInfo": {
                         "isNavigable": false,
@@ -582,7 +581,6 @@
                             "IsActive": true,
                             "IsStatic": false,
                             "IsSceneRoot": false,
-                            "MaintainThroughScenes": false,
                             "ShowBoundingBoxes": false,
                             "NavigationInfo": {
                                 "isNavigable": false,
@@ -619,7 +617,6 @@
                                     "IsActive": true,
                                     "IsStatic": false,
                                     "IsSceneRoot": false,
-                                    "MaintainThroughScenes": false,
                                     "ShowBoundingBoxes": false,
                                     "NavigationInfo": {
                                         "isNavigable": false,
@@ -648,161 +645,6 @@
                                     ],
                                     "Children": [
                                         {
-                                            "UID": 1834069584,
-                                            "ParentUID": 613119820,
-                                            "PrefabID": 768441083,
-                                            "IsPrefab": true,
-                                            "Name": "RLeg",
-                                            "IsActive": true,
-                                            "IsStatic": false,
-                                            "IsSceneRoot": false,
-                                            "MaintainThroughScenes": false,
-                                            "ShowBoundingBoxes": false,
-                                            "NavigationInfo": {
-                                                "isNavigable": false,
-                                                "navigationArea": 0
-                                            },
-                                            "Components": [
-                                                {
-                                                    "Type": 1,
-                                                    "LocalPosition": [
-                                                        -0.75423717498779297,
-                                                        9.2935104370117188,
-                                                        -1.5580799579620361
-                                                    ],
-                                                    "LocalRotation": [
-                                                        -0.0046017351560294628,
-                                                        -0.0059154834598302841,
-                                                        0.037348885089159012,
-                                                        0.99927419424057007
-                                                    ],
-                                                    "LocalScale": [
-                                                        0.99999994039535522,
-                                                        1,
-                                                        0.99999994039535522
-                                                    ]
-                                                }
-                                            ],
-                                            "Children": [
-                                                {
-                                                    "UID": 1626271800,
-                                                    "ParentUID": 1834069584,
-                                                    "PrefabID": 768441083,
-                                                    "IsPrefab": true,
-                                                    "Name": "RKnee",
-                                                    "IsActive": true,
-                                                    "IsStatic": false,
-                                                    "IsSceneRoot": false,
-                                                    "MaintainThroughScenes": false,
-                                                    "ShowBoundingBoxes": false,
-                                                    "NavigationInfo": {
-                                                        "isNavigable": false,
-                                                        "navigationArea": 0
-                                                    },
-                                                    "Components": [
-                                                        {
-                                                            "Type": 1,
-                                                            "LocalPosition": [
-                                                                55.681190490722656,
-                                                                3.6823339462280273,
-                                                                7.7038388252258301
-                                                            ],
-                                                            "LocalRotation": [
-                                                                0.0050133839249610901,
-                                                                0.0023709903471171856,
-                                                                -0.037080701440572739,
-                                                                0.99929690361022949
-                                                            ],
-                                                            "LocalScale": [
-                                                                1,
-                                                                1,
-                                                                1
-                                                            ]
-                                                        }
-                                                    ],
-                                                    "Children": [
-                                                        {
-                                                            "UID": 1408433804,
-                                                            "ParentUID": 1626271800,
-                                                            "PrefabID": 768441083,
-                                                            "IsPrefab": true,
-                                                            "Name": "RAnkle",
-                                                            "IsActive": true,
-                                                            "IsStatic": false,
-                                                            "IsSceneRoot": false,
-                                                            "MaintainThroughScenes": false,
-                                                            "ShowBoundingBoxes": false,
-                                                            "NavigationInfo": {
-                                                                "isNavigable": false,
-                                                                "navigationArea": 0
-                                                            },
-                                                            "Components": [
-                                                                {
-                                                                    "Type": 1,
-                                                                    "LocalPosition": [
-                                                                        46.627300262451172,
-                                                                        -0.70139700174331665,
-                                                                        -7.4441590309143066
-                                                                    ],
-                                                                    "LocalRotation": [
-                                                                        0,
-                                                                        0,
-                                                                        0,
-                                                                        1
-                                                                    ],
-                                                                    "LocalScale": [
-                                                                        1,
-                                                                        1,
-                                                                        1
-                                                                    ]
-                                                                }
-                                                            ],
-                                                            "Children": [
-                                                                {
-                                                                    "UID": 976089437,
-                                                                    "ParentUID": 1408433804,
-                                                                    "PrefabID": 768441083,
-                                                                    "IsPrefab": true,
-                                                                    "Name": "RFoot",
-                                                                    "IsActive": true,
-                                                                    "IsStatic": false,
-                                                                    "IsSceneRoot": false,
-                                                                    "MaintainThroughScenes": false,
-                                                                    "ShowBoundingBoxes": false,
-                                                                    "NavigationInfo": {
-                                                                        "isNavigable": false,
-                                                                        "navigationArea": 0
-                                                                    },
-                                                                    "Components": [
-                                                                        {
-                                                                            "Type": 1,
-                                                                            "LocalPosition": [
-                                                                                15.430729866027832,
-                                                                                0.87674617767333984,
-                                                                                3.3758389949798584
-                                                                            ],
-                                                                            "LocalRotation": [
-                                                                                0,
-                                                                                0,
-                                                                                0,
-                                                                                1
-                                                                            ],
-                                                                            "LocalScale": [
-                                                                                1,
-                                                                                1,
-                                                                                1
-                                                                            ]
-                                                                        }
-                                                                    ],
-                                                                    "Children": []
-                                                                }
-                                                            ]
-                                                        }
-                                                    ]
-                                                }
-                                            ]
-                                        },
-                                        {
                                             "UID": 24087673,
                                             "ParentUID": 613119820,
                                             "PrefabID": 768441083,
@@ -811,7 +653,6 @@
                                             "IsActive": true,
                                             "IsStatic": false,
                                             "IsSceneRoot": false,
-                                            "MaintainThroughScenes": false,
                                             "ShowBoundingBoxes": false,
                                             "NavigationInfo": {
                                                 "isNavigable": false,
@@ -848,7 +689,6 @@
                                                     "IsActive": true,
                                                     "IsStatic": false,
                                                     "IsSceneRoot": false,
-                                                    "MaintainThroughScenes": false,
                                                     "ShowBoundingBoxes": false,
                                                     "NavigationInfo": {
                                                         "isNavigable": false,
@@ -885,7 +725,6 @@
                                                             "IsActive": true,
                                                             "IsStatic": false,
                                                             "IsSceneRoot": false,
-                                                            "MaintainThroughScenes": false,
                                                             "ShowBoundingBoxes": false,
                                                             "NavigationInfo": {
                                                                 "isNavigable": false,
@@ -922,7 +761,6 @@
                                                                     "IsActive": true,
                                                                     "IsStatic": false,
                                                                     "IsSceneRoot": false,
-                                                                    "MaintainThroughScenes": false,
                                                                     "ShowBoundingBoxes": false,
                                                                     "NavigationInfo": {
                                                                         "isNavigable": false,
@@ -956,6 +794,157 @@
                                                     ]
                                                 }
                                             ]
+                                        },
+                                        {
+                                            "UID": 1834069584,
+                                            "ParentUID": 613119820,
+                                            "PrefabID": 768441083,
+                                            "IsPrefab": true,
+                                            "Name": "RLeg",
+                                            "IsActive": true,
+                                            "IsStatic": false,
+                                            "IsSceneRoot": false,
+                                            "ShowBoundingBoxes": false,
+                                            "NavigationInfo": {
+                                                "isNavigable": false,
+                                                "navigationArea": 0
+                                            },
+                                            "Components": [
+                                                {
+                                                    "Type": 1,
+                                                    "LocalPosition": [
+                                                        -0.75423717498779297,
+                                                        9.2935104370117188,
+                                                        -1.5580799579620361
+                                                    ],
+                                                    "LocalRotation": [
+                                                        -0.0046017351560294628,
+                                                        -0.0059154834598302841,
+                                                        0.037348885089159012,
+                                                        0.99927419424057007
+                                                    ],
+                                                    "LocalScale": [
+                                                        0.99999994039535522,
+                                                        1,
+                                                        0.99999994039535522
+                                                    ]
+                                                }
+                                            ],
+                                            "Children": [
+                                                {
+                                                    "UID": 1626271800,
+                                                    "ParentUID": 1834069584,
+                                                    "PrefabID": 768441083,
+                                                    "IsPrefab": true,
+                                                    "Name": "RKnee",
+                                                    "IsActive": true,
+                                                    "IsStatic": false,
+                                                    "IsSceneRoot": false,
+                                                    "ShowBoundingBoxes": false,
+                                                    "NavigationInfo": {
+                                                        "isNavigable": false,
+                                                        "navigationArea": 0
+                                                    },
+                                                    "Components": [
+                                                        {
+                                                            "Type": 1,
+                                                            "LocalPosition": [
+                                                                55.681190490722656,
+                                                                3.6823339462280273,
+                                                                7.7038388252258301
+                                                            ],
+                                                            "LocalRotation": [
+                                                                0.0050133839249610901,
+                                                                0.0023709903471171856,
+                                                                -0.037080701440572739,
+                                                                0.99929690361022949
+                                                            ],
+                                                            "LocalScale": [
+                                                                1,
+                                                                1,
+                                                                1
+                                                            ]
+                                                        }
+                                                    ],
+                                                    "Children": [
+                                                        {
+                                                            "UID": 1408433804,
+                                                            "ParentUID": 1626271800,
+                                                            "PrefabID": 768441083,
+                                                            "IsPrefab": true,
+                                                            "Name": "RAnkle",
+                                                            "IsActive": true,
+                                                            "IsStatic": false,
+                                                            "IsSceneRoot": false,
+                                                            "ShowBoundingBoxes": false,
+                                                            "NavigationInfo": {
+                                                                "isNavigable": false,
+                                                                "navigationArea": 0
+                                                            },
+                                                            "Components": [
+                                                                {
+                                                                    "Type": 1,
+                                                                    "LocalPosition": [
+                                                                        46.627300262451172,
+                                                                        -0.70139700174331665,
+                                                                        -7.4441590309143066
+                                                                    ],
+                                                                    "LocalRotation": [
+                                                                        0,
+                                                                        0,
+                                                                        0,
+                                                                        1
+                                                                    ],
+                                                                    "LocalScale": [
+                                                                        1,
+                                                                        1,
+                                                                        1
+                                                                    ]
+                                                                }
+                                                            ],
+                                                            "Children": [
+                                                                {
+                                                                    "UID": 976089437,
+                                                                    "ParentUID": 1408433804,
+                                                                    "PrefabID": 768441083,
+                                                                    "IsPrefab": true,
+                                                                    "Name": "RFoot",
+                                                                    "IsActive": true,
+                                                                    "IsStatic": false,
+                                                                    "IsSceneRoot": false,
+                                                                    "ShowBoundingBoxes": false,
+                                                                    "NavigationInfo": {
+                                                                        "isNavigable": false,
+                                                                        "navigationArea": 0
+                                                                    },
+                                                                    "Components": [
+                                                                        {
+                                                                            "Type": 1,
+                                                                            "LocalPosition": [
+                                                                                15.430729866027832,
+                                                                                0.87674617767333984,
+                                                                                3.3758389949798584
+                                                                            ],
+                                                                            "LocalRotation": [
+                                                                                0,
+                                                                                0,
+                                                                                0,
+                                                                                1
+                                                                            ],
+                                                                            "LocalScale": [
+                                                                                1,
+                                                                                1,
+                                                                                1
+                                                                            ]
+                                                                        }
+                                                                    ],
+                                                                    "Children": []
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
                                         }
                                     ]
                                 },
@@ -968,7 +957,6 @@
                                     "IsActive": true,
                                     "IsStatic": false,
                                     "IsSceneRoot": false,
-                                    "MaintainThroughScenes": false,
                                     "ShowBoundingBoxes": false,
                                     "NavigationInfo": {
                                         "isNavigable": false,
@@ -1005,7 +993,6 @@
                                             "IsActive": true,
                                             "IsStatic": false,
                                             "IsSceneRoot": false,
-                                            "MaintainThroughScenes": false,
                                             "ShowBoundingBoxes": false,
                                             "NavigationInfo": {
                                                 "isNavigable": false,
@@ -1042,7 +1029,6 @@
                                                     "IsActive": true,
                                                     "IsStatic": false,
                                                     "IsSceneRoot": false,
-                                                    "MaintainThroughScenes": false,
                                                     "ShowBoundingBoxes": false,
                                                     "NavigationInfo": {
                                                         "isNavigable": false,
@@ -1079,7 +1065,6 @@
                                                             "IsActive": true,
                                                             "IsStatic": false,
                                                             "IsSceneRoot": false,
-                                                            "MaintainThroughScenes": false,
                                                             "ShowBoundingBoxes": false,
                                                             "NavigationInfo": {
                                                                 "isNavigable": false,
@@ -1116,7 +1101,6 @@
                                                                     "IsActive": true,
                                                                     "IsStatic": false,
                                                                     "IsSceneRoot": false,
-                                                                    "MaintainThroughScenes": false,
                                                                     "ShowBoundingBoxes": false,
                                                                     "NavigationInfo": {
                                                                         "isNavigable": false,
@@ -1153,7 +1137,6 @@
                                                                             "IsActive": true,
                                                                             "IsStatic": false,
                                                                             "IsSceneRoot": false,
-                                                                            "MaintainThroughScenes": false,
                                                                             "ShowBoundingBoxes": false,
                                                                             "NavigationInfo": {
                                                                                 "isNavigable": false,
@@ -1190,7 +1173,6 @@
                                                                                     "IsActive": true,
                                                                                     "IsStatic": false,
                                                                                     "IsSceneRoot": false,
-                                                                                    "MaintainThroughScenes": false,
                                                                                     "ShowBoundingBoxes": false,
                                                                                     "NavigationInfo": {
                                                                                         "isNavigable": false,
@@ -1227,7 +1209,6 @@
                                                                                             "IsActive": true,
                                                                                             "IsStatic": false,
                                                                                             "IsSceneRoot": false,
-                                                                                            "MaintainThroughScenes": false,
                                                                                             "ShowBoundingBoxes": false,
                                                                                             "NavigationInfo": {
                                                                                                 "isNavigable": false,
@@ -1264,7 +1245,6 @@
                                                                                                     "IsActive": true,
                                                                                                     "IsStatic": false,
                                                                                                     "IsSceneRoot": false,
-                                                                                                    "MaintainThroughScenes": false,
                                                                                                     "ShowBoundingBoxes": false,
                                                                                                     "NavigationInfo": {
                                                                                                         "isNavigable": false,
@@ -1301,7 +1281,6 @@
                                                                                                             "IsActive": true,
                                                                                                             "IsStatic": false,
                                                                                                             "IsSceneRoot": false,
-                                                                                                            "MaintainThroughScenes": false,
                                                                                                             "ShowBoundingBoxes": false,
                                                                                                             "NavigationInfo": {
                                                                                                                 "isNavigable": false,
@@ -1330,6 +1309,43 @@
                                                                                                             ],
                                                                                                             "Children": [
                                                                                                                 {
+                                                                                                                    "UID": 169562100,
+                                                                                                                    "ParentUID": 1302184890,
+                                                                                                                    "PrefabID": 768441083,
+                                                                                                                    "IsPrefab": true,
+                                                                                                                    "Name": "SecondaryBarrel",
+                                                                                                                    "IsActive": true,
+                                                                                                                    "IsStatic": false,
+                                                                                                                    "IsSceneRoot": false,
+                                                                                                                    "ShowBoundingBoxes": false,
+                                                                                                                    "NavigationInfo": {
+                                                                                                                        "isNavigable": false,
+                                                                                                                        "navigationArea": 0
+                                                                                                                    },
+                                                                                                                    "Components": [
+                                                                                                                        {
+                                                                                                                            "Type": 1,
+                                                                                                                            "LocalPosition": [
+                                                                                                                                -14.603271484375,
+                                                                                                                                -43.221916198730469,
+                                                                                                                                -18.837615966796875
+                                                                                                                            ],
+                                                                                                                            "LocalRotation": [
+                                                                                                                                -7.6461765274871141e-07,
+                                                                                                                                -8.6357090367528144e-07,
+                                                                                                                                -2.3096836798686127e-07,
+                                                                                                                                1
+                                                                                                                            ],
+                                                                                                                            "LocalScale": [
+                                                                                                                                1.0000002384185791,
+                                                                                                                                0.99999845027923584,
+                                                                                                                                0.99999767541885376
+                                                                                                                            ]
+                                                                                                                        }
+                                                                                                                    ],
+                                                                                                                    "Children": []
+                                                                                                                },
+                                                                                                                {
                                                                                                                     "UID": 925476514,
                                                                                                                     "ParentUID": 1302184890,
                                                                                                                     "PrefabID": 768441083,
@@ -1338,7 +1354,6 @@
                                                                                                                     "IsActive": true,
                                                                                                                     "IsStatic": false,
                                                                                                                     "IsSceneRoot": false,
-                                                                                                                    "MaintainThroughScenes": false,
                                                                                                                     "ShowBoundingBoxes": false,
                                                                                                                     "NavigationInfo": {
                                                                                                                         "isNavigable": false,
@@ -1379,7 +1394,8 @@
                                                                                                                                 0,
                                                                                                                                 0,
                                                                                                                                 0
-                                                                                                                            ]
+                                                                                                                            ],
+                                                                                                                            "RenderLast": false
                                                                                                                         },
                                                                                                                         {
                                                                                                                             "Type": 3,
@@ -1410,44 +1426,6 @@
                                                                                                                         }
                                                                                                                     ],
                                                                                                                     "Children": []
-                                                                                                                },
-                                                                                                                {
-                                                                                                                    "UID": 169562100,
-                                                                                                                    "ParentUID": 1302184890,
-                                                                                                                    "PrefabID": 768441083,
-                                                                                                                    "IsPrefab": true,
-                                                                                                                    "Name": "SecondaryBarrel",
-                                                                                                                    "IsActive": true,
-                                                                                                                    "IsStatic": false,
-                                                                                                                    "IsSceneRoot": false,
-                                                                                                                    "MaintainThroughScenes": false,
-                                                                                                                    "ShowBoundingBoxes": false,
-                                                                                                                    "NavigationInfo": {
-                                                                                                                        "isNavigable": false,
-                                                                                                                        "navigationArea": 0
-                                                                                                                    },
-                                                                                                                    "Components": [
-                                                                                                                        {
-                                                                                                                            "Type": 1,
-                                                                                                                            "LocalPosition": [
-                                                                                                                                -14.603271484375,
-                                                                                                                                -43.221916198730469,
-                                                                                                                                -18.837615966796875
-                                                                                                                            ],
-                                                                                                                            "LocalRotation": [
-                                                                                                                                -7.6461765274871141e-07,
-                                                                                                                                -8.6357090367528144e-07,
-                                                                                                                                -2.3096836798686127e-07,
-                                                                                                                                1
-                                                                                                                            ],
-                                                                                                                            "LocalScale": [
-                                                                                                                                1.0000002384185791,
-                                                                                                                                0.99999845027923584,
-                                                                                                                                0.99999767541885376
-                                                                                                                            ]
-                                                                                                                        }
-                                                                                                                    ],
-                                                                                                                    "Children": []
                                                                                                                 }
                                                                                                             ]
                                                                                                         }
@@ -1470,7 +1448,6 @@
                                                                     "IsActive": true,
                                                                     "IsStatic": false,
                                                                     "IsSceneRoot": false,
-                                                                    "MaintainThroughScenes": false,
                                                                     "ShowBoundingBoxes": false,
                                                                     "NavigationInfo": {
                                                                         "isNavigable": false,
@@ -1507,7 +1484,6 @@
                                                                             "IsActive": true,
                                                                             "IsStatic": false,
                                                                             "IsSceneRoot": false,
-                                                                            "MaintainThroughScenes": false,
                                                                             "ShowBoundingBoxes": false,
                                                                             "NavigationInfo": {
                                                                                 "isNavigable": false,
@@ -1544,7 +1520,6 @@
                                                                                     "IsActive": true,
                                                                                     "IsStatic": false,
                                                                                     "IsSceneRoot": false,
-                                                                                    "MaintainThroughScenes": false,
                                                                                     "ShowBoundingBoxes": false,
                                                                                     "NavigationInfo": {
                                                                                         "isNavigable": false,
@@ -1581,7 +1556,6 @@
                                                                                             "IsActive": true,
                                                                                             "IsStatic": false,
                                                                                             "IsSceneRoot": false,
-                                                                                            "MaintainThroughScenes": false,
                                                                                             "ShowBoundingBoxes": false,
                                                                                             "NavigationInfo": {
                                                                                                 "isNavigable": false,
@@ -1618,7 +1592,6 @@
                                                                                                     "IsActive": true,
                                                                                                     "IsStatic": false,
                                                                                                     "IsSceneRoot": false,
-                                                                                                    "MaintainThroughScenes": false,
                                                                                                     "ShowBoundingBoxes": false,
                                                                                                     "NavigationInfo": {
                                                                                                         "isNavigable": false,
@@ -1655,7 +1628,6 @@
                                                                                                             "IsActive": true,
                                                                                                             "IsStatic": false,
                                                                                                             "IsSceneRoot": false,
-                                                                                                            "MaintainThroughScenes": false,
                                                                                                             "ShowBoundingBoxes": false,
                                                                                                             "NavigationInfo": {
                                                                                                                 "isNavigable": false,
@@ -1684,44 +1656,6 @@
                                                                                                             ],
                                                                                                             "Children": [
                                                                                                                 {
-                                                                                                                    "UID": 1512667075,
-                                                                                                                    "ParentUID": 1001093062,
-                                                                                                                    "PrefabID": 768441083,
-                                                                                                                    "IsPrefab": true,
-                                                                                                                    "Name": "Barrel",
-                                                                                                                    "IsActive": true,
-                                                                                                                    "IsStatic": false,
-                                                                                                                    "IsSceneRoot": false,
-                                                                                                                    "MaintainThroughScenes": false,
-                                                                                                                    "ShowBoundingBoxes": false,
-                                                                                                                    "NavigationInfo": {
-                                                                                                                        "isNavigable": false,
-                                                                                                                        "navigationArea": 0
-                                                                                                                    },
-                                                                                                                    "Components": [
-                                                                                                                        {
-                                                                                                                            "Type": 1,
-                                                                                                                            "LocalPosition": [
-                                                                                                                                -11.710708618164063,
-                                                                                                                                44.423431396484375,
-                                                                                                                                -19.809844970703125
-                                                                                                                            ],
-                                                                                                                            "LocalRotation": [
-                                                                                                                                -4.6566128730773926e-10,
-                                                                                                                                1.3969838619232178e-09,
-                                                                                                                                -7.4505805969238281e-09,
-                                                                                                                                1
-                                                                                                                            ],
-                                                                                                                            "LocalScale": [
-                                                                                                                                1,
-                                                                                                                                1,
-                                                                                                                                1
-                                                                                                                            ]
-                                                                                                                        }
-                                                                                                                    ],
-                                                                                                                    "Children": []
-                                                                                                                },
-                                                                                                                {
                                                                                                                     "UID": 200706849,
                                                                                                                     "ParentUID": 1001093062,
                                                                                                                     "PrefabID": 768441083,
@@ -1730,7 +1664,6 @@
                                                                                                                     "IsActive": true,
                                                                                                                     "IsStatic": false,
                                                                                                                     "IsSceneRoot": false,
-                                                                                                                    "MaintainThroughScenes": false,
                                                                                                                     "ShowBoundingBoxes": false,
                                                                                                                     "NavigationInfo": {
                                                                                                                         "isNavigable": false,
@@ -1771,7 +1704,8 @@
                                                                                                                                 0,
                                                                                                                                 0,
                                                                                                                                 0
-                                                                                                                            ]
+                                                                                                                            ],
+                                                                                                                            "RenderLast": false
                                                                                                                         },
                                                                                                                         {
                                                                                                                             "Type": 3,
@@ -1802,6 +1736,43 @@
                                                                                                                         }
                                                                                                                     ],
                                                                                                                     "Children": []
+                                                                                                                },
+                                                                                                                {
+                                                                                                                    "UID": 1512667075,
+                                                                                                                    "ParentUID": 1001093062,
+                                                                                                                    "PrefabID": 768441083,
+                                                                                                                    "IsPrefab": true,
+                                                                                                                    "Name": "Barrel",
+                                                                                                                    "IsActive": true,
+                                                                                                                    "IsStatic": false,
+                                                                                                                    "IsSceneRoot": false,
+                                                                                                                    "ShowBoundingBoxes": false,
+                                                                                                                    "NavigationInfo": {
+                                                                                                                        "isNavigable": false,
+                                                                                                                        "navigationArea": 0
+                                                                                                                    },
+                                                                                                                    "Components": [
+                                                                                                                        {
+                                                                                                                            "Type": 1,
+                                                                                                                            "LocalPosition": [
+                                                                                                                                -11.710708618164063,
+                                                                                                                                44.423431396484375,
+                                                                                                                                -19.809844970703125
+                                                                                                                            ],
+                                                                                                                            "LocalRotation": [
+                                                                                                                                -4.6566128730773926e-10,
+                                                                                                                                1.3969838619232178e-09,
+                                                                                                                                -7.4505805969238281e-09,
+                                                                                                                                1
+                                                                                                                            ],
+                                                                                                                            "LocalScale": [
+                                                                                                                                1,
+                                                                                                                                1,
+                                                                                                                                1
+                                                                                                                            ]
+                                                                                                                        }
+                                                                                                                    ],
+                                                                                                                    "Children": []
                                                                                                                 }
                                                                                                             ]
                                                                                                         }
@@ -1824,7 +1795,6 @@
                                                                     "IsActive": true,
                                                                     "IsStatic": false,
                                                                     "IsSceneRoot": false,
-                                                                    "MaintainThroughScenes": false,
                                                                     "ShowBoundingBoxes": false,
                                                                     "NavigationInfo": {
                                                                         "isNavigable": false,
@@ -1861,7 +1831,6 @@
                                                                             "IsActive": true,
                                                                             "IsStatic": false,
                                                                             "IsSceneRoot": false,
-                                                                            "MaintainThroughScenes": false,
                                                                             "ShowBoundingBoxes": false,
                                                                             "NavigationInfo": {
                                                                                 "isNavigable": false,
@@ -1898,7 +1867,6 @@
                                                                                     "IsActive": true,
                                                                                     "IsStatic": false,
                                                                                     "IsSceneRoot": false,
-                                                                                    "MaintainThroughScenes": false,
                                                                                     "ShowBoundingBoxes": false,
                                                                                     "NavigationInfo": {
                                                                                         "isNavigable": false,
@@ -1952,7 +1920,6 @@
                     "IsActive": true,
                     "IsStatic": false,
                     "IsSceneRoot": false,
-                    "MaintainThroughScenes": false,
                     "ShowBoundingBoxes": false,
                     "NavigationInfo": {
                         "isNavigable": false,

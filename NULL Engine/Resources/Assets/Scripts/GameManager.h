@@ -162,6 +162,8 @@ public:
 
     void UpdateLeaveBoss();
 
+    //I'm trash
+    bool tooBad = false;
     bool awaitingChestDrop = true;
     bool killedBoss = false;
     bool pickedItemUp = false; //If it has picked the item up
@@ -172,6 +174,8 @@ public:
 
     //Story & dialog vars
     StoryDialogData storyDialogState;
+
+    bool paused = false;
 
     //Win screen stats
     RunStats runStats;

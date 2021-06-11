@@ -180,11 +180,11 @@ void Player::SetUp()
 			C_AudioSource* source = (C_AudioSource*)gameObject->components[i];
 			std::string name = source->GetEventName();
 
-			if (name == "mando_walking")		{ walkAudio = source; }
-			else if (name == "mando_dash")		{ dashAudio = source; }
-			else if (name == "weapon_swap_weapon")	{ changeWeaponAudio = source; }
-			else if (name == "mando_damaged")	{ damageAudio = source; }
-			else if (name == "mando_death")		{ deathAudio = source; }
+			if (name == "mando_walking")			{ walkAudio = source; }
+			else if (name == "mando_dash")			{ dashAudio = source; }
+			else if (name == "mando_swap_weapon")	{ changeWeaponAudio = source; }
+			else if (name == "mando_damaged")		{ damageAudio = source; }
+			else if (name == "mando_death")			{ deathAudio = source; }
 		}
 	}
 
@@ -754,8 +754,13 @@ void Player::AnimatePlayer()
 		if (preview->GetTrackState() != TrackState::STOP)
 			preview->Stop();
 
-		if ((torsoClip == nullptr) || (torsoClip->GetName() != torsoInfo->name))
+		if ((torsoClip == nullptr) || overrideShootAnimation || (torsoClip->GetName() != torsoInfo->name))
+		{
 			animator->PlayClip(torsoTrack->GetName(), torsoInfo->name.c_str(), torsoInfo->blendTime);
+
+			if (overrideShootAnimation)
+				overrideShootAnimation = false;
+		}
 
 		if ((legsClip == nullptr) || (legsClip->GetName() != legsInfo->name))
 			animator->PlayClip(legsTrack->GetName(), legsInfo->name.c_str(), legsInfo->blendTime);
@@ -1249,11 +1254,17 @@ void Player::Aiming()
 void Player::ShootIn()
 {
 	//LOG("SHOOT IN");
-	
-	currentAnimation	= GetShootAnimation();
+
+	currentAnimation = GetShootAnimation();
 	if (currentAnimation != nullptr)
 		currentAnimation->duration = currentWeapon->FireRate();
-	aimState			= AimState::SHOOT;
+
+	//animator->PlayClip("Preview", idleAnimation.name.c_str(), idleAnimation.blendTime);
+
+	overrideShootAnimation = true;
+
+	aimState = AimState::SHOOT;
+
 	primaryWeaponImage->PlayAnimation(false, 1);
 }
 
