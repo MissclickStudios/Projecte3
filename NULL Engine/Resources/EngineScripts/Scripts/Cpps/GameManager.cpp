@@ -265,7 +265,8 @@ void GameManager::Update()
 
 	GateUpdate(); //Checks if gate should be unlocked
 
-	runStats.runTime += MC_Time::Game::GetDT();
+	if(!paused)
+		runStats.runTime += MC_Time::Game::GetDT();
 
 	UpdateLeaveBoss();
 
@@ -723,6 +724,7 @@ void GameManager::ReturnToMainMenu()
 
 void GameManager::Pause()
 {
+	paused = true;
 	std::vector<GameObject*>* objects = App->scene->GetGameObjects();
 	for (auto go = objects->begin(); go != objects->end(); ++go)
 	{
@@ -742,6 +744,7 @@ void GameManager::Pause()
 
 void GameManager::Resume()
 {
+	paused = false;
 	std::vector<GameObject*>* objects = App->scene->GetGameObjects();
 	for (auto go = objects->begin(); go != objects->end(); ++go)
 	{
@@ -1166,7 +1169,7 @@ void GameManager::BoughtFromArmorer()
 
 void GameManager::SetUpWinScreen()
 {
-	GameObject* tmp = App->scene->GetGameObjectByName("AttemptsText");
+	GameObject* tmp = App->scene->GetGameObjectByName("AttemptText");
 	if(tmp != nullptr)
 		tmp->GetComponent<C_UI_Text>()->SetText(std::to_string(runStats.attempt).c_str());
 
@@ -1174,13 +1177,39 @@ void GameManager::SetUpWinScreen()
 	if (tmp != nullptr)
 		tmp->GetComponent<C_UI_Text>()->SetText(std::to_string(runStats.runKills).c_str());
 
-	tmp = App->scene->GetGameObjectByName("PrecisionText");
-	if (tmp != nullptr)
-		tmp->GetComponent<C_UI_Text>()->SetText(std::to_string(runStats.runPrecision).c_str());
-
 	tmp = App->scene->GetGameObjectByName("TimeText");
 	if (tmp != nullptr)
-		tmp->GetComponent<C_UI_Text>()->SetText(std::to_string(runStats.runTime).c_str());
+	{
+		std::string timeString = "";
+
+		int hours, minutes, seconds = 0;
+		int time = runStats.runTime;
+		LOG("Total time in seconds: %d",time);
+		hours = time / 3600;
+		LOG("Total hours: %d", hours);
+		time = time % 3600;
+		LOG("Time after hours: %d", time);
+
+		minutes = time / 60;
+		LOG("Total minutes: %d", minutes);
+		
+		time = time % 60;
+		LOG("Time after minutes: %d", time);
+
+		seconds = time;
+		LOG("Total seconds: %d", seconds);
+
+		timeString = std::to_string(hours) + ":";
+		timeString += std::to_string(minutes) + ":";
+		
+		if(seconds > 0)
+			timeString += std::to_string(seconds);
+		else
+			timeString += "00";
+
+		tmp->GetComponent<C_UI_Text>()->SetText(timeString.c_str());
+	}
+		
 
 	tmp = App->scene->GetGameObjectByName("WeaponText");
 	if (tmp != nullptr)
