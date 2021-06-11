@@ -339,16 +339,28 @@ void Blurrg::LookAtPlayer()
 
 void Blurrg::Wander()
 {
-	if (agent != nullptr)
-		agent->SetDestination(gameObject->transform->GetWorldPosition());
+	if (agent == nullptr)
+		return;
+	
+	if (!agent->HasDestination())
+	{
+		float x = Random::LCG::GetBoundedRandomFloat(-wanderRadius, wanderRadius);
+		float z = Random::LCG::GetBoundedRandomFloat(-wanderRadius, wanderRadius);
+		agent->SetDestination(float3(x, gameObject->transform->GetWorldPosition().y, z));
+	
+		walkAnimation.duration = 3.9f * (speedModifier);
+	}
 }
 
 void Blurrg::Chase()
 {
-	if (agent != nullptr) {
-		agent->velocity = ChaseSpeed();
-		agent->SetDestination(player->transform->GetWorldPosition());
-	}
+	if (agent == nullptr)
+		return;
+
+	agent->velocity = ChaseSpeed();
+	agent->SetDestination(player->transform->GetWorldPosition());
+
+	walkAnimation.duration = 3.9f * (speedModifier);
 }
 
 void Blurrg::Dash()

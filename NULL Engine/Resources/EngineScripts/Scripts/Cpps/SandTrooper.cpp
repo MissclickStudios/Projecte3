@@ -332,7 +332,6 @@ void Trooper::Patrol()
 {
 	if (agent != nullptr)
 		agent->StopAndCancelDestination();
-
 }
 
 void Trooper::Chase()
@@ -341,6 +340,8 @@ void Trooper::Chase()
 	{
 		agent->SetDestination(player->transform->GetWorldPosition());
 		moveDirection = float2(agent->direction.x, agent->direction.z);
+
+		runAnimation.duration = 2 * (speedModifier);
 	}
 }
 

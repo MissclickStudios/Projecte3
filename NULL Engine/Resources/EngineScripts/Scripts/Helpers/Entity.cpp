@@ -170,7 +170,7 @@ void Entity::PreUpdate()
 				GetParticles("Hit")->StopSpawn();
 		}
 
-		if (type == EntityType::TURRET && rigidBody != nullptr)
+		if ((type == EntityType::TURRET || type == EntityType::IG11 || type == EntityType::IG12) && rigidBody != nullptr)
 			rigidBody->StopInertia();
 	}
 }
@@ -213,8 +213,8 @@ void Entity::PostUpdate()
 
 			if (clip == nullptr || clip->GetName() != currentAnimation->name)										// If no clip playing or animation/clip changed
 			{
-				//if (currentAnimation->duration > 0.0f)
-				//	clip->SetSpeed(currentAnimation->duration / clip->GetDuration());
+				if (currentAnimation->duration > 0.0f && clip != nullptr)
+					clip->SetSpeed(clip->GetDurationInSeconds() / currentAnimation->duration);
 
 				animator->PlayClip(currentAnimation->track.c_str(), currentAnimation->name.c_str(), currentAnimation->blendTime);
 
