@@ -25,10 +25,6 @@ Chest::~Chest()
 
 void Chest::Awake()
 {
-	chestAudio = new C_AudioSource(gameObject);
-	
-	if (chestAudio != nullptr)
-		chestAudio->SetEvent("chest_open");
 }
 
 void Chest::Update()
@@ -124,7 +120,11 @@ void Chest::OnCollisionEnter(GameObject* object)
 	if (searches >= rollAttempts)
 		item->Deactivate();
 
+	if (chestAudio == nullptr)
+		chestAudio = new C_AudioSource(gameObject);
+
 	if (chestAudio != nullptr)
+		chestAudio->SetEvent("chest_open");
 		chestAudio->PlayFx(chestAudio->GetEventId());
 
 	open = true;
