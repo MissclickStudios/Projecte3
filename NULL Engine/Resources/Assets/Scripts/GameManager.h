@@ -173,6 +173,8 @@ public:
     //Story & dialog vars
     StoryDialogData storyDialogState;
 
+    bool paused = false;
+
     //Win screen stats
     RunStats runStats;
 
