@@ -13,8 +13,7 @@ enum class GroguState
 {
 	IDLE,
 	MOVE,
-	ATTACK_IN,
-	ATTACK
+	ATTACK_IN
 };
 
 class SCRIPTS_API Grogu : public Entity ALLOWED_INHERITANCE

@@ -71,7 +71,7 @@ void Grogu::SetUp()
 
 	if (player != nullptr)
 	{
-		GameObject* particleGameObject = App->scene->InstantiatePrefab(ParticlePrefab.uid, player, player->transform->GetWorldPosition(), Quat());
+		GameObject* particleGameObject = App->scene->InstantiatePrefab(ParticlePrefab.uid, player, float3::zero, Quat());
 		if (particleGameObject != nullptr)
 		{
 			particles = particleGameObject->GetComponent<C_ParticleSystem>();
@@ -91,7 +91,10 @@ void Grogu::Behavior()
 	{
 		if (App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_DOWN
 			|| App->input->GetGameControllerButton(SDL_CONTROLLER_BUTTON_LEFTSHOULDER) == ButtonState::BUTTON_DOWN)
+		{
 			state = GroguState::ATTACK_IN;
+			cooldownTimer.Start();
+		}
 	}
 	else if (cooldownTimer.ReadSec() > cooldown)
 		cooldownTimer.Stop();
@@ -128,12 +131,6 @@ void Grogu::Behavior()
 		particleTimer.Start();
 		if (particles != nullptr)
 			particles->ResumeSpawn();
-		break;
-	case GroguState::ATTACK:
-		//state = GroguState::IDLE;
-		//if (attackCollider != nullptr)
-		//	attackCollider->SetIsActive(false);
-		//cooldownTimer.Start();
 		break;
 	}
 

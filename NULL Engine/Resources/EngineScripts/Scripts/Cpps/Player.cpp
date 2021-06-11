@@ -1143,6 +1143,8 @@ void Player::Run()
 	
 	Movement();
 
+	//currentAnimation->duration = 
+
 	if (!inHub && runParticles != nullptr)
 		runParticles->ResumeSpawn();
 
