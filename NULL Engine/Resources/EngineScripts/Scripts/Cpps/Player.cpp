@@ -719,9 +719,9 @@ void Player::AnimatePlayer()
 	AnimationInfo* torsoInfo	= GetAimStateAnimation();
 	AnimationInfo* legsInfo		= GetMoveStateAnimation();
 
-	LOG("CURRENT:	{ %s }::{ %u }",	(currentAnimation != nullptr) ? currentAnimation->name.c_str() : "NONE", preview->GetTrackState());
-	LOG("TORSO:	  { %s }::{ %u }",		(torsoInfo != nullptr) ? torsoInfo->name.c_str() : "NONE", torsoTrack->GetTrackState());
-	LOG("LEGS:	   { %s }::{ %u }",		(legsInfo != nullptr) ? legsInfo->name.c_str() : "NONE", legsTrack->GetTrackState());
+	//LOG("CURRENT:	{ %s }::{ %u }",	(currentAnimation != nullptr) ? currentAnimation->name.c_str() : "NONE", preview->GetTrackState());
+	//LOG("TORSO:	  { %s }::{ %u }",		(torsoInfo != nullptr) ? torsoInfo->name.c_str() : "NONE", torsoTrack->GetTrackState());
+	//LOG("LEGS:	   { %s }::{ %u }",		(legsInfo != nullptr) ? legsInfo->name.c_str() : "NONE", legsTrack->GetTrackState());
 
 	if (GetEntityState() != EntityState::NONE || aimState == AimState::IDLE || torsoInfo == nullptr || legsInfo == nullptr)		// TAKE INTO ACCOUNT STUN AND KNOCKBACK + LOOK INTO DASH PROBLEMS 
 	{	
@@ -729,12 +729,18 @@ void Player::AnimatePlayer()
 		{
 			if (torsoTrack->GetTrackState() != TrackState::STOP)
 				torsoTrack->Stop();
+
+			torsoTrack->FreeCurrentClip();
+			torsoTrack->FreeBlendingClip();
 		}
 			
 		if (legsTrack != nullptr)
 		{
 			if (legsTrack->GetTrackState() != TrackState::STOP)
 				legsTrack->Stop();
+
+			legsTrack->FreeCurrentClip();
+			legsTrack->FreeBlendingClip();
 		}
 		
 		AnimatorClip* previewClip = preview->GetCurrentClip();
@@ -760,12 +766,15 @@ void Player::AnimatePlayer()
 		(hip != nullptr) ? hip->transform->SetLocalRotation(float3::zero) : LOG("OOGA BOOGA NO HIPAROOGA");			// Resetting the hip position.
 			
 		AnimatorClip* torsoClip = torsoTrack->GetCurrentClip();
-		AnimatorClip* legsClip = legsTrack->GetCurrentClip();
+		AnimatorClip* legsClip	= legsTrack->GetCurrentClip();
+		AnimatorClip* bLegsClip	= legsTrack->GetBlendingClip();
 
 		//if (preview->GetTrackState() != TrackState::STOP)
 		//	preview->Stop();
 
 		preview->Stop();
+		preview->FreeCurrentClip();
+		preview->FreeBlendingClip();
 
 		if ((torsoClip == nullptr) || overrideShootAnimation || (torsoClip->GetName() != torsoInfo->name))
 		{
