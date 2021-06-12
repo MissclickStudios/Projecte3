@@ -840,7 +840,25 @@ void Player::AnimatePlayer()
 		AnimatorClip* previewClip = preview->GetCurrentClip();
 
 		if ((previewClip == nullptr) || (previewClip->GetName() != currentAnimation->name))											// If no clip playing or animation/clip changed
-			animator->PlayClip(currentAnimation->track.c_str(), currentAnimation->name.c_str(), currentAnimation->blendTime);
+		{
+			if (moveState == PlayerState::DASH)
+			{
+				if (!dashing)
+				{	
+					dashing = true;
+					
+					preview->FreeCurrentClip();
+					preview->FreeBlendingClip();
+
+					animator->PlayClip(currentAnimation->track.c_str(), currentAnimation->name.c_str(), currentAnimation->blendTime);
+				}
+			}
+			else
+			{
+				dashing = false;
+				animator->PlayClip(currentAnimation->track.c_str(), currentAnimation->name.c_str(), currentAnimation->blendTime);
+			}
+		}
 
 		if (preview->GetTrackState() == TrackState::STOP)
 		{

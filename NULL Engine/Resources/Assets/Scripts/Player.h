@@ -126,6 +126,7 @@ public:
 	AnimationInfo mainMenuAnimation			= { "MainMenu" };
 
 	bool overrideShootAnimation				= false;
+	bool dashing							= false;
 
 	// -- Status Effects
 	AnimationInfo stunnedAnimation			= { "Stun" };
@@ -152,10 +153,10 @@ public:
 	AnimationInfo dashAnimation				= { "Dash" };
 
 	// -- Weapons (Aim/Shoot/Reload/Change)
-	AnimationInfo aimBlasterAnimation		= { "AimBlaster", "Preview", 0.0f };
-	AnimationInfo aimSniperAnimation		= { "AimSniper", "Preview", 0.0f };
-	AnimationInfo aimMinigunAnimation		= { "AimMinigun", "Preview", 0.0f };
-	AnimationInfo aimShotgunAnimation		= { "AimShotgun", "Preview", 0.0f };
+	AnimationInfo aimBlasterAnimation		= { "AimBlaster" };
+	AnimationInfo aimSniperAnimation		= { "AimSniper"	};
+	AnimationInfo aimMinigunAnimation		= { "AimMinigun" };
+	AnimationInfo aimShotgunAnimation		= { "AimShotgun" };
 
 	AnimationInfo shootBlasterAnimation		= { "ShootBlaster" };
 	AnimationInfo shootSniperAnimation		= { "ShootSniper" };

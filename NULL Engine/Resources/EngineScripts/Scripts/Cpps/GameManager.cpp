@@ -200,7 +200,7 @@ void GameManager::Start()
 		if (strcmp(App->scene->GetCurrentScene(), levelNames.ruinsBoss.c_str()) == 0)
 		{
 			if (!storyDialogState.defeatedIG12FirstTime)
-				dialogManager->StartDialog("1st Conversation IG-12");
+				dialogManager->StartDialog("1st Conversation with IG - 12");
 			else
 				dialogManager->StartDialog("Pool Conversation IG-12");
 			return;
