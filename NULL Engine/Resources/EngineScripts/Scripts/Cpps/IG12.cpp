@@ -202,6 +202,7 @@ void IG12::SetUp()
 	//Audios
 	damageAudio = new C_AudioSource(gameObject);
 	deathAudio = new C_AudioSource(gameObject);
+	walkAudio = new C_AudioSource(gameObject);
 	if (damageAudio != nullptr)
 		damageAudio->SetEvent("ig11_damaged");
 	if (deathAudio != nullptr)
@@ -240,6 +241,8 @@ void IG12::CleanUp()
 		delete damageAudio;
 	if (deathAudio != nullptr)
 		delete deathAudio;
+	if (walkAudio != nullptr)
+		delete walkAudio;
 }
 
 void IG12::OnCollisionEnter(GameObject* object)

@@ -144,6 +144,7 @@ void IG11::Start()
 	//Audios
 	damageAudio = new C_AudioSource(gameObject);
 	deathAudio = new C_AudioSource(gameObject);
+	walkAudio = new C_AudioSource(gameObject);
 	if (damageAudio != nullptr)
 		damageAudio->SetEvent("ig11_damaged");
 	if (deathAudio != nullptr)
@@ -226,6 +227,8 @@ void IG11::CleanUp()
 		delete damageAudio;
 	if (deathAudio != nullptr)
 		delete deathAudio;
+	if (walkAudio != nullptr)
+		delete walkAudio;
 }
 
 void IG11::EntityPause()
