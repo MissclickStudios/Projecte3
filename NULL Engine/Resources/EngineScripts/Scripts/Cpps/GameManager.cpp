@@ -107,9 +107,9 @@ void GameManager::Awake()
 			LoadItemPool(chestItemPool, "ChestItemPool.json");
 			LoadItemPool(shopItemPool, "ShopItemPool.json");
 			LoadItemPool(hubItemPool, "HubItemPool.json");
-
-			HandleBackgroundMusic();
 		}
+
+		HandleBackgroundMusic();
 	}
 
 	GameObject* tmp = App->scene->GetGameObjectByName("DialogCanvas"); 
