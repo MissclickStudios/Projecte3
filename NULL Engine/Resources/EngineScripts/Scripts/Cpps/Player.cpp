@@ -473,8 +473,6 @@ void Player::LoadState(ParsonNode& playerNode)
 				secondaryWeapon->SetOwnership(type, rightHand, rightHandName.c_str());
 
 			int savedAmmo = playerNode.GetInteger("Equiped Gun Ammo");
-			if (savedAmmo > secondaryWeapon->MaxAmmo())
-				savedAmmo = secondaryWeapon->MaxAmmo();
 			secondaryWeapon->ammo = savedAmmo;
 		}
 	}
