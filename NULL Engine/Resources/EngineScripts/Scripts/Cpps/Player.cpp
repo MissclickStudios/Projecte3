@@ -817,7 +817,7 @@ void Player::AnimatePlayer()
 	//LOG("TORSO:	  { %s }::{ %u }",		(torsoInfo != nullptr) ? torsoInfo->name.c_str() : "NONE", torsoTrack->GetTrackState());
 	//LOG("LEGS:	   { %s }::{ %u }",		(legsInfo != nullptr) ? legsInfo->name.c_str() : "NONE", legsTrack->GetTrackState());
 
-	if (GetEntityState() != EntityState::NONE || aimState == AimState::IDLE || torsoInfo == nullptr || legsInfo == nullptr)		// TAKE INTO ACCOUNT STUN AND KNOCKBACK + LOOK INTO DASH PROBLEMS 
+	if (GetEntityState() != EntityState::NONE || moveState == PlayerState::DASH || aimState == AimState::IDLE || torsoInfo == nullptr || legsInfo == nullptr)
 	{	
 		if (torsoTrack != nullptr)
 		{
@@ -837,28 +837,13 @@ void Player::AnimatePlayer()
 			legsTrack->FreeBlendingClip();
 		}
 		
+		if (moveState == PlayerState::DASH)																							// Last minute fix, if it works it works.
+			currentAnimation = &dashAnimation;
+
 		AnimatorClip* previewClip = preview->GetCurrentClip();
 
 		if ((previewClip == nullptr) || (previewClip->GetName() != currentAnimation->name))											// If no clip playing or animation/clip changed
-		{
-			if (moveState == PlayerState::DASH)
-			{
-				if (!dashing)
-				{	
-					dashing = true;
-					
-					preview->FreeCurrentClip();
-					preview->FreeBlendingClip();
-
-					animator->PlayClip(currentAnimation->track.c_str(), currentAnimation->name.c_str(), currentAnimation->blendTime);
-				}
-			}
-			else
-			{
-				dashing = false;
-				animator->PlayClip(currentAnimation->track.c_str(), currentAnimation->name.c_str(), currentAnimation->blendTime);
-			}
-		}
+			animator->PlayClip(currentAnimation->track.c_str(), currentAnimation->name.c_str(), currentAnimation->blendTime);
 
 		if (preview->GetTrackState() == TrackState::STOP)
 		{
