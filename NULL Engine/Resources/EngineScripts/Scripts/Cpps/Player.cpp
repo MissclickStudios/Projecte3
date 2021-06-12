@@ -223,6 +223,32 @@ void Player::SetUp()
 	//Load HUD animations
 	switch (secondaryWeapon->type)
 	{
+	case WeaponType::BLASTER:
+		primaryWeaponImage->GetAnimationSprites("UseWeapon4", 1);
+		primaryWeaponImage->GetAnimationSprites("ChargeWeapon1", 3);
+		weaponImage->SetTextureCoordinates(-3130, -1190, 665, 245);
+		weaponNameImage->SetTextureCoordinates(1671, -140, 507, 78);
+		if (secondaryWeapon->weaponModel == nullptr)
+			primaryWeaponImage->GetAnimationSprites("ChangeWeapon", 2);
+		else
+		{
+			switch (secondaryWeapon->type)
+			{
+			case WeaponType::MINIGUN:
+				primaryWeaponImage->GetAnimationSprites("ChangeWeapon02", 2);
+				break;
+			case WeaponType::SNIPER:
+				primaryWeaponImage->GetAnimationSprites("ChangeWeapon01", 2);
+				break;
+			case WeaponType::SHOTGUN:
+				primaryWeaponImage->GetAnimationSprites("ChangeWeapon03", 2);
+				break;
+			default:
+				primaryWeaponImage->GetAnimationSprites("ChangeWeapon", 2);
+				break;
+			}
+		}
+		break;
 	case WeaponType::MINIGUN:
 		primaryWeaponImage->GetAnimationSprites("UseWeapon6", 1);
 		primaryWeaponImage->GetAnimationSprites("ChangeWeapon07", 2);
