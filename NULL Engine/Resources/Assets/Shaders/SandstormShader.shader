@@ -112,7 +112,7 @@ void main()
     
   
   
-   	vec2 displaced_TexCoord = vec2(TexCoord.x + (Time/512)*0.02* wind_direction.x, TexCoord.y + (Time/512)*0.02* wind_direction.y);
+   	vec2 displaced_TexCoord = vec2(TexCoord.x + (Time/512)*0.005* wind_direction.x, TexCoord.y + (Time/512)*0.005* wind_direction.y);
    	vec4 texColor = vec4(0.83, 0.7, 0.6, texture(ourTexture, displaced_TexCoord).r*0.35);
 	
  
@@ -207,6 +207,7 @@ vec4 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewD
 }
 
 #endif
+
 
 
 
