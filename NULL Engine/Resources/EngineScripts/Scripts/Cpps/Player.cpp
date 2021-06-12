@@ -793,13 +793,34 @@ AnimationInfo* Player::GetLegsAnimation()
 
 	if (aimInput.IsZero())
 	{
-		if (currentWeapon == nullptr)
-			return &runForwardsLightAnimation;
-
-		return (currentWeapon->type != WeaponType::MINIGUN) ? &runForwardsLightAnimation : &runForwardsHeavyAnimation;
+		return GetWeaponRunAnimation();
 	}
 
-	return legsMatrix[(int)aimDirection][(int)moveDirection];
+	AnimationInfo* legsAnimation = legsMatrix[(int)aimDirection][(int)moveDirection];
+	if (legsAnimation == &runForwardsAnimation)
+	{
+		legsAnimation = GetWeaponRunAnimation();
+	}
+
+	return legsAnimation;
+}
+
+AnimationInfo* Player::GetWeaponRunAnimation()
+{
+	if (currentWeapon == nullptr)
+		return &runForwardsAnimation;
+	
+	switch (currentWeapon->type)
+	{
+	case WeaponType::BLASTER:	{ return &runBlasterAnimation; }	break;
+	case WeaponType::SNIPER:	{ return &runSniperAnimation; }		break;
+	case WeaponType::SHOTGUN:	{ return &runShotgunAnimation; }	break;
+	case WeaponType::MINIGUN:	{ return &runMinigunAnimation; }	break;
+	}
+
+	LOG("[ERROR] Player Script: Could not get Weapon Run Animation! Error: Unknown Weapon Type.");
+
+	return &runForwardsAnimation;
 }
 
 AnimationInfo* Player::GetAimStateAnimation()
