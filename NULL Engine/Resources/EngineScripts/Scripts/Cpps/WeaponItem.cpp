@@ -75,20 +75,24 @@ void WeaponItem::PickUp(Player* player)
 	Deactivate();
 }
 
-void WeaponItem::CalculateNewHoverPosition()
-{
-	newPosition = float3::zero;
+void WeaponItem::CalculateNewHoverPosition()											// --- All this mess just to avoid using sin() 3 times per frame.
+{																						// It works tho :).
+	newPosition = float3::zero;															// And it hovers cool enough :). 
+	
+	if (hoverRate.x >= 1.0f)	{ addX = false; hoverRate.x = 1.0f; }					// -------------------------------------------------
+	if (hoverRate.y >= 1.0f)	{ addY = false; hoverRate.y = 1.0f; }					// Detecting that the rate is above the upper bound. 
+	if (hoverRate.z >= 1.0f)	{ addZ = false; hoverRate.z = 1.0f; }					// -------------------------------------------------
 
-	if (hoverRate.x >= 1.0f || hoverRate.x <= -1.0f) { addX = !addX; }					// --- All this mess just to avoid using sin() 3 times per frame.
-	if (hoverRate.y >= 1.0f || hoverRate.y <= -1.0f) { addY = !addY; }					// 
-	if (hoverRate.z >= 1.0f || hoverRate.z <= -1.0f) { addZ = !addZ; }					// 
+	if (hoverRate.x <= -1.0f)	{ addX = true; hoverRate.x = -1.0f; }					// -------------------------------------------------
+	if (hoverRate.y <= -1.0f)	{ addY = true; hoverRate.y = -1.0f; }					// Detecting that the rate is below the lower bound.
+	if (hoverRate.z <= -1.0f)	{ addZ = true; hoverRate.z = -1.0f; }					// -------------------------------------------------
+
+	float dt = MC_Time::Game::GetDT();													// -------------------------------------------------
+	hoverRate.x += (((addX) ? dt : -dt)) * hoverSpeed.x;								// 
+	hoverRate.y += (((addY) ? dt : -dt)) * hoverSpeed.y;								// 
+	hoverRate.z += (((addZ) ? dt : -dt)) * hoverSpeed.z;								// -------------------------------------------------
 	
-	float dt = MC_Time::Game::GetDT();													// 
-	hoverRate.x += (((addX) ? dt : -dt)) * hoverSpeed.x;								// It works tho :).
-	hoverRate.y += (((addY) ? dt : -dt)) * hoverSpeed.y;								// And it hovers cool enough :).
-	hoverRate.z += (((addZ) ? dt : -dt)) * hoverSpeed.z;								// 
-	
-	newPosition.x = (hoverRange.x * hoverRate.x) * 0.1f;								// 
+	newPosition.x = (hoverRange.x * hoverRate.x) * 0.1f;								// -------------------------------------------------
 	newPosition.y = (hoverRange.y * hoverRate.y) * 0.1f;								// 
 	newPosition.z = (hoverRange.z * hoverRate.z) * 0.1f;								// --------------------------------------------------------------
 }
