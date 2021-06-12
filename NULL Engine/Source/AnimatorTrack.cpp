@@ -214,11 +214,6 @@ bool AnimatorTrack::PlayClip(AnimatorClip* clip, std::vector<BoneLink>* clipBone
 	
 	Play();
 
-	/*if (success && trackState != TrackState::PLAY)
-	{
-		Play();
-	}*/
-
 	return success;
 }
 
@@ -493,6 +488,10 @@ bool AnimatorTrack::StepClips(float dt)
 		{
 			Stop();
 			ResetCurrentBones();
+			
+			if (blendingClip != nullptr)
+				SwitchBlendingToCurrent();
+			
 			return false;
 		}
 	}

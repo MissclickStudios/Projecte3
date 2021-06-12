@@ -767,6 +767,9 @@ void Player::AnimatePlayer()
 
 		if ((legsClip == nullptr) || (legsClip->GetName() != legsInfo->name))
 			animator->PlayClip(legsTrack->GetName(), legsInfo->name.c_str(), legsInfo->blendTime);
+
+		torsoTrack->Play();
+		legsTrack->Play();
 	}
 }
 
