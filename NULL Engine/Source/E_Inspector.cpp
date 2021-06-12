@@ -2272,7 +2272,10 @@ void E_Inspector::DrawBasicSettings(Component* component, const char* state)
 }
 
 void E_Inspector::DisplayMeshSelector(C_Mesh* cMesh, std::map<std::string, ResourceBase>& meshBases)
-{
+{	
+	static std::string copiedMeshPath	= "[NONE]";
+	static uint32 copiedMeshUID			= 0;
+	
 	if (ImGui::BeginCombo("Select Mesh", cMesh->GetMeshFile(), ImGuiComboFlags_None))
 	{
 		if (meshBases.empty())																									// Convoluted and overengineered, but it works :).
@@ -2281,15 +2284,15 @@ void E_Inspector::DisplayMeshSelector(C_Mesh* cMesh, std::map<std::string, Resou
 			App->resourceManager->GetResourceBases<R_Mesh>(rBases);
 
 			for (auto base = rBases.cbegin(); base != rBases.cend(); ++base)
-			{
+			{	
 				meshBases.emplace((*base).assetsFile, *base);																	// std::map will sort the bases by Alphabetical Order.
 			}
 
 			rBases.clear();
 		}
-			
+		
 		for (auto mesh = meshBases.cbegin(); mesh != meshBases.cend(); ++mesh)
-		{
+		{	
 			if (ImGui::Selectable(mesh->first.c_str(), (mesh->first == cMesh->GetMeshFile())))
 			{	
 				bool success = App->resourceManager->AllocateResource(mesh->second.UID, mesh->second.assetsPath.c_str());
@@ -2302,6 +2305,38 @@ void E_Inspector::DisplayMeshSelector(C_Mesh* cMesh, std::map<std::string, Resou
 		}
 		
 		ImGui::EndCombo();
+	}
+
+	if (ImGui::Button("Copy Mesh"))
+	{
+		std::vector<ResourceBase> rBases;
+		App->resourceManager->GetResourceBases<R_Mesh>(rBases);
+
+		for (auto base = rBases.cbegin(); base != rBases.cend(); ++base)
+		{
+			if ((*base).assetsFile == cMesh->GetMeshFile())
+			{
+				copiedMeshPath	= (*base).assetsPath;
+				copiedMeshUID	= (*base).UID;
+			}
+		}
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Paste Mesh"))
+	{
+		if (copiedMeshUID != 0 && copiedMeshPath != "[NONE]")
+		{
+			bool success = App->resourceManager->AllocateResource(copiedMeshUID, copiedMeshPath.c_str());
+			if (success) 
+			{ 
+				cMesh->SetMesh((R_Mesh*)App->resourceManager->RequestResource(copiedMeshUID)); 
+			}
+
+			copiedMeshPath	= "[NONE]";
+			copiedMeshUID	= 0;
+		}
 	}
 }
 
