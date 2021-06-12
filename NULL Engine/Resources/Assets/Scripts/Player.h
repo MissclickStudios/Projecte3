@@ -14,6 +14,7 @@
 
 class C_AudioSource;
 class C_2DAnimator;
+class C_UI_Image;
 
 struct ItemData;
 
@@ -217,6 +218,8 @@ public:
 	C_2DAnimator* dashImage;
 	C_2DAnimator* creditsImage;
 	C_2DAnimator* beskarImage;
+	C_UI_Image* weaponImage = nullptr;
+	C_UI_Image* weaponNameImage = nullptr;
 
 	// Controller
 	float joystickThreshold					= 25.0f;
