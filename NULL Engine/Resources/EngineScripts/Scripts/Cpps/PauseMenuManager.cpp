@@ -171,12 +171,12 @@ void PauseMenuManager::Update()
 	}
 
 	//settings
-	if (musicSlider && musicSlider->Hovered() && (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(3) == AxisState::POSITIVE_AXIS_DOWN))
+	if (musicSlider && musicSlider->Hovered() && (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::POSITIVE_AXIS_DOWN))
 	{
 		App->audio->maxMusicVolume = musicSlider->IncrementOneSquare();
 		App->audio->SetRtcp("maxMusicVolume", App->audio->maxMusicVolume);
 	}
-	else if (musicSlider && musicSlider->Hovered() && (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(3) == AxisState::NEGATIVE_AXIS_DOWN))
+	else if (musicSlider && musicSlider->Hovered() && (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::NEGATIVE_AXIS_DOWN))
 	{
 		App->audio->maxMusicVolume = musicSlider->DecrementOneSquare();
 		App->audio->SetRtcp("maxMusicVolume", App->audio->maxMusicVolume);
