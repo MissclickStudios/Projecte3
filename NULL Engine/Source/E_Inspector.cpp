@@ -2274,6 +2274,7 @@ void E_Inspector::DrawBasicSettings(Component* component, const char* state)
 void E_Inspector::DisplayMeshSelector(C_Mesh* cMesh, std::map<std::string, ResourceBase>& meshBases)
 {	
 	static std::string copiedMeshPath	= "[NONE]";
+	static std::string copiedMeshFile	= "[NONE]";
 	static uint32 copiedMeshUID			= 0;
 	
 	if (ImGui::BeginCombo("Select Mesh", cMesh->GetMeshFile(), ImGuiComboFlags_None))
@@ -2317,6 +2318,7 @@ void E_Inspector::DisplayMeshSelector(C_Mesh* cMesh, std::map<std::string, Resou
 			if ((*base).assetsFile == cMesh->GetMeshFile())
 			{
 				copiedMeshPath	= (*base).assetsPath;
+				copiedMeshFile	= (*base).assetsFile;
 				copiedMeshUID	= (*base).UID;
 			}
 		}
@@ -2335,9 +2337,21 @@ void E_Inspector::DisplayMeshSelector(C_Mesh* cMesh, std::map<std::string, Resou
 			}
 
 			copiedMeshPath	= "[NONE]";
+			copiedMeshFile	= "[NONE]";
 			copiedMeshUID	= 0;
 		}
 	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Clear"))
+	{
+		copiedMeshPath = "[NONE]";
+		copiedMeshFile = "[NONE]";
+		copiedMeshUID = 0;
+	}
+
+	ImGui::TextColored(Yellow.C_Array(), "Copied { %s }", copiedMeshFile.c_str());
 }
 
 void E_Inspector::DisplayMaterial(C_Material* cMaterial)
