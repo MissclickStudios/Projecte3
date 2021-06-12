@@ -1,6 +1,6 @@
 {
-    "ModTime": 1623452848,
-    "UID": 1611972384,
+    "ModTime": 1623487131,
+    "UID": 1549743245,
     "ParentUID": 888400124,
     "PrefabID": 1654173329,
     "IsPrefab": true,
@@ -17,9 +17,9 @@
         {
             "Type": 1,
             "LocalPosition": [
-                -178.36808776855469,
-                -4.5006685256958008,
-                -239.99446105957031
+                -178.74076843261719,
+                -6.2230820655822754,
+                -240.26649475097656
             ],
             "LocalRotation": [
                 0,
@@ -41,10 +41,10 @@
             "Density": 1000,
             "Linear Damping": 0,
             "Angular Damping": 0,
-            "Use Gravity": true,
-            "Is Kinematic": true,
+            "Use Gravity": false,
+            "Is Kinematic": false,
             "Freeze Position X": true,
-            "Freeze Position Y": false,
+            "Freeze Position Y": true,
             "Freeze Position Z": true,
             "Freeze Rotation X": true,
             "Freeze Rotation Y": true,
@@ -168,8 +168,90 @@
     ],
     "Children": [
         {
-            "UID": 641400998,
-            "ParentUID": 1611972384,
+            "UID": 695170324,
+            "ParentUID": 1549743245,
+            "PrefabID": 1654173329,
+            "IsPrefab": true,
+            "Name": "Base",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.70710664987564087,
+                        0,
+                        0,
+                        0.70710694789886475
+                    ],
+                    "LocalScale": [
+                        0.05000000074505806,
+                        0.05000000074505806,
+                        0.05000000074505806
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 220355391,
+                    "Name": "turret_base.nemesh",
+                    "Path": "Library\/Meshes\/220355391.nemesh",
+                    "File": "220355391.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": 1,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "RenderLast": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1886986290,
+                        "Color": [
+                            0.58823531866073608,
+                            0.58823531866073608,
+                            0.58823531866073608,
+                            1
+                        ],
+                        "Name": "turret_base.nemat",
+                        "Path": "Library\/Materials\/1886986290.nemat",
+                        "File": "1886986290.nemat"
+                    },
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/\/Enemies\/Turet\/turret_droid_texture.png",
+                        "AssetsName": "turret_droid_texture.png",
+                        "LibaryPath": "Library\/Textures\/1100532012.netex",
+                        "LibraryFile": "1100532012.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ],
+            "Children": []
+        },
+        {
+            "UID": 1858795951,
+            "ParentUID": 1549743245,
             "PrefabID": 1654173329,
             "IsPrefab": true,
             "Name": "Skeleton",
@@ -204,8 +286,8 @@
             ],
             "Children": [
                 {
-                    "UID": 1245559599,
-                    "ParentUID": 641400998,
+                    "UID": 35700045,
+                    "ParentUID": 1858795951,
                     "PrefabID": 1654173329,
                     "IsPrefab": true,
                     "Name": "Hand",
@@ -241,8 +323,8 @@
                     "Children": []
                 },
                 {
-                    "UID": 1080744612,
-                    "ParentUID": 641400998,
+                    "UID": 1095969642,
+                    "ParentUID": 1858795951,
                     "PrefabID": 1654173329,
                     "IsPrefab": true,
                     "Name": "Head",
@@ -277,8 +359,8 @@
                     ],
                     "Children": [
                         {
-                            "UID": 1990855343,
-                            "ParentUID": 1080744612,
+                            "UID": 1482342262,
+                            "ParentUID": 1095969642,
                             "PrefabID": 1654173329,
                             "IsPrefab": true,
                             "Name": "HeadMesh",
@@ -359,8 +441,8 @@
                             "Children": []
                         },
                         {
-                            "UID": 911288028,
-                            "ParentUID": 1080744612,
+                            "UID": 2059735415,
+                            "ParentUID": 1095969642,
                             "PrefabID": 1654173329,
                             "IsPrefab": true,
                             "Name": "Barrel",
@@ -398,88 +480,6 @@
                     ]
                 }
             ]
-        },
-        {
-            "UID": 2117359217,
-            "ParentUID": 1611972384,
-            "PrefabID": 1654173329,
-            "IsPrefab": true,
-            "Name": "Base",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        -0.70710664987564087,
-                        0,
-                        0,
-                        0.70710694789886475
-                    ],
-                    "LocalScale": [
-                        0.05000000074505806,
-                        0.05000000074505806,
-                        0.05000000074505806
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 220355391,
-                    "Name": "turret_base.nemesh",
-                    "Path": "Library\/Meshes\/220355391.nemesh",
-                    "File": "220355391.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false,
-                    "Outline": false,
-                    "OutlineThickness": 1,
-                    "OutlineColor": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "RenderLast": false
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 1886986290,
-                        "Color": [
-                            0.58823531866073608,
-                            0.58823531866073608,
-                            0.58823531866073608,
-                            1
-                        ],
-                        "Name": "turret_base.nemat",
-                        "Path": "Library\/Materials\/1886986290.nemat",
-                        "File": "1886986290.nemat"
-                    },
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/\/Enemies\/Turet\/turret_droid_texture.png",
-                        "AssetsName": "turret_droid_texture.png",
-                        "LibaryPath": "Library\/Textures\/1100532012.netex",
-                        "LibraryFile": "1100532012.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
-                    }
-                }
-            ],
-            "Children": []
         }
     ]
 } 
