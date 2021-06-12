@@ -112,7 +112,7 @@ public:
 	void AnimatePlayer();
 	AnimationInfo* GetMoveStateAnimation();
 	AnimationInfo* GetLegsAnimation();
-	AnimationInfo* GetWeaponRunAnimation();
+	AnimationInfo* GetWeaponRunAnimation(bool forceRunForward = false);
 	AnimationInfo* GetAimStateAnimation();
 	AnimationInfo* GetAimAnimation();
 	AnimationInfo* GetShootAnimation();

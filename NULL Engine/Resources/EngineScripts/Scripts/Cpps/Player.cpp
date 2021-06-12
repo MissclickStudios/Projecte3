@@ -917,15 +917,15 @@ AnimationInfo* Player::GetLegsAnimation()
 	AnimationInfo* legsAnimation = legsMatrix[(int)aimDirection][(int)moveDirection];
 	if (legsAnimation == &runForwardsAnimation)
 	{
-		legsAnimation = GetWeaponRunAnimation();
+		legsAnimation = GetWeaponRunAnimation(true);
 	}
 
 	return legsAnimation;
 }
 
-AnimationInfo* Player::GetWeaponRunAnimation()
+AnimationInfo* Player::GetWeaponRunAnimation(bool forceRunForward)
 {
-	if (currentWeapon == nullptr)
+	if (currentWeapon == nullptr || forceRunForward)
 		return &runForwardsAnimation;
 	
 	switch (currentWeapon->type)
