@@ -846,8 +846,6 @@ void Player::AnimatePlayer()
 	}
 	else
 	{	
-		//LOG("DIRECTIONS: [%d]::[%d]::[%s]::[%s]", aimDirection, moveDirection, GetAimStateAnimation()->name.c_str(), GetLegsAnimation()->name.c_str());
-
 		if (torsoTrack == nullptr || legsTrack == nullptr)
 		{
 			LOG("[WARNING] Player Script: torsoTrack or legsTrack was nullptr!");
@@ -860,12 +858,12 @@ void Player::AnimatePlayer()
 		AnimatorClip* legsClip	= legsTrack->GetCurrentClip();
 		AnimatorClip* bLegsClip	= legsTrack->GetBlendingClip();
 
-		//if (preview->GetTrackState() != TrackState::STOP)
-		//	preview->Stop();
-
-		preview->Stop();
-		preview->FreeCurrentClip();
-		preview->FreeBlendingClip();
+		if (preview != nullptr)
+		{
+			preview->Stop();
+			preview->FreeCurrentClip();
+			preview->FreeBlendingClip();
+		}
 
 		if ((torsoClip == nullptr) || overrideShootAnimation || (torsoClip->GetName() != torsoInfo->name))
 		{
