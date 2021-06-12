@@ -40,6 +40,8 @@ void GroundItem::Awake()
 	if (menuGameObject != nullptr)
 		gameManager = (GameManager*)menuGameObject->GetScript("GameManager");
 
+	player = App->scene->GetGameObjectByName(playerName.c_str());
+
 	for (uint i = 0; i < gameObject->components.size(); ++i) // CANT GETCOMPONENT() OF PARTICLE SYSTEM
 	{
 		if (gameObject->components[i]->GetType() == ComponentType::PARTICLE_SYSTEM)
@@ -64,6 +66,15 @@ void GroundItem::Awake()
 
 void GroundItem::Update()
 {
+	if (player != nullptr)
+	{
+		float playerY = player->transform->GetWorldPosition().y;
+		float thisY = gameObject->transform->GetWorldPosition().y;
+
+		if (abs(playerY - thisY) > 10)
+			PickUp((Player*)player->GetScript("Player"));
+	}
+
 	float3 N, U, _U, R;
 	float4x4 cameraTransform = App->camera->GetCurrentCamera()->GetOwner()->transform->GetWorldTransform();
 	float3 direction = float3(cameraTransform.TranslatePart() - gameObject->transform->GetWorldPosition()).Normalized(); //normalized vector between the camera and gameobject position

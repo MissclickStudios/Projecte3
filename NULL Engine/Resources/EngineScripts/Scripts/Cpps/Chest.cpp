@@ -29,6 +29,8 @@ void Chest::Awake()
 
 void Chest::Update()
 {
+	if (gameObject->transform->GetLocalPosition().y < -1000)
+		OnCollisionEnter(nullptr);
 	if (open)
 	{
 		Deactivate();
@@ -44,7 +46,7 @@ void Chest::CleanUp()
 void Chest::OnPause()
 {
 }
-
+ 
 void Chest::OnResume()
 {
 }

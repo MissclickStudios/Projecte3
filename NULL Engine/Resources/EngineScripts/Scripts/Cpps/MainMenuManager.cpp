@@ -37,6 +37,9 @@ void MainMenuManager::Start()
 		continueButton = (C_UI_Button*)continueButtonObject->GetComponent<C_UI_Button>();
 	if (settingsButtonObject != nullptr)
 		settingsButton = (C_UI_Button*)settingsButtonObject->GetComponent<C_UI_Button>();
+	
+	creditsButton = (C_UI_Button*)App->scene->GetGameObjectByName("Credits")->GetComponent<C_UI_Button>();
+
 	if (exitButtonObject != nullptr)
 		exitButton = (C_UI_Button*)exitButtonObject->GetComponent<C_UI_Button>();
 
@@ -94,6 +97,13 @@ void MainMenuManager::Update()
 		if (shakeCheck && gameManager->cameraShake)
 			shakeCheck->SetChecked();
 	}
+
+	if (gameManager && creditsButton && creditsButton->GetState() == UIButtonState::RELEASED)
+	{
+		App->scene->ScriptChangeScene("Assets/Scenes/Credits.json");
+		App->scene->creditsMainMenu = true;
+	}
+
 	if (gameManager && exitButton && exitButton->GetState() == UIButtonState::RELEASED && gameManagerObject != nullptr)
 		App->quit = true;
 
