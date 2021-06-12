@@ -111,6 +111,7 @@ public:
 	void AnimatePlayer();
 	AnimationInfo* GetMoveStateAnimation();
 	AnimationInfo* GetLegsAnimation();
+	AnimationInfo* GetWeaponRunAnimation();
 	AnimationInfo* GetAimStateAnimation();
 	AnimationInfo* GetAimAnimation();
 	AnimationInfo* GetShootAnimation();
@@ -138,9 +139,11 @@ public:
 	// -- Movement
 	AnimationInfo walkAnimation				= { "Walk" };
 
-	AnimationInfo runForwardsAnimation		= { "RunForwardsLight" };
-	AnimationInfo runForwardsLightAnimation	= { "RunForwardsLight" };
-	AnimationInfo runForwardsHeavyAnimation	= { "RunForwardsHeavy" };
+	AnimationInfo runForwardsAnimation		= { "RunMinigun" };
+	AnimationInfo runBlasterAnimation		= { "RunBlaster" };
+	AnimationInfo runSniperAnimation		= { "RunSniper" };
+	AnimationInfo runShotgunAnimation		= { "RunShotgun" };
+	AnimationInfo runMinigunAnimation		= { "RunMinigun" };
 	AnimationInfo runBackwardsAnimation		= { "RunBackwards" };
 	AnimationInfo runLeftAnimation			= { "RunLeft" };
 	AnimationInfo runRightAnimation			= { "RunRight" };
@@ -148,10 +151,10 @@ public:
 	AnimationInfo dashAnimation				= { "Dash" };
 
 	// -- Weapons (Aim/Shoot/Reload/Change)
-	AnimationInfo aimBlasterAnimation		= { "AimBlaster" };
-	AnimationInfo aimSniperAnimation		= { "AimSniper" };
-	AnimationInfo aimMinigunAnimation		= { "AimMinigun" };
-	AnimationInfo aimShotgunAnimation		= { "AimShotgun" };
+	AnimationInfo aimBlasterAnimation		= { "AimBlaster", "Preview", 0.0f };
+	AnimationInfo aimSniperAnimation		= { "AimSniper", "Preview", 0.0f };
+	AnimationInfo aimMinigunAnimation		= { "AimMinigun", "Preview", 0.0f };
+	AnimationInfo aimShotgunAnimation		= { "AimShotgun", "Preview", 0.0f };
 
 	AnimationInfo shootBlasterAnimation		= { "ShootBlaster" };
 	AnimationInfo shootSniperAnimation		= { "ShootSniper"};
