@@ -895,8 +895,8 @@ bool IG12::BombingAttack()
 	{
 		if (bombingParticles != nullptr)
 			bombingParticles->ResumeSpawn();
-		if (damageAudio != nullptr)
-			damageAudio->PlayFx(damageAudio->GetEventId());
+		/*if (damageAudio != nullptr)
+			damageAudio->PlayFx(damageAudio->GetEventId());*/
 		
 		crosshair->transform->SetWorldPosition(float3(bombPosition.x, 5, bombPosition.y));
 
