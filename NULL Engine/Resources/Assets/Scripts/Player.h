@@ -15,6 +15,7 @@
 class C_AudioSource;
 class C_2DAnimator;
 class C_UI_Image;
+class R_Texture;
 
 struct ItemData;
 
@@ -221,6 +222,21 @@ public:
 	C_2DAnimator* beskarImage;
 	C_UI_Image* weaponImage = nullptr;
 	C_UI_Image* weaponNameImage = nullptr;
+	R_Texture* blasterUse = nullptr;
+	R_Texture* blasterChangeBlaster = nullptr;
+	R_Texture* blasterChangeSniper = nullptr;
+	R_Texture* blasterChangeMiniGun = nullptr;
+	R_Texture* blasterChangeShootGun = nullptr;
+	R_Texture* blasterCharge = nullptr;
+	R_Texture* sniperUse = nullptr;
+	R_Texture* sniperChange = nullptr;
+	R_Texture* sniperCharge = nullptr;
+	R_Texture* shotgunUse = nullptr;
+	R_Texture* shotgunChange = nullptr;
+	R_Texture* shotgunCharge = nullptr;
+	R_Texture* minigunUse = nullptr;
+	R_Texture* minigunChange = nullptr;
+	R_Texture* minigunCharge = nullptr;
 
 	// Controller
 	float joystickThreshold					= 25.0f;
