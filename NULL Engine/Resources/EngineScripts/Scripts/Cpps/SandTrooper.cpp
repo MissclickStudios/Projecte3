@@ -186,6 +186,12 @@ void Trooper::LookAtPlayer()
 
 void Trooper::ManageMovement()
 {
+	if (dieAfterStun == 2)
+	{
+		dieAfterStun = 3;
+		moveState = TrooperState::DEAD_IN;
+		deathTimer.Resume();
+	}
 	if (moveState != TrooperState::DEAD)
 	{
 		if (health <= 0.0f)
@@ -263,7 +269,7 @@ void Trooper::ManageMovement()
 		if (player)
 		{
 			Player* playerScript = (Player*)player->GetScript("Player");
-			playerScript->GiveCredits(Random::LCG::GetBoundedRandomUint(minCredits, maxCredits));
+			playerScript->GiveCredits(Random::LCG::GetBoundedRandomUint(minCredits / 2, maxCredits / 2));
 		}
 		deathTimer.Start();
 		moveState = TrooperState::DEAD;

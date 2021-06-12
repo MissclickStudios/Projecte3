@@ -183,6 +183,14 @@ void Entity::Update()
 	if (gameObject->transform->GetLocalPosition().y < -1000)
 		health = 0.0f;
 
+	if (health <= 0.0f)
+		if (type == EntityType::DARK_TROOPER || type == EntityType::TROOPER || type == EntityType::PLAYER)
+			if (entityState != EntityState::NONE)
+				deathTimer.Pause();
+			else
+				if (dieAfterStun == 0 || dieAfterStun == 1)
+					++dieAfterStun;
+
 	switch (entityState)
 	{
 	case EntityState::NONE:			{ Behavior(); }									break;
