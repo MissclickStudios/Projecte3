@@ -485,14 +485,18 @@ bool AnimatorTrack::StepClips(float dt)
 	{
 		bool success = currentClip->StepClip(stepValue);
 		if (!success && !currentClip->IsLooped())
-		{
-			Stop();
-			ResetCurrentBones();
-			
+		{			
 			if (blendingClip != nullptr)
+			{
 				SwitchBlendingToCurrent();
-			
-			return false;
+				return true;
+			}
+			else
+			{
+				Stop();
+				ResetCurrentBones();
+				return false;
+			}
 		}
 	}
 
