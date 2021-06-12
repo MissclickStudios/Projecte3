@@ -185,10 +185,7 @@ void Entity::Update()
 	if (gameObject->transform->GetLocalPosition().y < -1000)
 		health = 0.0f;
 
-	if (health < 0.0f)
-		entityState = EntityState::NONE;
-
-	switch (entityState) // problem?
+	switch (entityState)
 	{
 	case EntityState::NONE:			{ Behavior(); }									break;
 	case EntityState::STUNED:		{ currentAnimation = &stunAnimation; }			break;

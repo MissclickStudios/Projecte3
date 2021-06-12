@@ -719,9 +719,9 @@ void Player::AnimatePlayer()
 	AnimationInfo* torsoInfo	= GetAimStateAnimation();
 	AnimationInfo* legsInfo		= GetMoveStateAnimation();
 
-	LOG("CURRENT:	{ %s }::{ %u }",	(currentAnimation != nullptr) ? currentAnimation->name.c_str() : "NONE", preview->GetTrackState());
-	LOG("TORSO:	  { %s }::{ %u }",		(torsoInfo != nullptr) ? torsoInfo->name.c_str() : "NONE", torsoTrack->GetTrackState());
-	LOG("LEGS:	   { %s }::{ %u }",		(legsInfo != nullptr) ? legsInfo->name.c_str() : "NONE", legsTrack->GetTrackState());
+	//LOG("CURRENT:	{ %s }::{ %u }",	(currentAnimation != nullptr) ? currentAnimation->name.c_str() : "NONE", preview->GetTrackState());
+	//LOG("TORSO:	  { %s }::{ %u }",		(torsoInfo != nullptr) ? torsoInfo->name.c_str() : "NONE", torsoTrack->GetTrackState());
+	//LOG("LEGS:	   { %s }::{ %u }",		(legsInfo != nullptr) ? legsInfo->name.c_str() : "NONE", legsTrack->GetTrackState());
 
 	if (GetEntityState() != EntityState::NONE || aimState == AimState::IDLE || torsoInfo == nullptr || legsInfo == nullptr)		// TAKE INTO ACCOUNT STUN AND KNOCKBACK + LOOK INTO DASH PROBLEMS 
 	{	

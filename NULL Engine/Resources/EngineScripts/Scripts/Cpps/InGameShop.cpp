@@ -30,6 +30,11 @@ void InGameShop::Start()
 
 void InGameShop::Update()
 {
+	if (counter < 5)
+	{
+		counter++;
+		return;
+	}
 	if (gameManager != nullptr)
 		return;
 
@@ -59,6 +64,7 @@ void InGameShop::Update()
 		std::string name = (*gameObjects)[i]->GetName();
 		if (name == stimPackName)
 		{
+			LOG("health: %f < maxHealth: %f", player->health, player->MaxHealth());
 			if (player->health < player->MaxHealth())
 				item->AddItemByName(gameManager->GetShopItemPool(), "Stim Pack", ItemRarity::COMMON);
 			else

@@ -28,6 +28,8 @@ public:
 private:
 
 	GameManager* gameManager = nullptr;
+
+	int counter = 0;
 };
 
 SCRIPTS_FUNCTION InGameShop* CreateInGameShop();
