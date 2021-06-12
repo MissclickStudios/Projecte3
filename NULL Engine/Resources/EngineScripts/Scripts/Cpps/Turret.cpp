@@ -102,6 +102,12 @@ void Turret::SetUp()
 
 void Turret::Behavior()
 {
+	if (dieAfterStun == 2)
+	{
+		dieAfterStun = 3;
+		moveState = TurretState::DEAD_IN;
+		deathTimer.Resume();
+	}
 	if (moveState != TurretState::DEAD)
 	{
 		if (health <= 0.0f)

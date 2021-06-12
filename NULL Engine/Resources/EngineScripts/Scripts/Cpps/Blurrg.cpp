@@ -131,6 +131,12 @@ void Blurrg::SetUp()
 
 void Blurrg::Behavior()
 {
+	if (dieAfterStun == 2)
+	{
+		dieAfterStun = 3;
+		state = BlurrgState::DEAD_IN;
+		deathTimer.Resume();
+	}
 	if (state != BlurrgState::DEAD)
 	{
 		if (health <= 0.0f)
@@ -240,6 +246,8 @@ void Blurrg::Behavior()
 			state = BlurrgState::DEAD;
 
 		case BlurrgState::DEAD:
+			if (dieAfterStun > 1)
+				deathTimer.Resume();
 			if (deathTimer.ReadSec() >= deathDuration)
 				Deactivate();
 			break;

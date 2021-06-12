@@ -196,6 +196,12 @@ void DarkTrooper::LookAtPlayer()
 
 void DarkTrooper::ManageMovement()
 {
+	if (dieAfterStun == 2)
+	{
+		dieAfterStun = 3;
+		moveState = DarkTrooperState::DEAD_IN;
+		deathTimer.Resume();
+	}
 	if (moveState != DarkTrooperState::DEAD)
 	{
 		if (health <= 0.0f)

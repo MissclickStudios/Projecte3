@@ -183,4 +183,8 @@ private:
 
 	// Particles
 	std::unordered_map<std::string, C_ParticleSystem*> particles;
+
+public:
+
+	int dieAfterStun = 0;
 };

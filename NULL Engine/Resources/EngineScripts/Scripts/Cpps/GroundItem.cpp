@@ -66,7 +66,7 @@ void GroundItem::Awake()
 
 void GroundItem::Update()
 {
-	if (player != nullptr)
+	if (player != nullptr && item != nullptr)
 	{
 		float playerY = player->transform->GetWorldPosition().y;
 		float thisY = gameObject->transform->GetWorldPosition().y;
