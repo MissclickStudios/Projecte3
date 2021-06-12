@@ -41,6 +41,7 @@ private:
 	C_UI_Button* playButton = nullptr;
 	C_UI_Button* continueButton = nullptr;
 	C_UI_Button* settingsButton = nullptr;
+	C_UI_Button* creditsButton = nullptr;
 	C_UI_Button* exitButton = nullptr;
 
 	C_Canvas* settingsCanvas = nullptr;

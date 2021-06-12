@@ -127,6 +127,8 @@ public:																														// --- SCENE LIGHT METHODS
 
 	void DoSceneTransition(R_Shader* screenShader, float transitionSpeed);
 	
+	bool creditsMainMenu = false;
+
 private:
 	std::vector<GameObject*> gameObjects;
 	std::multimap<uint32, std::pair<uint32, std::string>> models;															// Models currently loaded on scene and their correspondent GO.
