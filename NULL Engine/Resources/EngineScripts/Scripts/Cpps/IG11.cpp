@@ -305,6 +305,12 @@ void IG11::LookAtPlayer()
 
 void IG11::ManageMovement()
 {
+	if (dieAfterStun == 2)
+	{
+		dieAfterStun = 3;
+		moveState = IG11State::DEAD_IN;
+		deathTimer.Resume();
+	}
 	if (moveState != IG11State::DEAD)
 	{
 		if (health <= 0.0f)

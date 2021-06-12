@@ -473,8 +473,6 @@ void Player::LoadState(ParsonNode& playerNode)
 				secondaryWeapon->SetOwnership(type, rightHand, rightHandName.c_str());
 
 			int savedAmmo = playerNode.GetInteger("Equiped Gun Ammo");
-			if (savedAmmo > secondaryWeapon->MaxAmmo())
-				savedAmmo = secondaryWeapon->MaxAmmo();
 			secondaryWeapon->ammo = savedAmmo;
 		}
 	}
@@ -1124,6 +1122,12 @@ void Player::ManageInteractions()
 
 void Player::ManageMovement()
 {	
+	if (dieAfterStun == 2)
+	{
+		dieAfterStun = 3;
+		moveState = PlayerState::DEAD_IN;
+		deathTimer.Resume();
+	}
 	if (moveState != PlayerState::DEAD && moveState != PlayerState::DEAD_OUT)
 	{
 		if (health <= 0.0f)
