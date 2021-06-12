@@ -157,7 +157,7 @@ public:
 	AnimationInfo aimShotgunAnimation		= { "AimShotgun", "Preview", 0.0f };
 
 	AnimationInfo shootBlasterAnimation		= { "ShootBlaster" };
-	AnimationInfo shootSniperAnimation		= { "ShootSniper"};
+	AnimationInfo shootSniperAnimation		= { "ShootSniper" };
 	AnimationInfo shootMinigunAnimation		= { "ShootMinigun" };
 	AnimationInfo shootShotgunAnimation		= { "ShootShotgun" };
 
