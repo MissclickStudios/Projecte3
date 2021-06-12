@@ -221,7 +221,7 @@ void Player::SetUp()
 	beskarImage				= (uiImageGO != nullptr) ? (C_2DAnimator*)uiImageGO->GetComponent<C_2DAnimator>() : nullptr;
 
 	//Load HUD animations
-	switch (secondaryWeapon->type)
+	switch (currentWeapon->type)
 	{
 	case WeaponType::BLASTER:
 		primaryWeaponImage->GetAnimationSprites("UseWeapon4", 1);

@@ -222,6 +222,28 @@ void GameManager::Start()
 	{
 		clearedRoomAudio->SetEvent("room_cleared");
 	}
+
+	//Secondary weapon
+	if (playerScript != nullptr)
+	{
+		WeaponType weaponType = playerScript->GetSecondaryWeapon()->type;
+
+		switch (weaponType)
+		{
+		case WeaponType::MINIGUN:
+			runStats.weaponUsed = "Minigun";
+			break;
+		case WeaponType::SHOTGUN:
+			runStats.weaponUsed = "Shotgun";
+			break;
+		case WeaponType::SNIPER:
+			runStats.weaponUsed = "Sniper";
+			break;
+		}
+	}
+
+	//kills stats
+	runStats.runKills += enemies.size();
 }
 
 void GameManager::Update()
@@ -575,27 +597,7 @@ void GameManager::GoNextRoom()
 			}
 		}
 
-		//kills stats
-		runStats.runKills += enemies.size();
-
-		if (playerScript != nullptr)
-		{
-			//Secondary weapon
-			WeaponType weaponType = playerScript->GetSecondaryWeapon()->type;
-
-			switch (weaponType)
-			{
-			case WeaponType::MINIGUN:
-				runStats.weaponUsed = "Minigun";
-				break;
-			case WeaponType::SHOTGUN:
-				runStats.weaponUsed = "Shotgun";
-				break;
-			case WeaponType::SNIPER:
-				runStats.weaponUsed = "Sniper";
-				break;
-			}
-		}
+		
 	}
 }
 
@@ -916,6 +918,11 @@ void GameManager::SaveManagerState()
 	SaveArmorerItemLvl(jsonState);
 
 	storyDialogState.Save(&jsonState);
+
+	if (strcmp(App->scene->GetCurrentScene(), levelNames.hub.c_str()) == 0) //Reset run time to 0 when starting run
+		runStats.runTime = 0;
+
+	runStats.runKills += enemies.size();
 
 	runStats.Save(&jsonState);
 
