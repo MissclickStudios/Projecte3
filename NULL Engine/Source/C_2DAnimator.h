@@ -40,7 +40,7 @@ public:
 	const char* GetName(int animationNum);
 	void ChangeName(const char* name, int animationNum);
 
-	void GetAnimationSprites(const char* name, int animationDestination);
+	void GetAnimationSprites(const char* inputName, int animationDestination);
 
 	static inline ComponentType GetType() { return ComponentType::ANIMATOR2D; }  
 
