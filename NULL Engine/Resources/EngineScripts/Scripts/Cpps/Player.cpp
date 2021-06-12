@@ -234,7 +234,7 @@ void Player::Behavior()
 
 		if (moveState != PlayerState::DEAD && moveState != PlayerState::DEAD_OUT)
 		{
-			ManageAim();
+			//ManageAim();
 
 			ManageInvincibility();
 
@@ -1008,8 +1008,8 @@ void Player::ManageMovement()
 	{
 		if (health <= 0.0f)
 		{
-			moveState = PlayerState::DEAD_IN;
-			aimState = AimState::IDLE;
+			moveState	= PlayerState::DEAD_IN;
+			aimState	= AimState::IDLE;
 		}
 		else
 		{
@@ -1168,7 +1168,7 @@ void Player::Walk()
 
 void Player::Run()
 {
-	currentAnimation = &runForwardsAnimation;
+	currentAnimation = GetWeaponRunAnimation();
 	
 	Movement();
 
