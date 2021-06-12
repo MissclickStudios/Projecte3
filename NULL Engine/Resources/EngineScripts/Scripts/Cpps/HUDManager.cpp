@@ -274,12 +274,14 @@ void HUDManager::ManageWeaponHUD()
 
 void HUDManager::SetUpHealth(float hp, int maxHp)
 {
+	if (hp < 0)
+		hp = 0;
 	playerHealth = hp;
 	playerMaxHp = maxHp;
 	bool eaven = !((int)hp % 2);
 	if (eaven) 
 	{
-		currentHealthIndex = hp / 2 - 1;
+		currentHealthIndex = hp / (2 - 1);
 		if (hearts[currentHealthIndex] != nullptr)
 			hearts[currentHealthIndex]->SetTextureCoordinates(fullHeart[0], fullHeart[1], fullHeart[2], fullHeart[3]);
 	}
