@@ -113,9 +113,9 @@ void GameManager::Awake()
 			LoadItemPool(chestItemPool, "ChestItemPool.json");
 			LoadItemPool(shopItemPool, "ShopItemPool.json");
 			LoadItemPool(hubItemPool, "HubItemPool.json");
-
-			HandleBackgroundMusic();
 		}
+
+		HandleBackgroundMusic();
 	}
 
 	GameObject* tmp = App->scene->GetGameObjectByName("DialogCanvas"); 
@@ -1071,7 +1071,7 @@ void GameManager::HandleBackgroundMusic()
 		App->audio->aSourceBackgroundMusic->StopFx(App->audio->aSourceBackgroundMusic->GetEventId());
 		App->audio->aSourceBackgroundMusic->SetEvent("menu_music", true);
 	}
-	else if ((App->scene->GetCurrentScene() == levelNames.winScene) || (App->scene->GetCurrentScene() == levelNames.loseScene) || (App->scene->GetCurrentScene() ==  "Credits"))
+	else if ((App->scene->GetCurrentScene() == levelNames.winScene) || (App->scene->GetCurrentScene() == levelNames.loseScene) || strcmp(App->scene->GetCurrentScene(),"Credits")==0)
 	{
 		if (App->audio->aSourceBackgroundMusic->GetEventName() != "credit_music")
 		{
