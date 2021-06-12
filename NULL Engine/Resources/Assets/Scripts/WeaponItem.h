@@ -14,7 +14,6 @@ class Player;
 class SCRIPTS_API WeaponItem : public Object ALLOWED_INHERITANCE
 {
 public:
-
 	WeaponItem();
 	virtual ~WeaponItem();
 
@@ -27,23 +26,37 @@ public:
 
 	void OnTriggerRepeat(GameObject* object) override;
 
+public:
 	void PickUp(Player* player);
 
-	std::string gunName;
-	std::string gunDescription;
+	void CalculateNewHoverPosition();
 
-	Prefab weapon;
+public:
+	Prefab		weapon;
+	
+	std::string gunName				= "";
+	std::string gunDescription		= "";
+	std::string itemMenuName		= "Item Menu";
 
-	std::string itemMenuName = "Item Menu";
+	float3		rotationSpeed		= float3::zero;
 
-	float hoverSpeed		= 0.0f;
-	float hoverRange		= 0.0f;
+	float3		hoverSpeed			= float3::one;
+	float3		hoverRange			= float3::one;
 
-	float3 rotationSpeed	= float3::zero;
+	float		timeOffset			= 0.0f;
 
 protected:
+	ItemMenuManager* itemMenu		= nullptr;
 
-	ItemMenuManager* itemMenu = nullptr;
+private:
+	float3		newPosition			= float3::zero;
+	float3		hoverRate			= float3::zero;
+
+	float		offsetCount			= 0.0f;
+
+	bool		addX				= true;
+	bool		addY				= true;
+	bool		addZ				= true;
 };
 
 SCRIPTS_FUNCTION WeaponItem* CreateWeaponItem();
