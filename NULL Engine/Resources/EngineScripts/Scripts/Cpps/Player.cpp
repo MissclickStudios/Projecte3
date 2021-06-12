@@ -670,12 +670,15 @@ void Player::SetPlayerInteraction(InteractionType type, float duration)
 	{
 		interactionTimer.Stop();
 		interactionDuration = 0.0f;
-		
-		/*if (rigidBody != nullptr)																				// Making the player dynamic again once the interaction has finished.
-			rigidBody->MakeDynamic();*/
 
 		if (dashTimer.IsActive())																				// In case the interaction was set while the player was dashing.
 			moveState = PlayerState::DASH;
+
+		if (currentWeapon != nullptr)
+		{
+			if (currentWeapon->weaponModel != nullptr)
+				currentWeapon->weaponModel->SetIsActive(true);
+		}
 
 		return;
 	}
@@ -685,7 +688,12 @@ void Player::SetPlayerInteraction(InteractionType type, float duration)
 	
 	if (rigidBody != nullptr)																					// Making sure that the player will remain still while interacting.
 		rigidBody->StopInertia();
-		//rigidBody->MakeStatic();
+
+	if (currentWeapon != nullptr)
+	{
+		if (currentWeapon->weaponModel != nullptr)
+			currentWeapon->weaponModel->SetIsActive(false);
+	}
 
 	switch (currentInteraction)
 	{
@@ -711,9 +719,9 @@ void Player::AnimatePlayer()
 	AnimationInfo* torsoInfo	= GetAimStateAnimation();
 	AnimationInfo* legsInfo		= GetMoveStateAnimation();
 
-	LOG("CURRENT:	{ %s }",	(currentAnimation != nullptr) ? currentAnimation->name.c_str() : "NONE");
-	LOG("TORSO:	  { %s }",		(torsoInfo != nullptr) ? torsoInfo->name.c_str() : "NONE");
-	LOG("LEGS:	   { %s }",		(legsInfo != nullptr) ? legsInfo->name.c_str() : "NONE");
+	LOG("CURRENT:	{ %s }::{ %u }",	(currentAnimation != nullptr) ? currentAnimation->name.c_str() : "NONE", preview->GetTrackState());
+	LOG("TORSO:	  { %s }::{ %u }",		(torsoInfo != nullptr) ? torsoInfo->name.c_str() : "NONE", torsoTrack->GetTrackState());
+	LOG("LEGS:	   { %s }::{ %u }",		(legsInfo != nullptr) ? legsInfo->name.c_str() : "NONE", legsTrack->GetTrackState());
 
 	if (GetEntityState() != EntityState::NONE || aimState == AimState::IDLE || torsoInfo == nullptr || legsInfo == nullptr)		// TAKE INTO ACCOUNT STUN AND KNOCKBACK + LOOK INTO DASH PROBLEMS 
 	{	
@@ -754,8 +762,10 @@ void Player::AnimatePlayer()
 		AnimatorClip* torsoClip = torsoTrack->GetCurrentClip();
 		AnimatorClip* legsClip = legsTrack->GetCurrentClip();
 
-		if (preview->GetTrackState() != TrackState::STOP)
-			preview->Stop();
+		//if (preview->GetTrackState() != TrackState::STOP)
+		//	preview->Stop();
+
+		preview->Stop();
 
 		if ((torsoClip == nullptr) || overrideShootAnimation || (torsoClip->GetName() != torsoInfo->name))
 		{
@@ -768,8 +778,11 @@ void Player::AnimatePlayer()
 		if ((legsClip == nullptr) || (legsClip->GetName() != legsInfo->name))
 			animator->PlayClip(legsTrack->GetName(), legsInfo->name.c_str(), legsInfo->blendTime);
 
-		torsoTrack->Play();
-		legsTrack->Play();
+		if (torsoTrack->GetTrackState() == TrackState::STOP)
+			torsoTrack->Play();
+
+		if (legsTrack->GetTrackState() == TrackState::STOP)
+			legsTrack->Play();
 	}
 }
 
