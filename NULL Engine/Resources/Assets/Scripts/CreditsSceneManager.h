@@ -15,6 +15,9 @@ public:
 	void Update() override;
 	void CleanUp()override;
 
+	GameObject* creditsPlane = nullptr;
+	float moveSpeed = 1.f;
+
 private:
 	GameManager* gameManager = nullptr;
 };

@@ -111,6 +111,7 @@ void Blurrg::SetUp()
 	damageAudio = new C_AudioSource(gameObject);
 	deathAudio = new C_AudioSource(gameObject);
 	chargeAudio = new C_AudioSource(gameObject);
+	walkAudio = new C_AudioSource(gameObject);
 	if (damageAudio != nullptr)
 		damageAudio->SetEvent("blurrg_damaged");
 	if (deathAudio != nullptr)
@@ -254,6 +255,8 @@ void Blurrg::CleanUp()
 		delete deathAudio;
 	if (chargeAudio != nullptr)
 		delete chargeAudio;
+	if (walkAudio != nullptr)
+		delete walkAudio;
 }
 
 void Blurrg::OnCollisionEnter(GameObject* object)

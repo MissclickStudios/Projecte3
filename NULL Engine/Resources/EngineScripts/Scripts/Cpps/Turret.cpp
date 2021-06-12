@@ -93,6 +93,7 @@ void Turret::SetUp()
 	//Audios
 	damageAudio = new C_AudioSource(gameObject);
 	deathAudio = new C_AudioSource(gameObject);
+	walkAudio = new C_AudioSource(gameObject);
 	if (deathAudio != nullptr)
 		deathAudio->SetEvent("turret_death");
 	if (damageAudio != nullptr)
@@ -165,6 +166,8 @@ void Turret::CleanUp()
 		delete damageAudio;
 	if (deathAudio != nullptr)
 		delete deathAudio;
+	if (walkAudio != nullptr)
+		delete walkAudio;
 }
 
 void Turret::OnCollisionEnter(GameObject* object)

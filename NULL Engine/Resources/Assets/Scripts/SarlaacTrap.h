@@ -42,6 +42,7 @@ private:
 	float animationTimer = 0.0f;
 
 	C_AudioSource* sarlaacAudio = nullptr;
+	C_AudioSource* sarlaccAttackAudio = nullptr;
 	C_Animator* sarlaacAnimator = nullptr;
 
 	SarlaacState state = SarlaacState::IDLE;
