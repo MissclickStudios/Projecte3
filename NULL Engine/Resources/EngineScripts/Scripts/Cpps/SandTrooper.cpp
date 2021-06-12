@@ -186,6 +186,12 @@ void Trooper::LookAtPlayer()
 
 void Trooper::ManageMovement()
 {
+	if (dieAfterStun == 2)
+	{
+		dieAfterStun = 3;
+		moveState = TrooperState::DEAD_IN;
+		deathTimer.Resume();
+	}
 	if (moveState != TrooperState::DEAD)
 	{
 		if (health <= 0.0f)

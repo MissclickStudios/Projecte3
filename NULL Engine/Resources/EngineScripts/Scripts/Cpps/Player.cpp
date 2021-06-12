@@ -1121,6 +1121,12 @@ void Player::ManageInteractions()
 
 void Player::ManageMovement()
 {	
+	if (dieAfterStun == 2)
+	{
+		dieAfterStun = 3;
+		moveState = PlayerState::DEAD_IN;
+		deathTimer.Resume();
+	}
 	if (moveState != PlayerState::DEAD && moveState != PlayerState::DEAD_OUT)
 	{
 		if (health <= 0.0f)
