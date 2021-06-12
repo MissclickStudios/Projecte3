@@ -44,6 +44,12 @@ GameManager::~GameManager()
 
 void GameManager::Awake()
 {
+	if (App->scene->creditsMainMenu)
+	{
+		HandleBackgroundMusic();
+		return;
+	}
+
 	//Check files exist (Maybe in another place)
 	if (enabled) 
 	{
@@ -128,6 +134,9 @@ void GameManager::Awake()
 
 void GameManager::Start()
 {
+	if (App->scene->creditsMainMenu)
+		return;
+
 	//find all enemies
 	std::vector<GameObject*>* objects = App->scene->GetGameObjects();
 	for (auto go = objects->begin(); go != objects->end(); ++go)

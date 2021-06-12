@@ -36,9 +36,17 @@ void CreditsSceneManager::Update()
 		creditsPlane->transform->SetLocalPosition(creditsPlane->transform->GetLocalPosition() + float3(0 * moveSpeed * MC_Time::Game::GetDT(), 0.3 * moveSpeed * MC_Time::Game::GetDT(), -1 * moveSpeed * MC_Time::Game::GetDT()));
 
 
-	if (App->input->GetKey(SDL_SCANCODE_ESCAPE) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(0) == ButtonState::BUTTON_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(0) == ButtonState::BUTTON_DOWN)
 	{
-		gameManager->ReturnHub();
+		if (!App->scene->creditsMainMenu)
+		{
+			gameManager->ReturnHub();
+		}
+		else
+		{
+			gameManager->ReturnToMainMenu();
+			App->scene->creditsMainMenu = false;
+		}
 	}
 }
 
