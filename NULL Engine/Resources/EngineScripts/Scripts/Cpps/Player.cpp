@@ -221,57 +221,60 @@ void Player::SetUp()
 	beskarImage				= (uiImageGO != nullptr) ? (C_2DAnimator*)uiImageGO->GetComponent<C_2DAnimator>() : nullptr;
 
 	//Load HUD animations
-	switch (secondaryWeapon->type)
+	if (primaryWeaponImage && weaponImage && weaponNameImage) 
 	{
-	case WeaponType::BLASTER:
-		primaryWeaponImage->GetAnimationSprites("UseWeapon4", 1);
-		primaryWeaponImage->GetAnimationSprites("ChargeWeapon1", 3);
-		weaponImage->SetTextureCoordinates(-3130, -1190, 665, 245);
-		weaponNameImage->SetTextureCoordinates(1671, -140, 507, 78);
-		if (secondaryWeapon->weaponModel == nullptr)
-			primaryWeaponImage->GetAnimationSprites("ChangeWeapon", 2);
-		else
+		switch (currentWeapon->type)
 		{
-			switch (secondaryWeapon->type)
-			{
-			case WeaponType::MINIGUN:
-				primaryWeaponImage->GetAnimationSprites("ChangeWeapon02", 2);
-				break;
-			case WeaponType::SNIPER:
-				primaryWeaponImage->GetAnimationSprites("ChangeWeapon01", 2);
-				break;
-			case WeaponType::SHOTGUN:
-				primaryWeaponImage->GetAnimationSprites("ChangeWeapon03", 2);
-				break;
-			default:
+		case WeaponType::BLASTER:
+			primaryWeaponImage->GetAnimationSprites("UseWeapon4", 1);
+			primaryWeaponImage->GetAnimationSprites("ChargeWeapon1", 3);
+			weaponImage->SetTextureCoordinates(-3130, -1190, 665, 245);
+			weaponNameImage->SetTextureCoordinates(1671, -140, 507, 78);
+			if (secondaryWeapon->weaponModel == nullptr)
 				primaryWeaponImage->GetAnimationSprites("ChangeWeapon", 2);
-				break;
+			else
+			{
+				switch (secondaryWeapon->type)
+				{
+				case WeaponType::MINIGUN:
+					primaryWeaponImage->GetAnimationSprites("ChangeWeapon02", 2);
+					break;
+				case WeaponType::SNIPER:
+					primaryWeaponImage->GetAnimationSprites("ChangeWeapon01", 2);
+					break;
+				case WeaponType::SHOTGUN:
+					primaryWeaponImage->GetAnimationSprites("ChangeWeapon03", 2);
+					break;
+				default:
+					primaryWeaponImage->GetAnimationSprites("ChangeWeapon", 2);
+					break;
+				}
 			}
+			break;
+		case WeaponType::MINIGUN:
+			primaryWeaponImage->GetAnimationSprites("UseWeapon6", 1);
+			primaryWeaponImage->GetAnimationSprites("ChangeWeapon07", 2);
+			primaryWeaponImage->GetAnimationSprites("ChargeWeapon3", 3);
+			weaponImage->SetTextureCoordinates(-1799, -1190, 665, 245);
+			weaponNameImage->SetTextureCoordinates(2685, -140, 507, 78);
+			break;
+		case WeaponType::SNIPER:
+			primaryWeaponImage->GetAnimationSprites("UseWeapon5", 1);
+			primaryWeaponImage->GetAnimationSprites("ChangeWeapon04", 2);
+			primaryWeaponImage->GetAnimationSprites("ChargeWeapon2", 3);
+			weaponImage->SetTextureCoordinates(-2465, -1190, 665, 245);
+			weaponNameImage->SetTextureCoordinates(2178, -140, 507, 78);
+			break;
+		case WeaponType::SHOTGUN:
+			primaryWeaponImage->GetAnimationSprites("UseWeapon7", 1);
+			primaryWeaponImage->GetAnimationSprites("ChangeWeapon10", 2);
+			primaryWeaponImage->GetAnimationSprites("ChargeWeapon4", 3);
+			weaponImage->SetTextureCoordinates(-1133, -1190, 665, 245);
+			weaponNameImage->SetTextureCoordinates(3192, -140, 507, 78);
+			break;
+		default:
+			break;
 		}
-		break;
-	case WeaponType::MINIGUN:
-		primaryWeaponImage->GetAnimationSprites("UseWeapon6", 1);
-		primaryWeaponImage->GetAnimationSprites("ChangeWeapon07", 2);
-		primaryWeaponImage->GetAnimationSprites("ChargeWeapon3", 3);
-		weaponImage->SetTextureCoordinates(-1799, -1190, 665, 245);
-		weaponNameImage->SetTextureCoordinates(2685, -140, 507, 78);
-		break;
-	case WeaponType::SNIPER:
-		primaryWeaponImage->GetAnimationSprites("UseWeapon5", 1);
-		primaryWeaponImage->GetAnimationSprites("ChangeWeapon04", 2);
-		primaryWeaponImage->GetAnimationSprites("ChargeWeapon2", 3);
-		weaponImage->SetTextureCoordinates(-2465, -1190, 665, 245);
-		weaponNameImage->SetTextureCoordinates(2178, -140, 507, 78);
-		break;
-	case WeaponType::SHOTGUN:
-		primaryWeaponImage->GetAnimationSprites("UseWeapon7", 1);
-		primaryWeaponImage->GetAnimationSprites("ChangeWeapon10", 2);
-		primaryWeaponImage->GetAnimationSprites("ChargeWeapon4", 3);
-		weaponImage->SetTextureCoordinates(-1133, -1190, 665, 245);
-		weaponNameImage->SetTextureCoordinates(3192, -140, 507, 78);
-		break;
-	default:
-		break;
 	}
 }
 

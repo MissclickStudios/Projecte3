@@ -42,6 +42,7 @@ public:
 	Item* item = nullptr;
 
 	std::string itemMenuName = "Item Menu";
+	std::string playerName = "Mandalorian";
 
 protected:
 
@@ -52,6 +53,7 @@ protected:
 	ItemMenuManager* itemMenu = nullptr;
 
 	GameManager* gameManager = nullptr;
+	GameObject* player = nullptr;
 };
 
 SCRIPTS_FUNCTION GroundItem* CreateGroundItem();

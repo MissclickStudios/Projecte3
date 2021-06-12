@@ -111,6 +111,7 @@ void Trooper::SetUp()
 	//Audios
 	damageAudio = new C_AudioSource(gameObject);
 	deathAudio = new C_AudioSource(gameObject);
+	walkAudio = new C_AudioSource(gameObject);
 	if (damageAudio != nullptr)
 		damageAudio->SetEvent("sandtrooper_damaged");
 	if (deathAudio != nullptr)
@@ -135,6 +136,8 @@ void Trooper::CleanUp()
 		delete damageAudio;
 	if (deathAudio != nullptr)
 		delete deathAudio;
+	if (walkAudio != nullptr)
+		delete walkAudio;
 }
 
 void Trooper::EntityPause()
