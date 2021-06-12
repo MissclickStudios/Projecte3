@@ -92,8 +92,6 @@ void Entity::Start()
 	hitTimer.Stop();
 	stepTimer.Stop();
 
-	walkAudio = (C_AudioSource*)gameObject->CreateComponent(ComponentType::AUDIOSOURCE);
-
 	SetUp();
 }
 
