@@ -8,6 +8,7 @@
 class GameObject;
 class R_Texture;
 class Spritesheet;
+class R_Texture;
 
 typedef unsigned __int32 uint;
 
@@ -41,6 +42,7 @@ public:
 	void ChangeName(const char* name, int animationNum);
 
 	void GetAnimationSprites(const char* inputName, int animationDestination);
+	void GetAnimationSprites(const char* inputName, int animationDestination, R_Texture* texture);
 
 	static inline ComponentType GetType() { return ComponentType::ANIMATOR2D; }  
 
