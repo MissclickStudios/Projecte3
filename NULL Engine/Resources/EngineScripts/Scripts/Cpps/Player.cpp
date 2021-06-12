@@ -17,6 +17,7 @@
 #include "C_AudioSource.h"
 #include "C_2DAnimator.h"
 #include "C_Animator.h"
+#include "C_UI_Image.h"
 
 #include "GameManager.h"
 
@@ -204,9 +205,11 @@ void Player::SetUp()
 
 	uiImageGO				= App->scene->GetGameObjectByName(primaryWeaponImageName.c_str());
 	primaryWeaponImage		= (uiImageGO != nullptr) ? (C_2DAnimator*)uiImageGO->GetComponent<C_2DAnimator>() : nullptr;
+	weaponImage				= (uiImageGO != nullptr) ? (C_UI_Image*)uiImageGO->GetComponent<C_UI_Image>() : nullptr;
 
 	uiImageGO				= App->scene->GetGameObjectByName(secondaryWeaponImageName.c_str());
 	secondaryWeaponImage	= (uiImageGO != nullptr) ? (C_2DAnimator*)uiImageGO->GetComponent<C_2DAnimator>() : nullptr;
+	weaponNameImage			= (uiImageGO != nullptr) ? (C_UI_Image*)uiImageGO->GetComponent<C_UI_Image>() : nullptr;
 
 	uiImageGO				= App->scene->GetGameObjectByName(dashImageName.c_str());
 	dashImage				= (uiImageGO != nullptr) ? (C_2DAnimator*)uiImageGO->GetComponent<C_2DAnimator>() : nullptr;
@@ -216,6 +219,60 @@ void Player::SetUp()
 
 	uiImageGO				= App->scene->GetGameObjectByName(beskarImageName.c_str());
 	beskarImage				= (uiImageGO != nullptr) ? (C_2DAnimator*)uiImageGO->GetComponent<C_2DAnimator>() : nullptr;
+
+	//Load HUD animations
+	switch (currentWeapon->type)
+	{
+	case WeaponType::BLASTER:
+		primaryWeaponImage->GetAnimationSprites("UseWeapon4", 1);
+		primaryWeaponImage->GetAnimationSprites("ChargeWeapon1", 3);
+		weaponImage->SetTextureCoordinates(-3130, -1190, 665, 245);
+		weaponNameImage->SetTextureCoordinates(1671, -140, 507, 78);
+		if (secondaryWeapon->weaponModel == nullptr)
+			primaryWeaponImage->GetAnimationSprites("ChangeWeapon", 2);
+		else
+		{
+			switch (secondaryWeapon->type)
+			{
+			case WeaponType::MINIGUN:
+				primaryWeaponImage->GetAnimationSprites("ChangeWeapon02", 2);
+				break;
+			case WeaponType::SNIPER:
+				primaryWeaponImage->GetAnimationSprites("ChangeWeapon01", 2);
+				break;
+			case WeaponType::SHOTGUN:
+				primaryWeaponImage->GetAnimationSprites("ChangeWeapon03", 2);
+				break;
+			default:
+				primaryWeaponImage->GetAnimationSprites("ChangeWeapon", 2);
+				break;
+			}
+		}
+		break;
+	case WeaponType::MINIGUN:
+		primaryWeaponImage->GetAnimationSprites("UseWeapon6", 1);
+		primaryWeaponImage->GetAnimationSprites("ChangeWeapon07", 2);
+		primaryWeaponImage->GetAnimationSprites("ChargeWeapon3", 3);
+		weaponImage->SetTextureCoordinates(-1799, -1190, 665, 245);
+		weaponNameImage->SetTextureCoordinates(2685, -140, 507, 78);
+		break;
+	case WeaponType::SNIPER:
+		primaryWeaponImage->GetAnimationSprites("UseWeapon5", 1);
+		primaryWeaponImage->GetAnimationSprites("ChangeWeapon04", 2);
+		primaryWeaponImage->GetAnimationSprites("ChargeWeapon2", 3);
+		weaponImage->SetTextureCoordinates(-2465, -1190, 665, 245);
+		weaponNameImage->SetTextureCoordinates(2178, -140, 507, 78);
+		break;
+	case WeaponType::SHOTGUN:
+		primaryWeaponImage->GetAnimationSprites("UseWeapon7", 1);
+		primaryWeaponImage->GetAnimationSprites("ChangeWeapon10", 2);
+		primaryWeaponImage->GetAnimationSprites("ChargeWeapon4", 3);
+		weaponImage->SetTextureCoordinates(-1133, -1190, 665, 245);
+		weaponNameImage->SetTextureCoordinates(3192, -140, 507, 78);
+		break;
+	default:
+		break;
+	}
 }
 
 void Player::Behavior()
@@ -617,19 +674,53 @@ void Player::EquipWeapon(Prefab weapon)
 	{
 		secondaryWeapon = (Weapon*)GetObjectScript(secondaryGunGameObject, ObjectType::WEAPON);
 
-		if (secondaryWeapon != nullptr)
+		switch (secondaryWeapon->type)
 		{
-			if (secondaryWeapon->type == WeaponType::MINIGUN)
-			{
-				secondaryWeapon->SetOwnership(type, leftHand, leftHandName.c_str());
-				currentWeapon = secondaryWeapon;
-			}
-			else
-			{
-				secondaryWeapon->SetOwnership(type, rightHand, rightHandName.c_str());
-				currentWeapon = secondaryWeapon;
-			}
+		case WeaponType::MINIGUN:
+			secondaryWeapon->SetOwnership(type, leftHand, leftHandName.c_str());
+			currentWeapon = secondaryWeapon;
+			primaryWeaponImage->GetAnimationSprites("UseWeapon6", 1);
+			primaryWeaponImage->GetAnimationSprites("ChangeWeapon07", 2);
+			primaryWeaponImage->GetAnimationSprites("ChargeWeapon3", 3);
+			weaponImage->SetTextureCoordinates(-1799, -1190, 665, 245);
+			weaponNameImage->SetTextureCoordinates(2685, -140, 507, 78);
+			break;
+		case WeaponType::SNIPER:
+			secondaryWeapon->SetOwnership(type, rightHand, rightHandName.c_str());
+			currentWeapon = secondaryWeapon;
+			primaryWeaponImage->GetAnimationSprites("UseWeapon5", 1);
+			primaryWeaponImage->GetAnimationSprites("ChangeWeapon04", 2);
+			primaryWeaponImage->GetAnimationSprites("ChargeWeapon2", 3);
+			weaponImage->SetTextureCoordinates(-2465, -1190, 665, 245);
+			weaponNameImage->SetTextureCoordinates(2178, -140, 507, 78);
+			break;
+		case WeaponType::SHOTGUN:
+			secondaryWeapon->SetOwnership(type, rightHand, rightHandName.c_str());
+			currentWeapon = secondaryWeapon;
+			primaryWeaponImage->GetAnimationSprites("UseWeapon7", 1);
+			primaryWeaponImage->GetAnimationSprites("ChangeWeapon10",2);
+			primaryWeaponImage->GetAnimationSprites("ChargeWeapon4", 3);
+			weaponImage->SetTextureCoordinates(-1133, -1190, 665, 245);
+			weaponNameImage->SetTextureCoordinates(3192, -140, 507, 78);
+			break;
+		default:
+			secondaryWeapon->SetOwnership(type, rightHand, rightHandName.c_str());
+			currentWeapon = secondaryWeapon;
+			break;
 		}
+		//if (secondaryWeapon != nullptr)
+		//{
+		//	if (secondaryWeapon->type == WeaponType::MINIGUN)
+		//	{
+		//		secondaryWeapon->SetOwnership(type, leftHand, leftHandName.c_str());
+		//		currentWeapon = secondaryWeapon;
+		//	}
+		//	else
+		//	{
+		//		secondaryWeapon->SetOwnership(type, rightHand, rightHandName.c_str());
+		//		currentWeapon = secondaryWeapon;
+		//	}
+		//}
 	}
 }
 
@@ -670,12 +761,15 @@ void Player::SetPlayerInteraction(InteractionType type, float duration)
 	{
 		interactionTimer.Stop();
 		interactionDuration = 0.0f;
-		
-		/*if (rigidBody != nullptr)																				// Making the player dynamic again once the interaction has finished.
-			rigidBody->MakeDynamic();*/
 
 		if (dashTimer.IsActive())																				// In case the interaction was set while the player was dashing.
 			moveState = PlayerState::DASH;
+
+		if (currentWeapon != nullptr)
+		{
+			if (currentWeapon->weaponModel != nullptr)
+				currentWeapon->weaponModel->SetIsActive(true);
+		}
 
 		return;
 	}
@@ -685,7 +779,12 @@ void Player::SetPlayerInteraction(InteractionType type, float duration)
 	
 	if (rigidBody != nullptr)																					// Making sure that the player will remain still while interacting.
 		rigidBody->StopInertia();
-		//rigidBody->MakeStatic();
+
+	if (currentWeapon != nullptr)
+	{
+		if (currentWeapon->weaponModel != nullptr)
+			currentWeapon->weaponModel->SetIsActive(false);
+	}
 
 	switch (currentInteraction)
 	{
@@ -711,9 +810,9 @@ void Player::AnimatePlayer()
 	AnimationInfo* torsoInfo	= GetAimStateAnimation();
 	AnimationInfo* legsInfo		= GetMoveStateAnimation();
 
-	LOG("CURRENT:	{ %s }",	(currentAnimation != nullptr) ? currentAnimation->name.c_str() : "NONE");
-	LOG("TORSO:	  { %s }",		(torsoInfo != nullptr) ? torsoInfo->name.c_str() : "NONE");
-	LOG("LEGS:	   { %s }",		(legsInfo != nullptr) ? legsInfo->name.c_str() : "NONE");
+	//LOG("CURRENT:	{ %s }::{ %u }",	(currentAnimation != nullptr) ? currentAnimation->name.c_str() : "NONE", preview->GetTrackState());
+	//LOG("TORSO:	  { %s }::{ %u }",		(torsoInfo != nullptr) ? torsoInfo->name.c_str() : "NONE", torsoTrack->GetTrackState());
+	//LOG("LEGS:	   { %s }::{ %u }",		(legsInfo != nullptr) ? legsInfo->name.c_str() : "NONE", legsTrack->GetTrackState());
 
 	if (GetEntityState() != EntityState::NONE || aimState == AimState::IDLE || torsoInfo == nullptr || legsInfo == nullptr)		// TAKE INTO ACCOUNT STUN AND KNOCKBACK + LOOK INTO DASH PROBLEMS 
 	{	
@@ -721,12 +820,18 @@ void Player::AnimatePlayer()
 		{
 			if (torsoTrack->GetTrackState() != TrackState::STOP)
 				torsoTrack->Stop();
+
+			torsoTrack->FreeCurrentClip();
+			torsoTrack->FreeBlendingClip();
 		}
 			
 		if (legsTrack != nullptr)
 		{
 			if (legsTrack->GetTrackState() != TrackState::STOP)
 				legsTrack->Stop();
+
+			legsTrack->FreeCurrentClip();
+			legsTrack->FreeBlendingClip();
 		}
 		
 		AnimatorClip* previewClip = preview->GetCurrentClip();
@@ -752,10 +857,15 @@ void Player::AnimatePlayer()
 		(hip != nullptr) ? hip->transform->SetLocalRotation(float3::zero) : LOG("OOGA BOOGA NO HIPAROOGA");			// Resetting the hip position.
 			
 		AnimatorClip* torsoClip = torsoTrack->GetCurrentClip();
-		AnimatorClip* legsClip = legsTrack->GetCurrentClip();
+		AnimatorClip* legsClip	= legsTrack->GetCurrentClip();
+		AnimatorClip* bLegsClip	= legsTrack->GetBlendingClip();
 
-		if (preview->GetTrackState() != TrackState::STOP)
-			preview->Stop();
+		//if (preview->GetTrackState() != TrackState::STOP)
+		//	preview->Stop();
+
+		preview->Stop();
+		preview->FreeCurrentClip();
+		preview->FreeBlendingClip();
 
 		if ((torsoClip == nullptr) || overrideShootAnimation || (torsoClip->GetName() != torsoInfo->name))
 		{
@@ -768,8 +878,11 @@ void Player::AnimatePlayer()
 		if ((legsClip == nullptr) || (legsClip->GetName() != legsInfo->name))
 			animator->PlayClip(legsTrack->GetName(), legsInfo->name.c_str(), legsInfo->blendTime);
 
-		torsoTrack->Play();
-		legsTrack->Play();
+		if (torsoTrack->GetTrackState() == TrackState::STOP)
+			torsoTrack->Play();
+
+		if (legsTrack->GetTrackState() == TrackState::STOP)
+			legsTrack->Play();
 	}
 }
 
@@ -1337,7 +1450,7 @@ void Player::ReloadIn()
 
 		aimState = AimState::RELOAD;
 
-		primaryWeaponImage->GetOwner()->GetComponent<C_2DAnimator>()->SetAnimationStepTime(currentWeapon->ReloadTime() * 1000 / 35); // 35 is the amount of frames the reload 2D animation has
+		primaryWeaponImage->SetAnimationStepTime(currentWeapon->ReloadTime() * 1000 / 35); // 35 is the amount of frames the reload 2D animation has
 		primaryWeaponImage->PlayAnimation(false, 3);
 	}
 	else
@@ -1363,12 +1476,15 @@ void Player::ChangeIn()
 	if (changeWeaponAudio != nullptr)
 		changeWeaponAudio->PlayFx(changeWeaponAudio->GetEventId());
 
+	primaryWeaponImage->SetAnimationStepTime(ChangeTime() * 1000 / 12); // 18 is the amount of frames the reload 2D animation has
+	primaryWeaponImage->PlayAnimation(false, 2);
+
 	aimState = AimState::CHANGE;
 }
 
 void Player::Change()
 {
-	LOG("CHANGE");
+	//LOG("CHANGE");
 	
 	//LOG("Change Weapon Time %.3f", ChangeTime());
 	
@@ -1398,7 +1514,57 @@ void Player::Change()
 			secondaryWeapon->weaponModel->SetIsActive(false);
 	}
 
-	primaryWeaponImage->PlayAnimation(false, 2);
+	//setup the animations of the weapon on the hud
+	switch (currentWeapon->type)
+	{
+	case WeaponType::BLASTER:
+		primaryWeaponImage->GetAnimationSprites("UseWeapon4", 1);
+		primaryWeaponImage->GetAnimationSprites("ChargeWeapon1", 3);
+		weaponImage->SetTextureCoordinates(-3130, -1190, 665, 245);
+		weaponNameImage->SetTextureCoordinates(1671, -140, 507, 78);
+		if (secondaryWeapon->weaponModel == nullptr)
+			primaryWeaponImage->GetAnimationSprites("ChangeWeapon", 2);
+		else
+		{
+			switch (secondaryWeapon->type)
+			{
+			case WeaponType::MINIGUN:
+				primaryWeaponImage->GetAnimationSprites("ChangeWeapon02", 2);
+				break;
+			case WeaponType::SNIPER:
+				primaryWeaponImage->GetAnimationSprites("ChangeWeapon01", 2);
+				break;
+			case WeaponType::SHOTGUN:
+				primaryWeaponImage->GetAnimationSprites("ChangeWeapon03", 2);
+				break;
+			default:
+				primaryWeaponImage->GetAnimationSprites("ChangeWeapon", 2);
+				break;
+			}
+		}
+		break;
+	case WeaponType::MINIGUN:
+		primaryWeaponImage->GetAnimationSprites("UseWeapon6", 1);
+		primaryWeaponImage->GetAnimationSprites("ChangeWeapon07", 2);
+		primaryWeaponImage->GetAnimationSprites("ChargeWeapon3", 3);
+		weaponImage->SetTextureCoordinates(-1799, -1190, 665, 245);
+		weaponNameImage->SetTextureCoordinates(2685, -140, 507, 78);
+		break;
+	case WeaponType::SNIPER:
+		primaryWeaponImage->GetAnimationSprites("UseWeapon5", 1);
+		primaryWeaponImage->GetAnimationSprites("ChangeWeapon04", 2);
+		primaryWeaponImage->GetAnimationSprites("ChargeWeapon2", 3);
+		weaponImage->SetTextureCoordinates(-2465, -1190, 665, 245);
+		weaponNameImage->SetTextureCoordinates(2178, -140, 507, 78);
+		break;
+	case WeaponType::SHOTGUN:
+		primaryWeaponImage->GetAnimationSprites("UseWeapon7", 1);
+		primaryWeaponImage->GetAnimationSprites("ChangeWeapon10", 2);
+		primaryWeaponImage->GetAnimationSprites("ChargeWeapon4", 3);
+		weaponImage->SetTextureCoordinates(-1133, -1190, 665, 245);
+		weaponNameImage->SetTextureCoordinates(3192, -140, 507, 78);
+		break;
+	}
 
 	aimState = AimState::ON_GUARD;
 }

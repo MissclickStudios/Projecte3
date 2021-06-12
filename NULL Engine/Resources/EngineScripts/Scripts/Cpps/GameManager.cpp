@@ -1062,6 +1062,11 @@ void GameManager::HandleBackgroundMusic()
 		App->audio->aSourceBackgroundMusic->StopFx(App->audio->aSourceBackgroundMusic->GetEventId());
 		App->audio->aSourceBackgroundMusic->SetEvent("menu_music", true);
 	}
+	else if ((App->scene->GetCurrentScene() == levelNames.winScene) || (App->scene->GetCurrentScene() == levelNames.loseScene))
+	{
+		App->audio->aSourceBackgroundMusic->StopFx(App->audio->aSourceBackgroundMusic->GetEventId());
+		App->audio->aSourceBackgroundMusic->SetEvent("credit_music", true);
+	}
 	else
 	{
 		if (App->audio->aSourceBackgroundMusic->GetEventName() != "rooms_music")

@@ -202,6 +202,7 @@ void IG12::SetUp()
 	//Audios
 	damageAudio = new C_AudioSource(gameObject);
 	deathAudio = new C_AudioSource(gameObject);
+	walkAudio = new C_AudioSource(gameObject);
 	if (damageAudio != nullptr)
 		damageAudio->SetEvent("ig11_damaged");
 	if (deathAudio != nullptr)
@@ -240,6 +241,8 @@ void IG12::CleanUp()
 		delete damageAudio;
 	if (deathAudio != nullptr)
 		delete deathAudio;
+	if (walkAudio != nullptr)
+		delete walkAudio;
 }
 
 void IG12::OnCollisionEnter(GameObject* object)
@@ -555,11 +558,19 @@ void IG12::ManageMovement()
 					sniperWeapon->projectilesPerShot = 2;
 				}
 			}
+
+			if (bombingParticles != nullptr)	//make sure particles stay in place
+				bombingParticles->StopSpawn();
+
+			bombExploding = false;				//make sure there is no infinite shake due to bomb explode not being reset to false
+
+			crosshair->transform->SetWorldPosition(float3(bombPosition.x, 500, bombPosition.y));	//hide crosshair by default
 		}
 		break;
 	case IG12State::SPIRAL_ATTACK_IN:
 		specialAttackStartAim = aimDirection;
 		specialAttackRot = 0.0f;
+		currentAnimation = &specialAnimation;
 		
 		moveState = IG12State::SPIRAL_ATTACK;
 
@@ -605,6 +616,7 @@ void IG12::ManageMovement()
 		specialAttackRot = 0.0f;
 		attackDistance = 200.0f;
 		aimState = AimState::IDLE;
+		currentAnimation = &specialAnimation;
 
 		if (blasterWeapon)
 		{
@@ -660,6 +672,13 @@ void IG12::ManageMovement()
 					sniperWeapon->projectilesPerShot = 2;
 				}
 			}
+
+			if (bombingParticles != nullptr)	//make sure particles stay in place
+				bombingParticles->StopSpawn();
+
+			bombExploding = false;				//make sure there is no infinite shake due to bomb explode not being reset to false
+
+			crosshair->transform->SetWorldPosition(float3(bombPosition.x, 500, bombPosition.y));	//hide crosshair by default
 		}
 		break;
 	case IG12State::DEAD_IN:
@@ -852,6 +871,13 @@ bool IG12::BombingAttack()
 		sniperWeapon->projectilesPerShot = 1;
 	}
 
+	if (bombingParticles != nullptr)	//make sure particles stay in place
+		bombingParticles->StopSpawn();
+
+	bombExploding = false;				//make sure there is no infinite shake due to bomb explode not being reset to false
+
+	crosshair->transform->SetWorldPosition(float3(bombPosition.x, 500, bombPosition.y));	//hide crosshair by default
+
 	if (bombTimer.IsActive() && bombTimer.ReadSec() >= bombFallingTime)
 	{
 		bombTimer.Stop();
@@ -863,7 +889,8 @@ bool IG12::BombingAttack()
 				if (playerScript)
 					playerScript->TakeDamage(Damage());
 			}
-		bombExploding = false;
+
+		crosshair->transform->SetWorldPosition(float3(bombPosition.x, 5, bombPosition.y));
 	}
 
 	else if (bombTimer.IsActive() && bombTimer.ReadSec() >= bombFallingTime * 0.9)
@@ -872,6 +899,9 @@ bool IG12::BombingAttack()
 			bombingParticles->ResumeSpawn();
 		if (damageAudio != nullptr)
 			damageAudio->PlayFx(damageAudio->GetEventId());
+		
+		crosshair->transform->SetWorldPosition(float3(bombPosition.x, 5, bombPosition.y));
+
 		bombExploding = true;
 	}
 
@@ -883,15 +913,10 @@ bool IG12::BombingAttack()
 		bombPosition = CalculateNextBomb(playerPosition.x, playerPosition.y);
 
 		crosshair->transform->SetWorldPosition(float3(bombPosition.x, 5, bombPosition.y));
-		if (bombingParticles != nullptr)
-			bombingParticles->StopSpawn();
 	}
 
 	if (!bombingAttackTimer.IsActive())
 	{
-		crosshair->transform->SetWorldPosition(float3(bombPosition.x, 500, bombPosition.y));
-		if (bombingParticles != nullptr)
-			bombingParticles->StopSpawn();
 		return false;
 	}
 
@@ -942,13 +967,15 @@ bool IG12::BombingAndSpiralAttack()
 				if (playerScript)
 					playerScript->TakeDamage(Damage());
 			}
+		bombExploding = false;
 	}
-	else if (bombTimer.IsActive() && bombTimer.ReadSec() >= bombFallingTime * 0.8)
+	else if (bombTimer.IsActive() && bombTimer.ReadSec() >= bombFallingTime * 0.9)
 	{
 		if (bombingParticles != nullptr)
 			bombingParticles->ResumeSpawn();
 		if (damageAudio != nullptr)
 			damageAudio->PlayFx(damageAudio->GetEventId());
+		bombExploding = true;
 	}
 	else if (!bombTimer.IsActive())
 	{
@@ -959,6 +986,7 @@ bool IG12::BombingAndSpiralAttack()
 		crosshair->transform->SetWorldPosition(float3(bombPosition.x, 5, bombPosition.y));
 		if (bombingParticles != nullptr)
 			bombingParticles->StopSpawn();
+		bombExploding = false;
 	}
 
 	if (!bombingAndSpiralAttackTimer.IsActive())
@@ -966,6 +994,7 @@ bool IG12::BombingAndSpiralAttack()
 		crosshair->transform->SetWorldPosition(float3(bombPosition.x, 500, bombPosition.y));
 		if (bombingParticles != nullptr)
 			bombingParticles->StopSpawn();
+		bombExploding = false;
 		return false;
 	}
 

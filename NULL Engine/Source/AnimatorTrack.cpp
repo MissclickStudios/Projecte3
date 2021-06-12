@@ -422,7 +422,7 @@ bool AnimatorTrack::SetBlendingClip(AnimatorClip* newClip, std::vector<BoneLink>
 	{
 		return false;
 	}
-	
+
 	if (newClip == nullptr)
 	{
 		LOG("[ERROR] Animator Track: Could not Set Blending Clip! Error: Given AnimatorClip* was nullptr.");
@@ -438,7 +438,7 @@ bool AnimatorTrack::SetBlendingClip(AnimatorClip* newClip, std::vector<BoneLink>
 		LOG("[ERROR] Animator Track: Could not Set Blending Clip! Error: Given std::vector<BoneLink>* was nullptr.");
 		return false;
 	}
-	
+
 	blendingClip	= newClip;
 	blendingBones	= newBones;
 	blendFrames		= newBlendFrames;
@@ -473,7 +473,7 @@ bool AnimatorTrack::StepClips(float dt)
 	if (blendingClip != nullptr)
 	{
 		blendingClip->StepClip(stepValue);
-		
+
 		if (blendingClip->GetAnimationFrame() > (float)(blendingClip->GetStart() + blendFrames))										// ATTENTION HERE.
 		{
 			SwitchBlendingToCurrent();
@@ -485,14 +485,18 @@ bool AnimatorTrack::StepClips(float dt)
 	{
 		bool success = currentClip->StepClip(stepValue);
 		if (!success && !currentClip->IsLooped())
-		{
-			Stop();
-			ResetCurrentBones();
-			
+		{			
 			if (blendingClip != nullptr)
+			{
 				SwitchBlendingToCurrent();
-			
-			return false;
+				return true;
+			}
+			else
+			{
+				Stop();
+				ResetCurrentBones();
+				return false;
+			}
 		}
 	}
 
@@ -506,7 +510,7 @@ void AnimatorTrack::SwitchBlendingToCurrent()
 		LOG("[ERROR] Animator Track: Could not Switch Blending To Current! Error: There was no Blending Clip to switch in.");
 		return;
 	}
-	
+
 	if (currentClip != nullptr)
 	{
 		currentClip->playing = false;
