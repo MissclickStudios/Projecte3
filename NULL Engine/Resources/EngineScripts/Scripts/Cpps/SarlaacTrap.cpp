@@ -27,9 +27,13 @@ void SarlaacTrap::Start()
 	sarlaacAnimator->PlayClip("Preview", animationName.c_str(), 0u);
 
 	sarlaacAudio = new C_AudioSource(gameObject);
+	sarlaccAttackAudio = new C_AudioSource(gameObject);
 
 	if (sarlaacAudio != nullptr)
 		sarlaacAudio->SetEvent("sarlacc_active");
+
+	if (sarlaccAttackAudio != nullptr)
+		sarlaccAttackAudio->SetEvent("sarlacc_attack");
 }
 
 void SarlaacTrap::Update()
@@ -47,6 +51,12 @@ void SarlaacTrap::Update()
 	case SarlaacState::DAMAGING:
 
 		state = SarlaacState::SLEEPING;
+
+		//Animator play clip
+		sarlaacAnimator->PlayClip("Preview", animationName.c_str(), 0u);
+
+		if (sarlaccAttackAudio != nullptr)
+			sarlaccAttackAudio->PlayFx(sarlaccAttackAudio->GetEventId());
 
 		break;
 
@@ -86,6 +96,9 @@ void SarlaacTrap::CleanUp()
 {
 	if (sarlaacAudio != nullptr)
 		delete sarlaacAudio;
+
+	if (sarlaccAttackAudio != nullptr)
+		delete sarlaccAttackAudio;
 }
 
 void SarlaacTrap::OnTriggerRepeat(GameObject* object)
@@ -133,7 +146,7 @@ void SarlaacTrap::StartMoving()
 	state = SarlaacState::MOVING;
 
 	//Animator play clip
-	sarlaacAnimator->PlayClip("Preview",animationName.c_str(), 0u);
+	//sarlaacAnimator->PlayClip("Preview",animationName.c_str(), 0u);
 
 	if (sarlaacAudio != nullptr)
 		sarlaacAudio->PlayFx(sarlaacAudio->GetEventId());
