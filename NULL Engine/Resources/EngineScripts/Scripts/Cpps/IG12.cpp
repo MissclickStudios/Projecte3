@@ -555,6 +555,13 @@ void IG12::ManageMovement()
 					sniperWeapon->projectilesPerShot = 2;
 				}
 			}
+
+			if (bombingParticles != nullptr)	//make sure particles stay in place
+				bombingParticles->StopSpawn();
+
+			bombExploding = false;				//make sure there is no infinite shake due to bomb explode not being reset to false
+
+			crosshair->transform->SetWorldPosition(float3(bombPosition.x, 500, bombPosition.y));	//hide crosshair by default
 		}
 		break;
 	case IG12State::SPIRAL_ATTACK_IN:
@@ -662,6 +669,13 @@ void IG12::ManageMovement()
 					sniperWeapon->projectilesPerShot = 2;
 				}
 			}
+
+			if (bombingParticles != nullptr)	//make sure particles stay in place
+				bombingParticles->StopSpawn();
+
+			bombExploding = false;				//make sure there is no infinite shake due to bomb explode not being reset to false
+
+			crosshair->transform->SetWorldPosition(float3(bombPosition.x, 500, bombPosition.y));	//hide crosshair by default
 		}
 		break;
 	case IG12State::DEAD_IN:
@@ -860,7 +874,6 @@ bool IG12::BombingAttack()
 	bombExploding = false;				//make sure there is no infinite shake due to bomb explode not being reset to false
 
 	crosshair->transform->SetWorldPosition(float3(bombPosition.x, 500, bombPosition.y));	//hide crosshair by default
-
 
 	if (bombTimer.IsActive() && bombTimer.ReadSec() >= bombFallingTime)
 	{
