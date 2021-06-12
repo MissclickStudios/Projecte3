@@ -214,8 +214,6 @@ void IG12::SetUp()
 
 	hitParticles = gameObject->GetComponent<C_ParticleSystem>();
 	(hitParticles != nullptr) ? hitParticles->StopSpawn() : LOG("[ERROR] IG12 Script: Could not find { HIT } Particle System!");
-
-	damageAudio = (C_AudioSource*)gameObject->GetComponent<C_AudioSource>();
 }
 
 void IG12::Behavior()
