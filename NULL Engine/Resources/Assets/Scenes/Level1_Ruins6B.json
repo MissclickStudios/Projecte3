@@ -1,5 +1,5 @@
 {
-    "ModTime": 1623474760,
+    "ModTime": 1623490271,
     "Models In Scene": [
         {
             "GameObjectUID": 649823649,
@@ -3932,6 +3932,42 @@
             ]
         },
         {
+            "UID": 270095144,
+            "ParentUID": 1088042416,
+            "PrefabID": 1654173329,
+            "IsPrefab": true,
+            "Name": "Skeleton",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -1.1920928955078125e-07,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        2,
+                        2,
+                        2
+                    ]
+                }
+            ]
+        },
+        {
             "UID": 271111018,
             "ParentUID": 181982299,
             "PrefabID": 0,
@@ -4205,42 +4241,6 @@
                         "LibaryPath": "Library\/Shaders\/800223282.neshader",
                         "LibraryFile": "800223282.neshader"
                     }
-                }
-            ]
-        },
-        {
-            "UID": 286448942,
-            "ParentUID": 1451670161,
-            "PrefabID": 1654173329,
-            "IsPrefab": true,
-            "Name": "Barrel",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -0.0088924765586853027,
-                        -1.1674821376800537,
-                        1.4849205017089844
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
                 }
             ]
         },
@@ -9188,6 +9188,87 @@
             ]
         },
         {
+            "UID": 580949356,
+            "ParentUID": 1088042416,
+            "PrefabID": 1654173329,
+            "IsPrefab": true,
+            "Name": "Base",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.70710664987564087,
+                        0,
+                        0,
+                        0.70710694789886475
+                    ],
+                    "LocalScale": [
+                        0.05000000074505806,
+                        0.05000000074505806,
+                        0.05000000074505806
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 220355391,
+                    "Name": "turret_base.nemesh",
+                    "Path": "Library\/Meshes\/220355391.nemesh",
+                    "File": "220355391.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": 1,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "RenderLast": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1886986290,
+                        "Color": [
+                            0.58823531866073608,
+                            0.58823531866073608,
+                            0.58823531866073608,
+                            1
+                        ],
+                        "Name": "turret_base.nemat",
+                        "Path": "Library\/Materials\/1886986290.nemat",
+                        "File": "1886986290.nemat"
+                    },
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/\/Enemies\/Turet\/turret_droid_texture.png",
+                        "AssetsName": "turret_droid_texture.png",
+                        "LibaryPath": "Library\/Textures\/1100532012.netex",
+                        "LibraryFile": "1100532012.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ]
+        },
+        {
             "UID": 581954317,
             "ParentUID": 1552246383,
             "PrefabID": 1338592388,
@@ -10883,87 +10964,6 @@
             ]
         },
         {
-            "UID": 644756714,
-            "ParentUID": 1451670161,
-            "PrefabID": 1654173329,
-            "IsPrefab": true,
-            "Name": "HeadMesh",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -0.06196749210357666,
-                        -3.2230939865112305,
-                        -1.8218908309936523
-                    ],
-                    "LocalRotation": [
-                        -0.70710664987564087,
-                        0,
-                        0,
-                        0.70710694789886475
-                    ],
-                    "LocalScale": [
-                        0.02500000037252903,
-                        0.024999996647238731,
-                        0.024999996647238731
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 8468603,
-                    "Name": "turret_head.nemesh",
-                    "Path": "Library\/Meshes\/8468603.nemesh",
-                    "File": "8468603.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false,
-                    "Outline": false,
-                    "OutlineThickness": 1,
-                    "OutlineColor": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "RenderLast": false
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 1182090185,
-                        "Color": [
-                            0.58823531866073608,
-                            0.58823531866073608,
-                            0.58823531866073608,
-                            1
-                        ],
-                        "Name": "turret_head.nemat",
-                        "Path": "Library\/Materials\/1182090185.nemat",
-                        "File": "1182090185.nemat"
-                    },
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/\/Enemies\/Turet\/turret_droid_texture.png",
-                        "AssetsName": "turret_droid_texture.png",
-                        "LibaryPath": "Library\/Textures\/1100532012.netex",
-                        "LibraryFile": "1100532012.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
-                    }
-                }
-            ]
-        },
-        {
             "UID": 646670206,
             "ParentUID": 1338937508,
             "PrefabID": 1880457123,
@@ -11368,9 +11368,9 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        147.00326538085938,
-                        -0.18172112107276917,
-                        209.75900268554688
+                        155.37249755859375,
+                        -0.18171896040439606,
+                        105.17510986328125
                     ],
                     "LocalRotation": [
                         0,
@@ -12388,6 +12388,42 @@
             ]
         },
         {
+            "UID": 723842080,
+            "ParentUID": 2087108211,
+            "PrefabID": 1654173329,
+            "IsPrefab": true,
+            "Name": "Head",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        3.2654428482055664,
+                        1.8325634002685547
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
             "UID": 725561191,
             "ParentUID": 1683983010,
             "PrefabID": 1338592388,
@@ -13208,6 +13244,42 @@
             ]
         },
         {
+            "UID": 771122457,
+            "ParentUID": 270095144,
+            "PrefabID": 1654173329,
+            "IsPrefab": true,
+            "Name": "Hand",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.003144741291180253,
+                        2.1789751052856445,
+                        1.9898421764373779
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
             "UID": 771360684,
             "ParentUID": 293821343,
             "PrefabID": 1524961430,
@@ -13954,42 +14026,6 @@
             ]
         },
         {
-            "UID": 837162962,
-            "ParentUID": 1226829467,
-            "PrefabID": 1654173329,
-            "IsPrefab": true,
-            "Name": "Hand",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0.003144741291180253,
-                        2.1789751052856445,
-                        1.9898421764373779
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
             "UID": 842972481,
             "ParentUID": 331357172,
             "PrefabID": 1338592388,
@@ -14591,6 +14627,87 @@
             ]
         },
         {
+            "UID": 884586389,
+            "ParentUID": 1666074290,
+            "PrefabID": 1654173329,
+            "IsPrefab": true,
+            "Name": "Base",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.70710664987564087,
+                        0,
+                        0,
+                        0.70710694789886475
+                    ],
+                    "LocalScale": [
+                        0.05000000074505806,
+                        0.05000000074505806,
+                        0.05000000074505806
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 220355391,
+                    "Name": "turret_base.nemesh",
+                    "Path": "Library\/Meshes\/220355391.nemesh",
+                    "File": "220355391.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": 1,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "RenderLast": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1886986290,
+                        "Color": [
+                            0.58823531866073608,
+                            0.58823531866073608,
+                            0.58823531866073608,
+                            1
+                        ],
+                        "Name": "turret_base.nemat",
+                        "Path": "Library\/Materials\/1886986290.nemat",
+                        "File": "1886986290.nemat"
+                    },
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/\/Enemies\/Turet\/turret_droid_texture.png",
+                        "AssetsName": "turret_droid_texture.png",
+                        "LibaryPath": "Library\/Textures\/1100532012.netex",
+                        "LibraryFile": "1100532012.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ]
+        },
+        {
             "UID": 885573094,
             "ParentUID": 888400124,
             "PrefabID": 615742766,
@@ -14934,7 +15051,7 @@
         },
         {
             "UID": 888400124,
-            "ParentUID": 1263478901,
+            "ParentUID": 487600052,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -16328,6 +16445,87 @@
             ]
         },
         {
+            "UID": 985871322,
+            "ParentUID": 723842080,
+            "PrefabID": 1654173329,
+            "IsPrefab": true,
+            "Name": "HeadMesh",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -0.06196749210357666,
+                        -3.2230939865112305,
+                        -1.8218908309936523
+                    ],
+                    "LocalRotation": [
+                        -0.70710664987564087,
+                        0,
+                        0,
+                        0.70710694789886475
+                    ],
+                    "LocalScale": [
+                        0.02500000037252903,
+                        0.024999996647238731,
+                        0.024999996647238731
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 8468603,
+                    "Name": "turret_head.nemesh",
+                    "Path": "Library\/Meshes\/8468603.nemesh",
+                    "File": "8468603.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": 1,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "RenderLast": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1182090185,
+                        "Color": [
+                            0.58823531866073608,
+                            0.58823531866073608,
+                            0.58823531866073608,
+                            1
+                        ],
+                        "Name": "turret_head.nemat",
+                        "Path": "Library\/Materials\/1182090185.nemat",
+                        "File": "1182090185.nemat"
+                    },
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/\/Enemies\/Turet\/turret_droid_texture.png",
+                        "AssetsName": "turret_droid_texture.png",
+                        "LibaryPath": "Library\/Textures\/1100532012.netex",
+                        "LibraryFile": "1100532012.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ]
+        },
+        {
             "UID": 990609135,
             "ParentUID": 378606977,
             "PrefabID": 1414243045,
@@ -16984,6 +17182,42 @@
                         "LibaryPath": "Library\/Shaders\/800223282.neshader",
                         "LibraryFile": "800223282.neshader"
                     }
+                }
+            ]
+        },
+        {
+            "UID": 1019914961,
+            "ParentUID": 723842080,
+            "PrefabID": 1654173329,
+            "IsPrefab": true,
+            "Name": "Barrel",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -0.0088924765586853027,
+                        -1.1674821376800537,
+                        1.4849205017089844
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
                 }
             ]
         },
@@ -18335,6 +18569,174 @@
                         1,
                         1,
                         1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1088042416,
+            "ParentUID": 888400124,
+            "PrefabID": 1654173329,
+            "IsPrefab": true,
+            "Name": "Turret",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": true,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -53.829421997070313,
+                        6.4119062423706055,
+                        -162.6085205078125
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": false,
+                    "Filter": " enemy",
+                    "Mass": 10000,
+                    "Density": 1000,
+                    "Linear Damping": 0,
+                    "Angular Damping": 0,
+                    "Use Gravity": false,
+                    "Is Kinematic": false,
+                    "Freeze Position X": true,
+                    "Freeze Position Y": true,
+                    "Freeze Position Z": true,
+                    "Freeze Rotation X": true,
+                    "Freeze Rotation Y": true,
+                    "Freeze Rotation Z": true
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 7,
+                    "Size Y": 20,
+                    "Size Z": 7,
+                    "Center X": 0,
+                    "Center Y": 4,
+                    "Center Z": -1
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 941988715,
+                    "AssetsPath": "Assets\/Scripts\/\/Turret.h",
+                    "DataName": "Turret",
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 5,
+                            "Name": "playerName",
+                            "string": "Mandalorian"
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "health",
+                            "float": 80
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "maxHealth",
+                            "float": 5
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "speed",
+                            "float": 0
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "attackSpeed",
+                            "float": 0
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "damage",
+                            "float": 0.5
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "defense",
+                            "float": 1
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "maxHealthModifier",
+                            "float": 0
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "speedModifier",
+                            "float": 1
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "attackSpeedModifier",
+                            "float": 1
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "damageModifier",
+                            "float": 1
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "defenseModifier",
+                            "float": 1
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "cooldownModifier",
+                            "float": 1
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "deathDuration",
+                            "float": 1
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "attackDistance",
+                            "float": 90
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "blaster",
+                            "prefab": 1609990140
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "rightHandName",
+                            "string": "Hand"
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "minCredits",
+                            "int": 15
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "maxCredits",
+                            "int": 27
+                        }
                     ]
                 }
             ]
@@ -20193,42 +20595,6 @@
                         0.99999988079071045,
                         0.99999988079071045,
                         0.99999970197677612
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1226829467,
-            "ParentUID": 1714609919,
-            "PrefabID": 1654173329,
-            "IsPrefab": true,
-            "Name": "Skeleton",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -1.1920928955078125e-07,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        2,
-                        2,
-                        2
                     ]
                 }
             ]
@@ -24548,42 +24914,6 @@
             ]
         },
         {
-            "UID": 1451670161,
-            "ParentUID": 1226829467,
-            "PrefabID": 1654173329,
-            "IsPrefab": true,
-            "Name": "Head",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        3.2654428482055664,
-                        1.8325634002685547
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
             "UID": 1457893191,
             "ParentUID": 1805521705,
             "PrefabID": 1338592388,
@@ -24610,6 +24940,42 @@
                         -0.24644681811332703,
                         -0.24794381856918335,
                         0.85368061065673828
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1458269726,
+            "ParentUID": 2087108211,
+            "PrefabID": 1654173329,
+            "IsPrefab": true,
+            "Name": "Hand",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0.003144741291180253,
+                        2.1789751052856445,
+                        1.9898421764373779
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
                     ],
                     "LocalScale": [
                         1,
@@ -25232,87 +25598,6 @@
                         1,
                         1
                     ]
-                }
-            ]
-        },
-        {
-            "UID": 1524257619,
-            "ParentUID": 1714609919,
-            "PrefabID": 1654173329,
-            "IsPrefab": true,
-            "Name": "Base",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        -0.70710664987564087,
-                        0,
-                        0,
-                        0.70710694789886475
-                    ],
-                    "LocalScale": [
-                        0.05000000074505806,
-                        0.05000000074505806,
-                        0.05000000074505806
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 220355391,
-                    "Name": "turret_base.nemesh",
-                    "Path": "Library\/Meshes\/220355391.nemesh",
-                    "File": "220355391.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false,
-                    "Outline": false,
-                    "OutlineThickness": 1,
-                    "OutlineColor": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "RenderLast": false
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 1886986290,
-                        "Color": [
-                            0.58823531866073608,
-                            0.58823531866073608,
-                            0.58823531866073608,
-                            1
-                        ],
-                        "Name": "turret_base.nemat",
-                        "Path": "Library\/Materials\/1886986290.nemat",
-                        "File": "1886986290.nemat"
-                    },
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/\/Enemies\/Turet\/turret_droid_texture.png",
-                        "AssetsName": "turret_droid_texture.png",
-                        "LibaryPath": "Library\/Textures\/1100532012.netex",
-                        "LibraryFile": "1100532012.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
-                    }
                 }
             ]
         },
@@ -27699,6 +27984,174 @@
             ]
         },
         {
+            "UID": 1666074290,
+            "ParentUID": 888400124,
+            "PrefabID": 1654173329,
+            "IsPrefab": true,
+            "Name": "Turret",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        172.66323852539063,
+                        6.3042411804199219,
+                        -62.522407531738281
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": false,
+                    "Filter": " enemy",
+                    "Mass": 10000,
+                    "Density": 1000,
+                    "Linear Damping": 0,
+                    "Angular Damping": 0,
+                    "Use Gravity": false,
+                    "Is Kinematic": false,
+                    "Freeze Position X": true,
+                    "Freeze Position Y": true,
+                    "Freeze Position Z": true,
+                    "Freeze Rotation X": true,
+                    "Freeze Rotation Y": true,
+                    "Freeze Rotation Z": true
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 7,
+                    "Size Y": 20,
+                    "Size Z": 7,
+                    "Center X": 0,
+                    "Center Y": 4,
+                    "Center Z": -1
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 941988715,
+                    "AssetsPath": "Assets\/Scripts\/\/Turret.h",
+                    "DataName": "Turret",
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 5,
+                            "Name": "playerName",
+                            "string": "Mandalorian"
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "health",
+                            "float": 80
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "maxHealth",
+                            "float": 5
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "speed",
+                            "float": 0
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "attackSpeed",
+                            "float": 0
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "damage",
+                            "float": 0.5
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "defense",
+                            "float": 1
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "maxHealthModifier",
+                            "float": 0
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "speedModifier",
+                            "float": 1
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "attackSpeedModifier",
+                            "float": 1
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "damageModifier",
+                            "float": 1
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "defenseModifier",
+                            "float": 1
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "cooldownModifier",
+                            "float": 1
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "deathDuration",
+                            "float": 1
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "attackDistance",
+                            "float": 90
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "blaster",
+                            "prefab": 1609990140
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "rightHandName",
+                            "string": "Hand"
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "minCredits",
+                            "int": 15
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "maxCredits",
+                            "int": 27
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "UID": 1666964618,
             "ParentUID": 425707108,
             "PrefabID": 1338592388,
@@ -28093,6 +28546,87 @@
                             "float": 2
                         }
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 1692000146,
+            "ParentUID": 1951148143,
+            "PrefabID": 1654173329,
+            "IsPrefab": true,
+            "Name": "HeadMesh",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -0.06196749210357666,
+                        -3.2230939865112305,
+                        -1.8218908309936523
+                    ],
+                    "LocalRotation": [
+                        -0.70710664987564087,
+                        0,
+                        0,
+                        0.70710694789886475
+                    ],
+                    "LocalScale": [
+                        0.02500000037252903,
+                        0.024999996647238731,
+                        0.024999996647238731
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 8468603,
+                    "Name": "turret_head.nemesh",
+                    "Path": "Library\/Meshes\/8468603.nemesh",
+                    "File": "8468603.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": 1,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "RenderLast": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1182090185,
+                        "Color": [
+                            0.58823531866073608,
+                            0.58823531866073608,
+                            0.58823531866073608,
+                            1
+                        ],
+                        "Name": "turret_head.nemat",
+                        "Path": "Library\/Materials\/1182090185.nemat",
+                        "File": "1182090185.nemat"
+                    },
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/\/Enemies\/Turet\/turret_droid_texture.png",
+                        "AssetsName": "turret_droid_texture.png",
+                        "LibaryPath": "Library\/Textures\/1100532012.netex",
+                        "LibraryFile": "1100532012.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
                 }
             ]
         },
@@ -28552,174 +29086,6 @@
                         "LibaryPath": "Library\/Shaders\/1025410539.neshader",
                         "LibraryFile": "1025410539.neshader"
                     }
-                }
-            ]
-        },
-        {
-            "UID": 1714609919,
-            "ParentUID": 888400124,
-            "PrefabID": 1654173329,
-            "IsPrefab": true,
-            "Name": "Turret",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        171.99452209472656,
-                        25.331676483154297,
-                        -63.782585144042969
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 8,
-                    "Is Static": false,
-                    "Filter": " enemy",
-                    "Mass": 10000,
-                    "Density": 1000,
-                    "Linear Damping": 0,
-                    "Angular Damping": 0,
-                    "Use Gravity": true,
-                    "Is Kinematic": true,
-                    "Freeze Position X": true,
-                    "Freeze Position Y": false,
-                    "Freeze Position Z": true,
-                    "Freeze Rotation X": true,
-                    "Freeze Rotation Y": true,
-                    "Freeze Rotation Z": true
-                },
-                {
-                    "Type": 9,
-                    "Is Trigger": false,
-                    "Show Collider": true,
-                    "Size X": 7,
-                    "Size Y": 20,
-                    "Size Z": 7,
-                    "Center X": 0,
-                    "Center Y": 4,
-                    "Center Z": -1
-                },
-                {
-                    "Type": 24,
-                    "ResourceUID": 941988715,
-                    "AssetsPath": "Assets\/Scripts\/\/Turret.h",
-                    "DataName": "Turret",
-                    "HasInspector": true,
-                    "InspectorVariables": [
-                        {
-                            "Type": 5,
-                            "Name": "playerName",
-                            "string": "Mandalorian"
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "health",
-                            "float": 80
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "maxHealth",
-                            "float": 5
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "speed",
-                            "float": 0
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "attackSpeed",
-                            "float": 0
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "damage",
-                            "float": 0.5
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "defense",
-                            "float": 1
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "maxHealthModifier",
-                            "float": 0
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "speedModifier",
-                            "float": 1
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "attackSpeedModifier",
-                            "float": 1
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "damageModifier",
-                            "float": 1
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "defenseModifier",
-                            "float": 1
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "cooldownModifier",
-                            "float": 1
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "deathDuration",
-                            "float": 1
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "attackDistance",
-                            "float": 90
-                        },
-                        {
-                            "Type": 4,
-                            "Name": "blaster",
-                            "prefab": 1609990140
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "rightHandName",
-                            "string": "Hand"
-                        },
-                        {
-                            "Type": 0,
-                            "Name": "minCredits",
-                            "int": 15
-                        },
-                        {
-                            "Type": 0,
-                            "Name": "maxCredits",
-                            "int": 27
-                        }
-                    ]
                 }
             ]
         },
@@ -29514,6 +29880,42 @@
                         2.2351741790771484e-08,
                         -2.4214386940002441e-08,
                         -1.0058283805847168e-07,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1777702902,
+            "ParentUID": 1951148143,
+            "PrefabID": 1654173329,
+            "IsPrefab": true,
+            "Name": "Barrel",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -0.0088924765586853027,
+                        -1.1674821376800537,
+                        1.4849205017089844
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
                         1
                     ],
                     "LocalScale": [
@@ -32649,6 +33051,42 @@
             ]
         },
         {
+            "UID": 1951148143,
+            "ParentUID": 270095144,
+            "PrefabID": 1654173329,
+            "IsPrefab": true,
+            "Name": "Head",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        3.2654428482055664,
+                        1.8325634002685547
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
             "UID": 1951485178,
             "ParentUID": 512729499,
             "PrefabID": 615742766,
@@ -34888,6 +35326,42 @@
             ]
         },
         {
+            "UID": 2087108211,
+            "ParentUID": 1666074290,
+            "PrefabID": 1654173329,
+            "IsPrefab": true,
+            "Name": "Skeleton",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -1.1920928955078125e-07,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        2,
+                        2,
+                        2
+                    ]
+                }
+            ]
+        },
+        {
             "UID": 2088371107,
             "ParentUID": 1323669779,
             "PrefabID": 1524961430,
@@ -35357,480 +35831,6 @@
                         0.40999999642372131,
                         0.40999999642372131
                     ]
-                }
-            ]
-        },
-        {
-            "UID": 3657496,
-            "ParentUID": 888400124,
-            "PrefabID": 1654173329,
-            "IsPrefab": true,
-            "Name": "Turret",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -53.617389678955078,
-                        23.687078475952148,
-                        -161.76783752441406
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 8,
-                    "Is Static": false,
-                    "Filter": " enemy",
-                    "Mass": 10000,
-                    "Density": 1000,
-                    "Linear Damping": 0,
-                    "Angular Damping": 0,
-                    "Use Gravity": true,
-                    "Is Kinematic": true,
-                    "Freeze Position X": true,
-                    "Freeze Position Y": false,
-                    "Freeze Position Z": true,
-                    "Freeze Rotation X": true,
-                    "Freeze Rotation Y": true,
-                    "Freeze Rotation Z": true
-                },
-                {
-                    "Type": 9,
-                    "Is Trigger": false,
-                    "Show Collider": true,
-                    "Size X": 7,
-                    "Size Y": 20,
-                    "Size Z": 7,
-                    "Center X": 0,
-                    "Center Y": 4,
-                    "Center Z": -1
-                },
-                {
-                    "Type": 24,
-                    "ResourceUID": 941988715,
-                    "AssetsPath": "Assets\/Scripts\/\/Turret.h",
-                    "DataName": "Turret",
-                    "HasInspector": true,
-                    "InspectorVariables": [
-                        {
-                            "Type": 5,
-                            "Name": "playerName",
-                            "string": "Mandalorian"
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "health",
-                            "float": 80
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "maxHealth",
-                            "float": 5
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "speed",
-                            "float": 0
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "attackSpeed",
-                            "float": 0
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "damage",
-                            "float": 0.5
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "defense",
-                            "float": 1
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "maxHealthModifier",
-                            "float": 0
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "speedModifier",
-                            "float": 1
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "attackSpeedModifier",
-                            "float": 1
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "damageModifier",
-                            "float": 1
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "defenseModifier",
-                            "float": 1
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "cooldownModifier",
-                            "float": 1
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "deathDuration",
-                            "float": 1
-                        },
-                        {
-                            "Type": 2,
-                            "Name": "attackDistance",
-                            "float": 90
-                        },
-                        {
-                            "Type": 4,
-                            "Name": "blaster",
-                            "prefab": 1609990140
-                        },
-                        {
-                            "Type": 5,
-                            "Name": "rightHandName",
-                            "string": "Hand"
-                        },
-                        {
-                            "Type": 0,
-                            "Name": "minCredits",
-                            "int": 15
-                        },
-                        {
-                            "Type": 0,
-                            "Name": "maxCredits",
-                            "int": 27
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1757326928,
-            "ParentUID": 3657496,
-            "PrefabID": 1654173329,
-            "IsPrefab": true,
-            "Name": "Skeleton",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -1.1920928955078125e-07,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        2,
-                        2,
-                        2
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1234876424,
-            "ParentUID": 1757326928,
-            "PrefabID": 1654173329,
-            "IsPrefab": true,
-            "Name": "Hand",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0.003144741291180253,
-                        2.1789751052856445,
-                        1.9898421764373779
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1218593330,
-            "ParentUID": 1757326928,
-            "PrefabID": 1654173329,
-            "IsPrefab": true,
-            "Name": "Head",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        3.2654428482055664,
-                        1.8325634002685547
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 400024690,
-            "ParentUID": 1218593330,
-            "PrefabID": 1654173329,
-            "IsPrefab": true,
-            "Name": "HeadMesh",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -0.06196749210357666,
-                        -3.2230939865112305,
-                        -1.8218908309936523
-                    ],
-                    "LocalRotation": [
-                        -0.70710664987564087,
-                        0,
-                        0,
-                        0.70710694789886475
-                    ],
-                    "LocalScale": [
-                        0.02500000037252903,
-                        0.024999996647238731,
-                        0.024999996647238731
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 8468603,
-                    "Name": "turret_head.nemesh",
-                    "Path": "Library\/Meshes\/8468603.nemesh",
-                    "File": "8468603.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false,
-                    "Outline": false,
-                    "OutlineThickness": 1,
-                    "OutlineColor": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "RenderLast": false
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 1182090185,
-                        "Color": [
-                            0.58823531866073608,
-                            0.58823531866073608,
-                            0.58823531866073608,
-                            1
-                        ],
-                        "Name": "turret_head.nemat",
-                        "Path": "Library\/Materials\/1182090185.nemat",
-                        "File": "1182090185.nemat"
-                    },
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/\/Enemies\/Turet\/turret_droid_texture.png",
-                        "AssetsName": "turret_droid_texture.png",
-                        "LibaryPath": "Library\/Textures\/1100532012.netex",
-                        "LibraryFile": "1100532012.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
-                    }
-                }
-            ]
-        },
-        {
-            "UID": 1806842905,
-            "ParentUID": 1218593330,
-            "PrefabID": 1654173329,
-            "IsPrefab": true,
-            "Name": "Barrel",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -0.0088924765586853027,
-                        -1.1674821376800537,
-                        1.4849205017089844
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1316205220,
-            "ParentUID": 3657496,
-            "PrefabID": 1654173329,
-            "IsPrefab": true,
-            "Name": "Base",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        -0.70710664987564087,
-                        0,
-                        0,
-                        0.70710694789886475
-                    ],
-                    "LocalScale": [
-                        0.05000000074505806,
-                        0.05000000074505806,
-                        0.05000000074505806
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 220355391,
-                    "Name": "turret_base.nemesh",
-                    "Path": "Library\/Meshes\/220355391.nemesh",
-                    "File": "220355391.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false,
-                    "Outline": false,
-                    "OutlineThickness": 1,
-                    "OutlineColor": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "RenderLast": false
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 1886986290,
-                        "Color": [
-                            0.58823531866073608,
-                            0.58823531866073608,
-                            0.58823531866073608,
-                            1
-                        ],
-                        "Name": "turret_base.nemat",
-                        "Path": "Library\/Materials\/1886986290.nemat",
-                        "File": "1886986290.nemat"
-                    },
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/\/Enemies\/Turet\/turret_droid_texture.png",
-                        "AssetsName": "turret_droid_texture.png",
-                        "LibaryPath": "Library\/Textures\/1100532012.netex",
-                        "LibraryFile": "1100532012.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
-                    }
                 }
             ]
         }
