@@ -670,12 +670,15 @@ void Player::SetPlayerInteraction(InteractionType type, float duration)
 	{
 		interactionTimer.Stop();
 		interactionDuration = 0.0f;
-		
-		/*if (rigidBody != nullptr)																				// Making the player dynamic again once the interaction has finished.
-			rigidBody->MakeDynamic();*/
 
 		if (dashTimer.IsActive())																				// In case the interaction was set while the player was dashing.
 			moveState = PlayerState::DASH;
+
+		if (currentWeapon != nullptr)
+		{
+			if (currentWeapon->weaponModel != nullptr)
+				currentWeapon->weaponModel->SetIsActive(true);
+		}
 
 		return;
 	}
@@ -685,7 +688,12 @@ void Player::SetPlayerInteraction(InteractionType type, float duration)
 	
 	if (rigidBody != nullptr)																					// Making sure that the player will remain still while interacting.
 		rigidBody->StopInertia();
-		//rigidBody->MakeStatic();
+
+	if (currentWeapon != nullptr)
+	{
+		if (currentWeapon->weaponModel != nullptr)
+			currentWeapon->weaponModel->SetIsActive(false);
+	}
 
 	switch (currentInteraction)
 	{
@@ -711,9 +719,9 @@ void Player::AnimatePlayer()
 	AnimationInfo* torsoInfo	= GetAimStateAnimation();
 	AnimationInfo* legsInfo		= GetMoveStateAnimation();
 
-	//LOG("CURRENT:	{ %s }",	(currentAnimation != nullptr) ? currentAnimation->name.c_str() : "NONE");
-	//LOG("TORSO:	  { %s }",		(torsoInfo != nullptr) ? torsoInfo->name.c_str() : "NONE");
-	//LOG("LEGS:	   { %s }",		(legsInfo != nullptr) ? legsInfo->name.c_str() : "NONE");
+	LOG("CURRENT:	{ %s }::{ %u }",	(currentAnimation != nullptr) ? currentAnimation->name.c_str() : "NONE", preview->GetTrackState());
+	LOG("TORSO:	  { %s }::{ %u }",		(torsoInfo != nullptr) ? torsoInfo->name.c_str() : "NONE", torsoTrack->GetTrackState());
+	LOG("LEGS:	   { %s }::{ %u }",		(legsInfo != nullptr) ? legsInfo->name.c_str() : "NONE", legsTrack->GetTrackState());
 
 	if (GetEntityState() != EntityState::NONE || aimState == AimState::IDLE || torsoInfo == nullptr || legsInfo == nullptr)		// TAKE INTO ACCOUNT STUN AND KNOCKBACK + LOOK INTO DASH PROBLEMS 
 	{	
@@ -754,8 +762,10 @@ void Player::AnimatePlayer()
 		AnimatorClip* torsoClip = torsoTrack->GetCurrentClip();
 		AnimatorClip* legsClip = legsTrack->GetCurrentClip();
 
-		if (preview->GetTrackState() != TrackState::STOP)
-			preview->Stop();
+		//if (preview->GetTrackState() != TrackState::STOP)
+		//	preview->Stop();
+
+		preview->Stop();
 
 		if ((torsoClip == nullptr) || overrideShootAnimation || (torsoClip->GetName() != torsoInfo->name))
 		{
@@ -767,6 +777,12 @@ void Player::AnimatePlayer()
 
 		if ((legsClip == nullptr) || (legsClip->GetName() != legsInfo->name))
 			animator->PlayClip(legsTrack->GetName(), legsInfo->name.c_str(), legsInfo->blendTime);
+
+		if (torsoTrack->GetTrackState() == TrackState::STOP)
+			torsoTrack->Play();
+
+		if (legsTrack->GetTrackState() == TrackState::STOP)
+			legsTrack->Play();
 	}
 }
 
@@ -793,13 +809,34 @@ AnimationInfo* Player::GetLegsAnimation()
 
 	if (aimInput.IsZero())
 	{
-		if (currentWeapon == nullptr)
-			return &runForwardsLightAnimation;
-
-		return (currentWeapon->type != WeaponType::MINIGUN) ? &runForwardsLightAnimation : &runForwardsHeavyAnimation;
+		return GetWeaponRunAnimation();
 	}
 
-	return legsMatrix[(int)aimDirection][(int)moveDirection];
+	AnimationInfo* legsAnimation = legsMatrix[(int)aimDirection][(int)moveDirection];
+	if (legsAnimation == &runForwardsAnimation)
+	{
+		legsAnimation = GetWeaponRunAnimation();
+	}
+
+	return legsAnimation;
+}
+
+AnimationInfo* Player::GetWeaponRunAnimation()
+{
+	if (currentWeapon == nullptr)
+		return &runForwardsAnimation;
+	
+	switch (currentWeapon->type)
+	{
+	case WeaponType::BLASTER:	{ return &runBlasterAnimation; }	break;
+	case WeaponType::SNIPER:	{ return &runSniperAnimation; }		break;
+	case WeaponType::SHOTGUN:	{ return &runShotgunAnimation; }	break;
+	case WeaponType::MINIGUN:	{ return &runMinigunAnimation; }	break;
+	}
+
+	LOG("[ERROR] Player Script: Could not get Weapon Run Animation! Error: Unknown Weapon Type.");
+
+	return &runForwardsAnimation;
 }
 
 AnimationInfo* Player::GetAimStateAnimation()
@@ -987,8 +1024,8 @@ void Player::ManageMovement()
 	{
 		if (health <= 0.0f)
 		{
-			moveState = PlayerState::DEAD_IN;
-			aimState = AimState::IDLE;
+			moveState	= PlayerState::DEAD_IN;
+			aimState	= AimState::IDLE;
 		}
 		else
 		{
@@ -1147,7 +1184,7 @@ void Player::Walk()
 
 void Player::Run()
 {
-	currentAnimation = &runForwardsAnimation;
+	currentAnimation = GetWeaponRunAnimation();
 	
 	Movement();
 

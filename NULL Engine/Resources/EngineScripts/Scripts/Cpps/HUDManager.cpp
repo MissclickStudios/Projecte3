@@ -274,10 +274,12 @@ void HUDManager::ManageWeaponHUD()
 
 void HUDManager::SetUpHealth(float hp, int maxHp)
 {
+	if (hp < 0)
+		hp = 0;
 	playerHealth = hp;
 	playerMaxHp = maxHp;
 	bool eaven = !((int)hp % 2);
-	if (eaven) 
+	if (eaven && hp !=0) 
 	{
 		currentHealthIndex = hp / 2 - 1;
 		if (hearts[currentHealthIndex] != nullptr)
