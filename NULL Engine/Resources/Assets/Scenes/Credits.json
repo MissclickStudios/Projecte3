@@ -1,6 +1,12 @@
 {
-    "ModTime": 1623085168,
-    "Models In Scene": [],
+    "ModTime": 1623494137,
+    "Models In Scene": [
+        {
+            "GameObjectUID": 1444845295,
+            "ModelResourceUID": 1068552071,
+            "ModelAssetsPath": "Assets\/Models\/Primitives\/plane.fbx"
+        }
+    ],
     "Game Objects": [
         {
             "UID": 57158828,
@@ -11,7 +17,6 @@
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
             "ShowBoundingBoxes": true,
             "NavigationInfo": {
                 "isNavigable": false,
@@ -63,7 +68,6 @@
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
             "ShowBoundingBoxes": false,
             "NavigationInfo": {
                 "isNavigable": false,
@@ -96,7 +100,7 @@
                     "MaxFOV": 120,
                     "Culling": false,
                     "OrthogonalView": false,
-                    "HideFrustum": false
+                    "HideFrustum": true
                 },
                 {
                     "Type": 13,
@@ -104,8 +108,8 @@
                         "IsActive": true,
                         "X": 0,
                         "Y": 0,
-                        "W": 50,
-                        "H": 50
+                        "W": 1.0926049947738647,
+                        "H": 0.5787392258644104
                     }
                 }
             ]
@@ -119,7 +123,6 @@
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
             "ShowBoundingBoxes": true,
             "NavigationInfo": {
                 "isNavigable": false,
@@ -242,7 +245,7 @@
                         {
                             "Type": 4,
                             "Name": "playerPrefab",
-                            "prefab": 813688999
+                            "prefab": 390555474
                         },
                         {
                             "Type": 4,
@@ -289,14 +292,13 @@
         },
         {
             "UID": 575581970,
-            "ParentUID": 773358620,
+            "ParentUID": 346312646,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": true,
-            "MaintainThroughScenes": false,
             "ShowBoundingBoxes": false,
             "NavigationInfo": {
                 "isNavigable": false,
@@ -333,7 +335,6 @@
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
             "ShowBoundingBoxes": true,
             "NavigationInfo": {
                 "isNavigable": false,
@@ -377,7 +378,6 @@
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "MaintainThroughScenes": false,
             "ShowBoundingBoxes": false,
             "NavigationInfo": {
                 "isNavigable": false,
@@ -390,6 +390,123 @@
                         72.925308227539063,
                         -132.45834350585938,
                         61.394397735595703
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1292774068,
+            "ParentUID": 1444845295,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Plane001",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        -21.899999618530273,
+                        2.7999999523162842
+                    ],
+                    "LocalRotation": [
+                        -0.39874908328056335,
+                        0,
+                        0,
+                        0.91706007719039917
+                    ],
+                    "LocalScale": [
+                        16.270000457763672,
+                        57.75,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1016193486,
+                    "Name": "Plane001.nemesh",
+                    "Path": "Library\/Meshes\/1016193486.nemesh",
+                    "File": "1016193486.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": 1,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "RenderLast": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1705422038,
+                        "Color": [
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            1
+                        ],
+                        "Name": "Plane001.nemat",
+                        "Path": "Library\/Materials\/1705422038.nemat",
+                        "File": "1705422038.nemat"
+                    },
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/UI\/Credits.png",
+                        "AssetsName": "Credits.png",
+                        "LibaryPath": "Library\/Textures\/106143218.netex",
+                        "LibraryFile": "106143218.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1444845295,
+            "ParentUID": 575581970,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "plane.fbx",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
                     ],
                     "LocalRotation": [
                         0,
