@@ -127,7 +127,7 @@ public:
 	AnimationInfo mainMenuAnimation			= { "MainMenu" };
 
 	bool overrideShootAnimation				= false;
-	bool dashing							= false;
+	bool dying								= false;
 
 	// -- Status Effects
 	AnimationInfo stunnedAnimation			= { "Stun" };

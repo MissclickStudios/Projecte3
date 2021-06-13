@@ -671,10 +671,13 @@ void Player::DisableInput()
 }
 
 void Player::TakeDamage(float damage)
-{
+{	
 	if (currentInteraction != InteractionType::NONE && currentInteraction != InteractionType::SIGNAL_GROGU)
 		return;
-	
+
+	if (health <= 0.0f)
+		return;
+
 	if (!invincibilityTimer.IsActive())
 	{
 		float damageDealt = 0.0f;
@@ -1382,7 +1385,7 @@ void Player::Dash()
 {
 	ApplyDash();
 
-	if (dashTimer.ReadSec() >= DashDuration())				// When the dash duration ends start the cooldown and reset the move state
+	if (dashTimer.ReadSec() >= DashDuration() || health <= 0.0f)				// When the dash duration ends start the cooldown and reset the move state
 	{
 		dashTimer.Stop();
 		dashCooldownTimer.Start();
@@ -1404,6 +1407,14 @@ void Player::DeadIn()
 {
 	currentAnimation = &deathAnimation;
 
+	if (dying)
+	{
+		moveState = PlayerState::DEAD;
+		return;
+	}
+
+	dying = true;
+
 	if (deathAudio != nullptr)
 		deathAudio->PlayFx(deathAudio->GetEventId());
 
@@ -1417,6 +1428,9 @@ void Player::DeadIn()
 
 void Player::Dead()
 {
+	if (rigidBody != nullptr)
+		rigidBody->StopInertia();
+	
 	if (deathTimer.ReadSec() >= deathDuration)
 		moveState = PlayerState::DEAD_OUT;
 }
@@ -1645,6 +1659,7 @@ void Player::GatherMoveInputs()
 		if ((App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(LEFT_TRIGGER) == ButtonState::BUTTON_DOWN))
 		{
 			if (!dashTimer.IsActive())
+				LOG("DASHIN");
 				moveState = PlayerState::DASH_IN;
 
 			return;
