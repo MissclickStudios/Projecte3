@@ -37,6 +37,8 @@ public:
 	float activationTime = 1.f;
 	float sleepingTime = 2.f;
 
+	bool initialized = false;
+
 private:
 
 	float animationTimer = 0.0f;
@@ -44,6 +46,9 @@ private:
 	C_AudioSource* sarlaacAudio = nullptr;
 	C_AudioSource* sarlaccAttackAudio = nullptr;
 	C_Animator* sarlaacAnimator = nullptr;
+
+	C_ParticleSystem* idleParticles		= nullptr;
+	C_ParticleSystem* attackParticles	= nullptr;
 
 	SarlaacState state = SarlaacState::IDLE;
 };
