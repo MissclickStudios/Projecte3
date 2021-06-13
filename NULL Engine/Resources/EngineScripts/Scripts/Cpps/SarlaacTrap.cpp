@@ -41,11 +41,11 @@ void SarlaacTrap::Start()
 	particlesGO		= gameObject->FindChild("Attack");
 	attackParticles = (particlesGO != nullptr) ? particlesGO->GetComponent<C_ParticleSystem>() : nullptr;
 
-	if (idleParticles != nullptr)
+	/*if (idleParticles != nullptr)
 		idleParticles->StopSpawn();
 
 	if (attackParticles != nullptr)
-		attackParticles->StopSpawn();
+		attackParticles->StopSpawn();*/
 }
 
 void SarlaacTrap::Update()
@@ -64,7 +64,7 @@ void SarlaacTrap::Update()
 
 	case SarlaacState::IDLE:
 
-		idleParticles->ResumeSpawn();
+		//idleParticles->ResumeSpawn();
 
 		break;
 
@@ -78,7 +78,7 @@ void SarlaacTrap::Update()
 		if (sarlaccAttackAudio != nullptr)
 			sarlaccAttackAudio->PlayFx(sarlaccAttackAudio->GetEventId());
 
-		idleParticles->StopSpawn();
+		//idleParticles->StopSpawn();
 		
 
 		break;
@@ -109,11 +109,11 @@ void SarlaacTrap::Update()
 		{
 			animationTimer += MC_Time::Game::GetDT();
 
-			if(animationTimer >= (sleepingTime * 0.25f))
+			/*if(animationTimer >= (sleepingTime * 0.25f))
 				attackParticles->ResumeSpawn();
 
 			if (animationTimer >= (sleepingTime * 0.5f))
-				attackParticles->StopSpawn();
+				attackParticles->StopSpawn();*/
 		}
 
 		break;

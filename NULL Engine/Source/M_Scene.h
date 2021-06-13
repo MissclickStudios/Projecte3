@@ -59,7 +59,7 @@ public:																													// --- GAME OBJECTS METHODS ---
 	GameObject*		LoadPrefabIntoScene(ParsonNode* a, GameObject* parent);
 	void			LoadPrefabObject(GameObject* gameObject, ParsonNode* node);
 	
-	GameObject*		InstantiatePrefab(uint prefabID,GameObject* parent,float3 position,Quat rotation);
+	GameObject*		InstantiatePrefab(uint prefabID,GameObject* parent,float3 position,Quat rotation,float3 globalPos = float3::zero);
 
 	std::vector<GameObject*>*	GetGameObjects();
 	

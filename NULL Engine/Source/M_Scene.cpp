@@ -643,7 +643,7 @@ void M_Scene::LoadPrefabObject(GameObject* _gameObject, ParsonNode* node)
 	}
 }
 
-GameObject* M_Scene::InstantiatePrefab(uint prefabID, GameObject* parent, float3 position, Quat rotation)
+GameObject* M_Scene::InstantiatePrefab(uint prefabID, GameObject* parent, float3 position, Quat rotation, float3 globalPos)
 {
 	char* buffer = nullptr;
 	std::string fileName = ASSETS_PREFABS_PATH + std::to_string(prefabID) + PREFAB_EXTENSION;
@@ -661,6 +661,9 @@ GameObject* M_Scene::InstantiatePrefab(uint prefabID, GameObject* parent, float3
 
 	rootObjectLoaded->transform->SetLocalPosition(position);
 	rootObjectLoaded->transform->SetLocalRotation(rotation);
+
+	if (globalPos.x != 0 && globalPos.y != 0 && globalPos.z != 0)
+		rootObjectLoaded->transform->SetWorldPosition(globalPos);
 
 	return rootObjectLoaded;
 }

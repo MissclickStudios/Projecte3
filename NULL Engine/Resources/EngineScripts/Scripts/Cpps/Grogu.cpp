@@ -79,6 +79,7 @@ void Grogu::SetUp()
 				particles->StopSpawn();
 		}
 	}
+
 }
 
 void Grogu::Behavior()

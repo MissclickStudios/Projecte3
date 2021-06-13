@@ -1,6 +1,11 @@
 {
-    "ModTime": 1623533974,
+    "ModTime": 1623583178,
     "Models In Scene": [
+        {
+            "GameObjectUID": 206805431,
+            "ModelResourceUID": 655744124,
+            "ModelAssetsPath": "Assets\/Models\/Blockouts\/Decorations\/Stones_Moisture.fbx"
+        },
         {
             "GameObjectUID": 649823649,
             "ModelResourceUID": 385458923,
@@ -107,9 +112,9 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -0.19060134887695313,
+                        -0.19060134887695312,
                         1.2901343107223511,
-                        -1.5982437133789063
+                        -1.5982437133789062
                     ],
                     "LocalRotation": [
                         0,
@@ -1175,7 +1180,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         63.41552734375,
-                        134.64102172851563,
+                        134.64102172851562,
                         -4.2900390625
                     ],
                     "LocalRotation": [
@@ -2538,6 +2543,11 @@
                             "Type": 1,
                             "Name": "stun",
                             "bool": true
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "stunTime",
+                            "float": 0.75
                         }
                     ]
                 }
@@ -3209,7 +3219,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         -608.4754638671875,
-                        -153.68887329101563,
+                        -153.68887329101562,
                         173.59916687011719
                     ],
                     "LocalRotation": [
@@ -3898,7 +3908,7 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        86.002639770507813,
+                        86.002639770507812,
                         -3.8434028625488281,
                         -46.555038452148438
                     ],
@@ -4504,7 +4514,7 @@
                     "LocalPosition": [
                         -0.6596454381942749,
                         122.56063079833984,
-                        129.59182739257813
+                        129.59182739257812
                     ],
                     "LocalRotation": [
                         -0.44619780778884888,
@@ -6154,7 +6164,7 @@
         },
         {
             "UID": 888400124,
-            "ParentUID": 975125712,
+            "ParentUID": 498671727,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -6243,7 +6253,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         57.163230895996094,
-                        -2.1067276000976563,
+                        -2.1067276000976562,
                         10.233486175537109
                     ],
                     "LocalRotation": [
@@ -6657,7 +6667,7 @@
                     "LocalPosition": [
                         -8.1309738159179688,
                         9.3420076370239258,
-                        81.071792602539063
+                        81.071792602539062
                     ],
                     "LocalRotation": [
                         0,
@@ -8061,7 +8071,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         586.1552734375,
-                        10.441482543945313,
+                        10.441482543945312,
                         -84.071212768554688
                     ],
                     "LocalRotation": [
@@ -11609,9 +11619,9 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -8.4842910766601563,
+                        -8.4842910766601562,
                         9.630000114440918,
-                        -91.539871215820313
+                        -91.539871215820312
                     ],
                     "LocalRotation": [
                         0,
@@ -12278,7 +12288,7 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -338.43862915039063,
+                        -338.43862915039062,
                         -371.779052734375,
                         -924.93304443359375
                     ],
@@ -13078,7 +13088,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         -1358.09716796875,
-                        -424.58255004882813,
+                        -424.58255004882812,
                         21.522308349609375
                     ],
                     "LocalRotation": [
@@ -13949,7 +13959,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         63.41552734375,
-                        134.64102172851563,
+                        134.64102172851562,
                         -4.2900390625
                     ],
                     "LocalRotation": [
@@ -15013,6 +15023,195 @@
                         "AssetsName": "UIShader.shader",
                         "LibaryPath": "Library\/Shaders\/1025410539.neshader",
                         "LibraryFile": "1025410539.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 206805431,
+            "ParentUID": 888400124,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Stones_Moisture.fbx",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1177555103,
+            "ParentUID": 206805431,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Stones",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -242.84063720703125,
+                        2.8789825439453125,
+                        459.8660888671875
+                    ],
+                    "LocalRotation": [
+                        5.9604644775390625e-08,
+                        0,
+                        0,
+                        0.99999994039535522
+                    ],
+                    "LocalScale": [
+                        0.65570998191833496,
+                        0.65570998191833496,
+                        0.65570998191833496
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1270542163,
+            "ParentUID": 206805431,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Destroyed_House",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -242.84063720703125,
+                        0,
+                        459.8660888671875
+                    ],
+                    "LocalRotation": [
+                        5.9604644775390625e-08,
+                        0,
+                        0,
+                        0.99999994039535522
+                    ],
+                    "LocalScale": [
+                        0.3937009871006012,
+                        0.3937009871006012,
+                        0.3937009871006012
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1564510293,
+            "ParentUID": 206805431,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "rubble_medium027",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": true,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        64.5345458984375,
+                        0.048556327819824219,
+                        12.406975746154785
+                    ],
+                    "LocalRotation": [
+                        -0.020910933613777161,
+                        0.68328994512557983,
+                        0.72972655296325684,
+                        -0.01329371239989996
+                    ],
+                    "LocalScale": [
+                        0.19240002334117889,
+                        0.19240002334117889,
+                        0.19240003824234009
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 253049466,
+                    "Name": "rubble_medium027.nemesh",
+                    "Path": "Library\/Meshes\/253049466.nemesh",
+                    "File": "253049466.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": 1,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "RenderLast": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1748516045,
+                        "Color": [
+                            0.5,
+                            0.5,
+                            0.5,
+                            1
+                        ],
+                        "Name": "rubble_medium027.nemat",
+                        "Path": "Library\/Materials\/1748516045.nemat",
+                        "File": "1748516045.nemat"
+                    },
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/\/Blockouts\/Props&Textures_v02\/rubble_Texture.png",
+                        "AssetsName": "rubble_Texture.png",
+                        "LibaryPath": "Library\/Textures\/754235625.netex",
+                        "LibraryFile": "754235625.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
                     }
                 }
             ]
