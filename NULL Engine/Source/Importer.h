@@ -15,18 +15,18 @@ typedef unsigned __int32	uint32;
 
 namespace Importer
 {
-	void	InitializeImporters	();
-	void	ShutDownImporters	();
+	void	InitializeImporters();
+	void	ShutDownImporters();
 
-	bool	ImportScene			(const char* buffer, uint size, R_Model* rModel);
-	bool	ImportMesh			(const char* buffer, R_Mesh* rMesh);
-	bool	ImportTexture		(const char* buffer, uint size, R_Texture* rTexture);
-	bool	ImportShader		(const char* buffer, R_Shader* rShader);
-	bool	ImportParticles		(const char* buffer, R_ParticleSystem* rParticles);
-	bool	ImportScript		(const char* buffer, R_Script* rScript);
-	bool	ImportNavMesh		(const char* buffer, R_NavMesh* rNavMesh);
+	bool	ImportScene(const char* buffer, uint size, R_Model* rModel);
+	bool	ImportMesh(const char* buffer, R_Mesh* rMesh);
+	bool	ImportTexture(const char* buffer, uint size, R_Texture* rTexture);
+	bool	ImportShader(const char* buffer, R_Shader* rShader);
+	bool	ImportParticles(const char* buffer, R_ParticleSystem* rParticles);
+	bool	ImportScript(const char* buffer, R_Script* rScript);
+	bool	ImportNavMesh(const char* buffer, R_NavMesh* rNavMesh);
 
-	void	FindAndForceUID		(Resource* resource);											// MOVE TO RESOURCE MANAGER LATER.
+	void	FindAndForceUID(Resource* resource);											// MOVE TO RESOURCE MANAGER LATER.
 }
 
 #endif // !__IMPORTER_H__

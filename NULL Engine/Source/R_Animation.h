@@ -25,13 +25,13 @@ public:
 	static inline ResourceType GetType() { return ResourceType::ANIMATION; }
 
 public:
-	const char* GetName				() const;
-	double		GetDuration			() const;
-	double		GetTicksPerSecond	() const;
+	const char* GetName() const;
+	double		GetDuration() const;
+	double		GetTicksPerSecond() const;
 
-	void		SetName				(const char* name);
-	void		SetDuration			(const double& duration);
-	void		SetTicksPerSecond	(const double& ticksPerSecond);
+	void		SetName(const char* name);
+	void		SetDuration(const double& duration);
+	void		SetTicksPerSecond(const double& ticksPerSecond);
 
 
 public:
@@ -42,7 +42,7 @@ private:
 	double					duration;
 	double					ticksPerSecond;
 	
-	AnimationSettings animationSettings;
+	AnimationSettings		animationSettings;
 };
 
 #endif // !__R_ANIMATION_H__
