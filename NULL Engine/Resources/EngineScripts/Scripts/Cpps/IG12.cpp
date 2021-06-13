@@ -161,8 +161,6 @@ void IG12::SetUp()
 	}
 
 	crosshair->SetIsActive(false);
-	
-	bombAudio = new C_AudioSource(bombGameObject);
 
 	if(bombProjectile.uid != NULL)
 		projectileGameObject = App->scene->InstantiatePrefab(bombProjectile.uid, App->scene->GetSceneRoot(), float3::zero, Quat());
@@ -226,10 +224,13 @@ void IG12::SetUp()
 	damageAudio = new C_AudioSource(gameObject);
 	deathAudio = new C_AudioSource(gameObject);
 	walkAudio = new C_AudioSource(gameObject);
+	bombAudio = new C_AudioSource(bombGameObject);
 	if (damageAudio != nullptr)
 		damageAudio->SetEvent("ig11_damaged");
 	if (deathAudio != nullptr)
 		deathAudio->SetEvent("ig11_death");
+	if(bombAudio != nullptr)
+		bombAudio->SetEvent("barrel_active");
 
 	//Particles and SFX
 	bombingParticles = bombGameObject->GetComponent<C_ParticleSystem>();
@@ -264,6 +265,9 @@ void IG12::CleanUp()
 		delete deathAudio;
 	if (walkAudio != nullptr)
 		delete walkAudio;
+	if (bombAudio != nullptr)
+		delete bombAudio;
+	
 }
 
 void IG12::OnCollisionEnter(GameObject* object)
@@ -958,10 +962,8 @@ bool IG12::BombingAttack()
 		projectileGameObject->SetIsActive(false);
 
 		if (bombAudio != nullptr)
-		{
-			bombAudio->SetEvent("barrel_active");
 			bombAudio->PlayFx(bombAudio->GetEventId());
-		}
+			
 
 	}
 	else if (bombTimer.IsActive() && projectileGameObject->transform->GetWorldPosition().y < 10)
@@ -1047,10 +1049,8 @@ bool IG12::BombingAndSpiralAttack()
 		projectileGameObject->SetIsActive(false);
 
 		if (bombAudio != nullptr)
-		{
-			bombAudio->SetEvent("barrel_active");
 			bombAudio->PlayFx(bombAudio->GetEventId());
-		}
+			
 
 	}
 	else if (bombTimer.IsActive() && projectileGameObject->transform->GetWorldPosition().y < 10)
