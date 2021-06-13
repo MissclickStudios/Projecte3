@@ -23,6 +23,7 @@ public:
 
 	int damage = 0;
 	float power = 20.0f;
+	float stunTime = 0.75f;
 
 	bool stun = false;
 };

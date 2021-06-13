@@ -17,6 +17,7 @@ class C_Canvas;
 class C_UI_Image;
 class CameraMovement;
 class C_AudioSource;
+class C_BoxCollider;
 
 enum class IG12State
 {
@@ -73,6 +74,7 @@ public:
 	AnimationInfo changeAnimation = { "Change" };
 	AnimationInfo onGuardAnimation = { "OnGuard" };
 	AnimationInfo specialAnimation = { "SpecialAttack" };
+	AnimationInfo bombingAnimation = { "BombingAttack" };
 
 	// Attack
 	float attackDistance = 0.0f;
@@ -105,6 +107,7 @@ public:
 	// Weapons
 	Prefab blaster;
 	Prefab sniper;
+	Prefab bomb;
 
 	std::string rightHandName;
 	std::string leftHandName;
@@ -157,7 +160,7 @@ private:
 	void pickFirstStageAttack();		//Randomly picks an attack from the first stage
 	void pickSecondStageAttack();		//Randomly picks an attack from the second stage
 
-	float2 CalculateNextBomb(float x, float y);
+	float3 CalculateNextBomb(float x, float y);
 
 	Timer firstStageTimer;
 	Timer secondStageTimer;
@@ -175,7 +178,10 @@ private:
 
 	float2 specialAttackStartAim = float2::zero;
 	float specialAttackRot = 0.0f;
+	//Bomb
 
+	GameObject* bombGameObject = nullptr;
+	C_BoxCollider* bombCollider = nullptr;
 	// Weapons
 	GameObject* blasterGameObject = nullptr;
 	Weapon* blasterWeapon = nullptr;
@@ -195,6 +201,7 @@ private:
 
 	//Audio
 	C_AudioSource* deathAudio = nullptr;
+	C_AudioSource* bombAudio = nullptr;
 };
 
 SCRIPTS_FUNCTION IG12* CreateIG12();

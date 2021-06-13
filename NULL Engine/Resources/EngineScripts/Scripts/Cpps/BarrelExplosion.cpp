@@ -40,7 +40,7 @@ void BarrelExplosion::CleanUp()
 void BarrelExplosion::OnTriggerRepeat(GameObject* object)
 {
 	Entity* entity = (Entity*)GetObjectScript(object, ObjectType::ENTITY);
-	if (!entity)
+	if (!entity || entity->type == EntityType::IG12)
 		return;
 
 	Effect* eff = nullptr;
@@ -62,7 +62,7 @@ void BarrelExplosion::OnTriggerRepeat(GameObject* object)
 		direction.Normalize();
 		direction *= currentPower;
 
-		eff = entity->AddEffect(EffectType::KNOCKBACK, 0.75f, false, 0.0f, 0.0f, float3(direction.x, 0.0f, direction.y));
+		eff = entity->AddEffect(EffectType::KNOCKBACK, stunTime, false, 0.0f, 0.0f, float3(direction.x, 0.0f, direction.y));
 		if (eff)
 			entity->gameObject->GetComponent<C_RigidBody>()->FreezePositionY(true);
 	}
@@ -80,6 +80,7 @@ BarrelExplosion* CreateBarrelExplosion() {
 	INSPECTOR_INPUT_INT(script->damage);
 	INSPECTOR_DRAGABLE_FLOAT(script->power);
 	INSPECTOR_CHECKBOX_BOOL(script->stun);
+	INSPECTOR_DRAGABLE_FLOAT(script->stunTime);
 
 	return script;
 }
