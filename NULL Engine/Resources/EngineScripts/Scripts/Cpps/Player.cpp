@@ -18,6 +18,7 @@
 #include "C_2DAnimator.h"
 #include "C_Animator.h"
 #include "C_UI_Image.h"
+#include "R_Texture.h"
 
 #include "GameManager.h"
 
@@ -223,52 +224,69 @@ void Player::SetUp()
 	//Load HUD animations
 	if (primaryWeaponImage && weaponImage && weaponNameImage) 
 	{
+		//Charge the textures for the 2Danimations
+		blasterUse	 =  (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/textures/2DAnimations/UseWeapon4.png");
+		blasterChangeBlaster = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/textures/2DAnimations/ChangeWeapon.png");
+		blasterChangeSniper =  (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/textures/2DAnimations/ChangeWeapon01.png");
+		blasterChangeMiniGun = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/textures/2DAnimations/ChangeWeapon02.png");
+		blasterChangeShootGun =(R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/textures/2DAnimations/ChangeWeapon03.png");
+		blasterCharge = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/textures/2DAnimations/ChargeWeapon1.png");
+		sniperUse = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/textures/2DAnimations/UseWeapon5.png");
+		sniperChange  = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/textures/2DAnimations/ChangeWeapon04.png");
+		sniperCharge  = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/textures/2DAnimations/ChargeWeapon2.png");
+		shotgunUse	 =  (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/textures/2DAnimations/UseWeapon7.png");
+		shotgunChange = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/textures/2DAnimations/ChangeWeapon10.png");
+		shotgunCharge = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/textures/2DAnimations/ChargeWeapon4.png");
+		minigunUse	 =  (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/textures/2DAnimations/UseWeapon6.png");
+		minigunChange = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/textures/2DAnimations/ChangeWeapon07.png");
+		minigunCharge = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/textures/2DAnimations/ChargeWeapon3.png");
+
 		switch (currentWeapon->type)
 		{
 		case WeaponType::BLASTER:
-			primaryWeaponImage->GetAnimationSprites("UseWeapon4", 1);
-			primaryWeaponImage->GetAnimationSprites("ChargeWeapon1", 3);
+			primaryWeaponImage->GetAnimationSprites("UseWeapon4", 1, blasterUse);
+			primaryWeaponImage->GetAnimationSprites("ChargeWeapon1", 3, blasterCharge);
 			weaponImage->SetTextureCoordinates(-3130, -1190, 665, 245);
 			weaponNameImage->SetTextureCoordinates(1671, -140, 507, 78);
 			if (secondaryWeapon->weaponModel == nullptr)
-				primaryWeaponImage->GetAnimationSprites("ChangeWeapon", 2);
+				primaryWeaponImage->GetAnimationSprites("ChangeWeapon", 2, blasterChangeBlaster);
 			else
 			{
 				switch (secondaryWeapon->type)
 				{
 				case WeaponType::MINIGUN:
-					primaryWeaponImage->GetAnimationSprites("ChangeWeapon02", 2);
+					primaryWeaponImage->GetAnimationSprites("ChangeWeapon02", 2, blasterChangeMiniGun);
 					break;
 				case WeaponType::SNIPER:
-					primaryWeaponImage->GetAnimationSprites("ChangeWeapon01", 2);
+					primaryWeaponImage->GetAnimationSprites("ChangeWeapon01", 2, blasterChangeSniper);
 					break;
 				case WeaponType::SHOTGUN:
-					primaryWeaponImage->GetAnimationSprites("ChangeWeapon03", 2);
+					primaryWeaponImage->GetAnimationSprites("ChangeWeapon03", 2, blasterChangeShootGun);
 					break;
 				default:
-					primaryWeaponImage->GetAnimationSprites("ChangeWeapon", 2);
+					primaryWeaponImage->GetAnimationSprites("ChangeWeapon", 2, blasterChangeBlaster);
 					break;
 				}
 			}
 			break;
 		case WeaponType::MINIGUN:
-			primaryWeaponImage->GetAnimationSprites("UseWeapon6", 1);
-			primaryWeaponImage->GetAnimationSprites("ChangeWeapon07", 2);
-			primaryWeaponImage->GetAnimationSprites("ChargeWeapon3", 3);
+			primaryWeaponImage->GetAnimationSprites("UseWeapon6", 1, minigunUse);
+			primaryWeaponImage->GetAnimationSprites("ChangeWeapon07", 2, minigunChange);
+			primaryWeaponImage->GetAnimationSprites("ChargeWeapon3", 3, minigunCharge);
 			weaponImage->SetTextureCoordinates(-1799, -1190, 665, 245);
 			weaponNameImage->SetTextureCoordinates(2685, -140, 507, 78);
 			break;
 		case WeaponType::SNIPER:
-			primaryWeaponImage->GetAnimationSprites("UseWeapon5", 1);
-			primaryWeaponImage->GetAnimationSprites("ChangeWeapon04", 2);
-			primaryWeaponImage->GetAnimationSprites("ChargeWeapon2", 3);
+			primaryWeaponImage->GetAnimationSprites("UseWeapon5", 1, sniperUse);
+			primaryWeaponImage->GetAnimationSprites("ChangeWeapon04", 2, sniperChange);
+			primaryWeaponImage->GetAnimationSprites("ChargeWeapon2", 3, sniperCharge);
 			weaponImage->SetTextureCoordinates(-2465, -1190, 665, 245);
 			weaponNameImage->SetTextureCoordinates(2178, -140, 507, 78);
 			break;
 		case WeaponType::SHOTGUN:
-			primaryWeaponImage->GetAnimationSprites("UseWeapon7", 1);
-			primaryWeaponImage->GetAnimationSprites("ChangeWeapon10", 2);
-			primaryWeaponImage->GetAnimationSprites("ChargeWeapon4", 3);
+			primaryWeaponImage->GetAnimationSprites("UseWeapon7", 1, shotgunUse);
+			primaryWeaponImage->GetAnimationSprites("ChangeWeapon10", 2, shotgunChange);
+			primaryWeaponImage->GetAnimationSprites("ChargeWeapon4", 3, shotgunCharge);
 			weaponImage->SetTextureCoordinates(-1133, -1190, 665, 245);
 			weaponNameImage->SetTextureCoordinates(3192, -140, 507, 78);
 			break;
@@ -328,6 +346,38 @@ void Player::CleanUp()
 		delete savedItems.begin()->second;
 		savedItems.erase(savedItems.begin());
 	}
+
+	//Free the textures for the 2Danimations
+	if (blasterUse)
+		App->resourceManager->FreeResource(blasterUse->GetUID());
+	if (blasterChangeBlaster)
+		App->resourceManager->FreeResource(blasterChangeBlaster->GetUID());
+	if (blasterChangeSniper)
+		App->resourceManager->FreeResource(blasterChangeSniper->GetUID());
+	if (blasterChangeMiniGun)
+		App->resourceManager->FreeResource(blasterChangeMiniGun->GetUID());
+	if (blasterChangeShootGun)
+		App->resourceManager->FreeResource(blasterChangeShootGun->GetUID());
+	if (blasterCharge)
+		App->resourceManager->FreeResource(blasterCharge->GetUID());
+	if (sniperUse)
+		App->resourceManager->FreeResource(sniperUse->GetUID());
+	if (sniperChange)
+		App->resourceManager->FreeResource(sniperChange->GetUID());
+	if (sniperCharge)
+		App->resourceManager->FreeResource(sniperCharge->GetUID());
+	if (shotgunUse)
+		App->resourceManager->FreeResource(shotgunUse->GetUID());
+	if (blasterUse)
+		App->resourceManager->FreeResource(shotgunChange->GetUID());
+	if (shotgunCharge)
+		App->resourceManager->FreeResource(shotgunCharge->GetUID());
+	if (minigunUse)
+		App->resourceManager->FreeResource(minigunUse->GetUID());
+	if (minigunChange)
+		App->resourceManager->FreeResource(minigunChange->GetUID());
+	if (minigunCharge)
+		App->resourceManager->FreeResource(minigunCharge->GetUID());
 }
 
 void Player::EntityPause()
@@ -680,27 +730,27 @@ void Player::EquipWeapon(Prefab weapon)
 		case WeaponType::MINIGUN:
 			secondaryWeapon->SetOwnership(type, leftHand, leftHandName.c_str());
 			currentWeapon = secondaryWeapon;
-			primaryWeaponImage->GetAnimationSprites("UseWeapon6", 1);
-			primaryWeaponImage->GetAnimationSprites("ChangeWeapon07", 2);
-			primaryWeaponImage->GetAnimationSprites("ChargeWeapon3", 3);
+			primaryWeaponImage->GetAnimationSprites("UseWeapon6", 1, minigunUse);
+			primaryWeaponImage->GetAnimationSprites("ChangeWeapon07", 2, minigunChange);
+			primaryWeaponImage->GetAnimationSprites("ChargeWeapon3", 3, minigunCharge);
 			weaponImage->SetTextureCoordinates(-1799, -1190, 665, 245);
 			weaponNameImage->SetTextureCoordinates(2685, -140, 507, 78);
 			break;
 		case WeaponType::SNIPER:
 			secondaryWeapon->SetOwnership(type, rightHand, rightHandName.c_str());
 			currentWeapon = secondaryWeapon;
-			primaryWeaponImage->GetAnimationSprites("UseWeapon5", 1);
-			primaryWeaponImage->GetAnimationSprites("ChangeWeapon04", 2);
-			primaryWeaponImage->GetAnimationSprites("ChargeWeapon2", 3);
+			primaryWeaponImage->GetAnimationSprites("UseWeapon5", 1, sniperUse);
+			primaryWeaponImage->GetAnimationSprites("ChangeWeapon04", 2, sniperChange);
+			primaryWeaponImage->GetAnimationSprites("ChargeWeapon2", 3, sniperCharge);
 			weaponImage->SetTextureCoordinates(-2465, -1190, 665, 245);
 			weaponNameImage->SetTextureCoordinates(2178, -140, 507, 78);
 			break;
 		case WeaponType::SHOTGUN:
 			secondaryWeapon->SetOwnership(type, rightHand, rightHandName.c_str());
 			currentWeapon = secondaryWeapon;
-			primaryWeaponImage->GetAnimationSprites("UseWeapon7", 1);
-			primaryWeaponImage->GetAnimationSprites("ChangeWeapon10",2);
-			primaryWeaponImage->GetAnimationSprites("ChargeWeapon4", 3);
+			primaryWeaponImage->GetAnimationSprites("UseWeapon7", 1, shotgunUse);
+			primaryWeaponImage->GetAnimationSprites("ChangeWeapon10", 2, shotgunChange);
+			primaryWeaponImage->GetAnimationSprites("ChargeWeapon4", 3, shotgunCharge);
 			weaponImage->SetTextureCoordinates(-1133, -1190, 665, 245);
 			weaponNameImage->SetTextureCoordinates(3192, -140, 507, 78);
 			break;
@@ -1530,49 +1580,49 @@ void Player::Change()
 	switch (currentWeapon->type)
 	{
 	case WeaponType::BLASTER:
-		primaryWeaponImage->GetAnimationSprites("UseWeapon4", 1);
-		primaryWeaponImage->GetAnimationSprites("ChargeWeapon1", 3);
+		primaryWeaponImage->GetAnimationSprites("UseWeapon4", 1, blasterUse);
+		primaryWeaponImage->GetAnimationSprites("ChargeWeapon1", 3, blasterCharge);
 		weaponImage->SetTextureCoordinates(-3130, -1190, 665, 245);
 		weaponNameImage->SetTextureCoordinates(1671, -140, 507, 78);
 		if (secondaryWeapon->weaponModel == nullptr)
-			primaryWeaponImage->GetAnimationSprites("ChangeWeapon", 2);
+			primaryWeaponImage->GetAnimationSprites("ChangeWeapon", 2, blasterChangeBlaster);
 		else
 		{
 			switch (secondaryWeapon->type)
 			{
 			case WeaponType::MINIGUN:
-				primaryWeaponImage->GetAnimationSprites("ChangeWeapon02", 2);
+				primaryWeaponImage->GetAnimationSprites("ChangeWeapon02", 2, blasterChangeMiniGun);
 				break;
 			case WeaponType::SNIPER:
-				primaryWeaponImage->GetAnimationSprites("ChangeWeapon01", 2);
+				primaryWeaponImage->GetAnimationSprites("ChangeWeapon01", 2, blasterChangeSniper);
 				break;
 			case WeaponType::SHOTGUN:
-				primaryWeaponImage->GetAnimationSprites("ChangeWeapon03", 2);
+				primaryWeaponImage->GetAnimationSprites("ChangeWeapon03", 2, blasterChangeShootGun);
 				break;
 			default:
-				primaryWeaponImage->GetAnimationSprites("ChangeWeapon", 2);
+				primaryWeaponImage->GetAnimationSprites("ChangeWeapon", 2, blasterChangeBlaster);
 				break;
 			}
 		}
 		break;
 	case WeaponType::MINIGUN:
-		primaryWeaponImage->GetAnimationSprites("UseWeapon6", 1);
-		primaryWeaponImage->GetAnimationSprites("ChangeWeapon07", 2);
-		primaryWeaponImage->GetAnimationSprites("ChargeWeapon3", 3);
+		primaryWeaponImage->GetAnimationSprites("UseWeapon6", 1, minigunUse);
+		primaryWeaponImage->GetAnimationSprites("ChangeWeapon07", 2, minigunChange);
+		primaryWeaponImage->GetAnimationSprites("ChargeWeapon3", 3, minigunCharge);
 		weaponImage->SetTextureCoordinates(-1799, -1190, 665, 245);
 		weaponNameImage->SetTextureCoordinates(2685, -140, 507, 78);
 		break;
 	case WeaponType::SNIPER:
-		primaryWeaponImage->GetAnimationSprites("UseWeapon5", 1);
-		primaryWeaponImage->GetAnimationSprites("ChangeWeapon04", 2);
-		primaryWeaponImage->GetAnimationSprites("ChargeWeapon2", 3);
+		primaryWeaponImage->GetAnimationSprites("UseWeapon5", 1, sniperUse);
+		primaryWeaponImage->GetAnimationSprites("ChangeWeapon04", 2, sniperChange);
+		primaryWeaponImage->GetAnimationSprites("ChargeWeapon2", 3, sniperCharge);
 		weaponImage->SetTextureCoordinates(-2465, -1190, 665, 245);
 		weaponNameImage->SetTextureCoordinates(2178, -140, 507, 78);
 		break;
 	case WeaponType::SHOTGUN:
-		primaryWeaponImage->GetAnimationSprites("UseWeapon7", 1);
-		primaryWeaponImage->GetAnimationSprites("ChangeWeapon10", 2);
-		primaryWeaponImage->GetAnimationSprites("ChargeWeapon4", 3);
+		primaryWeaponImage->GetAnimationSprites("UseWeapon7", 1, shotgunUse);
+		primaryWeaponImage->GetAnimationSprites("ChangeWeapon10", 2, shotgunChange);
+		primaryWeaponImage->GetAnimationSprites("ChargeWeapon4", 3, shotgunCharge);
 		weaponImage->SetTextureCoordinates(-1133, -1190, 665, 245);
 		weaponNameImage->SetTextureCoordinates(3192, -140, 507, 78);
 		break;

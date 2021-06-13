@@ -261,6 +261,33 @@ void C_2DAnimator::GetAnimationSprites(const char* inputName, int animationDesti
 	}
 }
 
+void C_2DAnimator::GetAnimationSprites(const char* inputName, int animationDestination, R_Texture* texture)
+{
+	if (texture == nullptr)
+		return;
+
+	switch (animationDestination)
+	{
+	case 1:
+		this->name = inputName;
+		//App->resourceManager->FreeResource(spritesheet->spriteSheet->GetUID());
+		spritesheet->spriteSheet = texture;
+		break;
+	case 2:
+		this->name = inputName;
+		//App->resourceManager->FreeResource(spritesheet->spriteSheet->GetUID());
+		spritesheet2->spriteSheet = texture;
+		break;
+	case 3:
+		this->name = inputName;
+		//App->resourceManager->FreeResource(spritesheet->spriteSheet->GetUID());
+		spritesheet3->spriteSheet = texture;
+		break;
+	case 0:
+		break;
+	}
+}
+
 void C_2DAnimator::PlayAnimation(bool loop, int animationNumber)
 {
 	if (!this) return;
