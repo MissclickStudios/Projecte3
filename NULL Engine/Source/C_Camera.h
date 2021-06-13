@@ -23,7 +23,7 @@ public:
 	bool SaveState(ParsonNode& root) const override;
 	bool LoadState(ParsonNode& root) override;
 
-	static inline ComponentType GetType() { return ComponentType::CAMERA; }								// This is needed to use templeates for functions such as GetComponent<>();
+	static inline ComponentType GetType() { return ComponentType::CAMERA; }									// This is needed to use templates for functions such as GetComponent<>();
 
 public:																										// --- FRUSTUM METHODS
 	void InitFrustum();
@@ -54,8 +54,8 @@ public:																										// --- FRUSTUM CULLING
 	Plane* GetFrustumPlanes() const;
 	float3* GetFrustumVertices() const;
 
-	bool FrustumCointainsAABB(const AABB& aabb) const;										// Returns true if the Frustum contains the whole AABB.
-	bool FrustumIntersectsAABB(const AABB& aabb) const;										// Returns true if the Frustum contains at least one vertex of the AABB.
+	bool FrustumCointainsAABB(const AABB& aabb) const;														// Returns true if the Frustum contains the whole AABB.
+	bool FrustumIntersectsAABB(const AABB& aabb) const;														// Returns true if the Frustum contains at least one vertex of the AABB.
 
 public:																										// --- GET/SET FRUSTUM SETTINGS
 	float GetAspectRatio() const;
@@ -64,11 +64,11 @@ public:																										// --- GET/SET FRUSTUM SETTINGS
 	float GetNearPlaneDistance() const;
 	float GetFarPlaneDistance() const;
 	float GetHorizontalFOV() const;
-	float GetVerticalFOV () const;
+	float GetVerticalFOV() const;
 
 	void SetNearPlaneDistance(const float& nearDistance);
 	void SetFarPlaneDistance(const float& farDistance);
-	void SetHorizontalFOV(const float& horizontalFov);									// Chosen FOV adaptation: VFOV locked , HFOV adapted to aspect_ratio.
+	void SetHorizontalFOV(const float& horizontalFov);														// Chosen FOV adaptation: VFOV locked , HFOV adapted to aspect_ratio.
 	void SetVerticalFOV(const float& verticalFov);
 
 	void GetMinMaxFOV(uint& minFov, uint& maxFov) const;
@@ -86,17 +86,17 @@ public:																										// --- CAMERA FLAGS
 private:
 	Frustum frustum;																						//
 
-	Plane* frustumPlanes;																					// --- FRUSTUM CULLING
+	Plane*	frustumPlanes;																					// --- FRUSTUM CULLING
 	float3* frustumVertices;																				// -------------------
 	
-	uint minFov;																						// --- FRUSTUM SETTINGS 
-	uint maxFov;																						// --------------------
+	uint	minFov;																							// --- FRUSTUM SETTINGS 
+	uint	maxFov;																							// --------------------
 
-	bool isCulling;																						// --- CAMERA FLAGS
-	bool inOrthogonalView;																				//
-	bool hideFrustum;																					// ----------------
+	bool	isCulling;																						// --- CAMERA FLAGS
+	bool	inOrthogonalView;																				//
+	bool	hideFrustum;																					// ----------------
 	
-	bool updateProjectionMatrix;																		// --- FRUSTUM UPDATES
+	bool	updateProjectionMatrix;																			// --- FRUSTUM UPDATES
 };
 
 #endif // !__CAMERA_H__

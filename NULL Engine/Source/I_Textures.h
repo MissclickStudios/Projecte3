@@ -3,22 +3,22 @@
 
 class R_Texture;
 
-typedef unsigned int		uint;
+typedef unsigned int uint;
 
 namespace Importer
 {
 	namespace Textures
 	{	
-		void	Init	();
-		void	CleanUp	();
+		void	Init();
+		void	CleanUp();
 		
-		bool	Import	(const char* buffer, uint size, R_Texture* rTexture);
-		uint	Save	(const R_Texture* rTexture, char** buffer);
-		bool	Load	(const char* buffer, const uint size, R_Texture* rTexture);
+		bool	Import(const char* buffer, uint size, R_Texture* rTexture);
+		uint	Save(const R_Texture* rTexture, char** buffer);
+		bool	Load(const char* buffer, const uint size, R_Texture* rTexture);
 
 		namespace Utilities
 		{	
-			uint CreateTexture	(const void* data, uint width,
+			uint CreateTexture(const void* data, uint width,
 													uint height,
 													uint target = 0x0DE1, 				// 0x0DE1 = GL_TEXTURE_2D
 													int filter = 0x2600,				// 0x2600 = GL_NEAREST
