@@ -155,7 +155,7 @@ private:																														// --- DRAW COMPONENT UTILITY METHODS ---
 	void ScriptSelectCombo(C_Script*& cScript, const char* previewValue, bool swapForCurrent);
 
 private:
-	GameObject* shownGameObject = nullptr;
+	GameObject*	shownGameObject = nullptr;
 	bool		lockGameObject	= false;
 	
 	bool		showDeleteComponentPopup;

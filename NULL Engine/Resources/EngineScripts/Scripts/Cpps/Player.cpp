@@ -836,7 +836,11 @@ void Player::AnimatePlayer()
 		}
 		
 		if (moveState == PlayerState::DASH)																							// Last minute fix, if it works it works.
+		{
 			currentAnimation = &dashAnimation;
+			preview->FreeCurrentClip();
+			preview->FreeBlendingClip();
+		}
 
 		AnimatorClip* previewClip = preview->GetCurrentClip();
 
