@@ -48,7 +48,7 @@ void Entity::Awake()
 
 	if (type == EntityType::TURRET)
 	{
-		GameObject* turretHead = App->scene->GetGameObjectByName("HeadMesh");
+		GameObject* turretHead = gameObject->FindChild("HeadMesh");
 		if(turretHead)
 			secondaryMat = turretHead->GetComponent<C_Material>();
 	}
