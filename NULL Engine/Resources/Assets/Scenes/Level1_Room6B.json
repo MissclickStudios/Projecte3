@@ -1,5 +1,5 @@
 {
-    "ModTime": 1623534004,
+    "ModTime": 1623583674,
     "Models In Scene": [
         {
             "GameObjectUID": 649823649,
@@ -351,42 +351,6 @@
             ]
         },
         {
-            "UID": 44821015,
-            "ParentUID": 305190749,
-            "PrefabID": 1414243045,
-            "IsPrefab": true,
-            "Name": "BOCAGRAN",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -180.25811767578125,
-                        -7.2956538200378418,
-                        1.2833660840988159
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        -0.046079803258180618,
-                        0.99893778562545776
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
             "UID": 54404932,
             "ParentUID": 1162476572,
             "PrefabID": 1524961430,
@@ -491,7 +455,7 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        3.1338882446289063,
+                        3.1338882446289062,
                         44.711788177490234,
                         -89.455619812011719
                     ],
@@ -1739,7 +1703,7 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        133.65420532226563,
+                        133.65420532226562,
                         12.486793518066406,
                         -64.97479248046875
                     ],
@@ -1863,6 +1827,11 @@
                             "Type": 1,
                             "Name": "stun",
                             "bool": false
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "stunTime",
+                            "float": 0.75
                         }
                     ]
                 }
@@ -2089,42 +2058,6 @@
                         1.0000001192092896,
                         1.0000001192092896,
                         1
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 186167560,
-            "ParentUID": 923191080,
-            "PrefabID": 1414243045,
-            "IsPrefab": true,
-            "Name": "BOCAPEQUEPUNTA",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -163.56423950195313,
-                        -0.21429039537906647,
-                        -1.5588259696960449
-                    ],
-                    "LocalRotation": [
-                        -0.046420853585004807,
-                        -0.050344198942184448,
-                        -0.67628878355026245,
-                        0.73344671726226807
-                    ],
-                    "LocalScale": [
-                        0.99999988079071045,
-                        0.99999988079071045,
-                        0.99999994039535522
                     ]
                 }
             ]
@@ -2472,7 +2405,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         63.41552734375,
-                        134.64102172851563,
+                        134.64102172851562,
                         -4.2900390625
                     ],
                     "LocalRotation": [
@@ -2719,6 +2652,11 @@
                             "Type": 1,
                             "Name": "stun",
                             "bool": true
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "stunTime",
+                            "float": 0.75
                         }
                     ]
                 }
@@ -3246,51 +3184,6 @@
             ]
         },
         {
-            "UID": 296572897,
-            "ParentUID": 984384323,
-            "PrefabID": 1414243045,
-            "IsPrefab": true,
-            "Name": "Attack",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        -7.0494213104248047,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 12,
-                    "particleSystemUID": 643906344,
-                    "particleSystemAssetsPath": "Assets\/ParticleSystems\/SarlaccAttack.particles",
-                    "stopSpawn": false,
-                    "tempDelete": false,
-                    "previewEnabled": true,
-                    "stopAndDeleteCheck": false
-                }
-            ]
-        },
-        {
             "UID": 299983841,
             "ParentUID": 1174805241,
             "PrefabID": 0,
@@ -3339,42 +3232,6 @@
                     "Center X": 0,
                     "Center Y": 0,
                     "Center Z": 0
-                }
-            ]
-        },
-        {
-            "UID": 305190749,
-            "ParentUID": 1663893585,
-            "PrefabID": 1414243045,
-            "IsPrefab": true,
-            "Name": "MAIN",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -3.6978325843811035,
-                        -57.722248077392578,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0.048691451549530029,
-                        0.048151720315217972,
-                        0.70936745405197144,
-                        0.70150434970855713
-                    ],
-                    "LocalScale": [
-                        0.39370074868202209,
-                        0.39370074868202209,
-                        0.39370077848434448
-                    ]
                 }
             ]
         },
@@ -5272,7 +5129,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         974.9691162109375,
-                        -399.23489379882813,
+                        -399.23489379882812,
                         -1382.399658203125
                     ],
                     "LocalRotation": [
@@ -5623,7 +5480,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         -617.7576904296875,
-                        -402.62356567382813,
+                        -402.62356567382812,
                         1312.086181640625
                     ],
                     "LocalRotation": [
@@ -7132,42 +6989,6 @@
             ]
         },
         {
-            "UID": 666753519,
-            "ParentUID": 1214947624,
-            "PrefabID": 1414243045,
-            "IsPrefab": true,
-            "Name": "MAIN",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -3.6978325843811035,
-                        -57.722248077392578,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0.048691451549530029,
-                        0.048151720315217972,
-                        0.70936745405197144,
-                        0.70150434970855713
-                    ],
-                    "LocalScale": [
-                        0.39370074868202209,
-                        0.39370074868202209,
-                        0.39370077848434448
-                    ]
-                }
-            ]
-        },
-        {
             "UID": 672324694,
             "ParentUID": 1174805241,
             "PrefabID": 0,
@@ -7186,7 +7007,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         119.92894744873047,
-                        11.285537719726563,
+                        11.285537719726562,
                         -20.906673431396484
                     ],
                     "LocalRotation": [
@@ -7288,51 +7109,6 @@
                         0.99999988079071045,
                         1
                     ]
-                }
-            ]
-        },
-        {
-            "UID": 697403580,
-            "ParentUID": 775952054,
-            "PrefabID": 1414243045,
-            "IsPrefab": true,
-            "Name": "Attack",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        -7.0494213104248047,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 12,
-                    "particleSystemUID": 643906344,
-                    "particleSystemAssetsPath": "Assets\/ParticleSystems\/SarlaccAttack.particles",
-                    "stopSpawn": false,
-                    "tempDelete": false,
-                    "previewEnabled": true,
-                    "stopAndDeleteCheck": false
                 }
             ]
         },
@@ -7799,7 +7575,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         63.41552734375,
-                        134.64102172851563,
+                        134.64102172851562,
                         -4.2900390625
                     ],
                     "LocalRotation": [
@@ -7843,42 +7619,6 @@
                         0.0035556426737457514,
                         -0.019442183896899223,
                         0.99379932880401611
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 775952054,
-            "ParentUID": 1663893585,
-            "PrefabID": 1414243045,
-            "IsPrefab": true,
-            "Name": "Particles",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
                     ],
                     "LocalScale": [
                         1,
@@ -8327,7 +8067,7 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -53.825637817382813,
+                        -53.825637817382812,
                         6.1515789031982422,
                         -50.475135803222656
                     ],
@@ -8987,7 +8727,7 @@
         },
         {
             "UID": 888400124,
-            "ParentUID": 975125712,
+            "ParentUID": 498671727,
             "PrefabID": 0,
             "IsPrefab": false,
             "Name": "MainScene",
@@ -9211,42 +8951,6 @@
             ]
         },
         {
-            "UID": 923191080,
-            "ParentUID": 666753519,
-            "PrefabID": 1414243045,
-            "IsPrefab": true,
-            "Name": "BOCAPEQUE",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -180.04975891113281,
-                        11.407363891601563,
-                        -1.2965205907821655
-                    ],
-                    "LocalRotation": [
-                        -0.034614797681570053,
-                        0.99001628160476685,
-                        -0.13649232685565948,
-                        -0.006296197883784771
-                    ],
-                    "LocalScale": [
-                        0.99999988079071045,
-                        1,
-                        0.99999988079071045
-                    ]
-                }
-            ]
-        },
-        {
             "UID": 925312319,
             "ParentUID": 1174805241,
             "PrefabID": 0,
@@ -9264,7 +8968,7 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -71.164688110351563,
+                        -71.164688110351562,
                         12.632499694824219,
                         -108.29434967041016
                     ],
@@ -9846,78 +9550,6 @@
             ]
         },
         {
-            "UID": 976057069,
-            "ParentUID": 666753519,
-            "PrefabID": 1414243045,
-            "IsPrefab": true,
-            "Name": "BOCAGRAN",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -180.25811767578125,
-                        -7.2956538200378418,
-                        1.2833660840988159
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        -0.046079803258180618,
-                        0.99893778562545776
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 984384323,
-            "ParentUID": 1214947624,
-            "PrefabID": 1414243045,
-            "IsPrefab": true,
-            "Name": "Particles",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
             "UID": 1001462181,
             "ParentUID": 1566714077,
             "PrefabID": 1338592388,
@@ -10008,7 +9640,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         63.41552734375,
-                        134.64102172851563,
+                        134.64102172851562,
                         -4.2900390625
                     ],
                     "LocalRotation": [
@@ -11109,9 +10741,9 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -0.19060134887695313,
+                        -0.19060134887695312,
                         1.2901343107223511,
-                        -1.5982437133789063
+                        -1.5982437133789062
                     ],
                     "LocalRotation": [
                         0,
@@ -11687,7 +11319,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         -776.324462890625,
-                        28.922683715820313,
+                        28.922683715820312,
                         -1857.08154296875
                     ],
                     "LocalRotation": [
@@ -11746,78 +11378,6 @@
                         "LibaryPath": "Library\/Shaders\/800223282.neshader",
                         "LibraryFile": "800223282.neshader"
                     }
-                }
-            ]
-        },
-        {
-            "UID": 1199065566,
-            "ParentUID": 976057069,
-            "PrefabID": 1414243045,
-            "IsPrefab": true,
-            "Name": "BOCAGRANPUNTA",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        163.56413269042969,
-                        0.21430432796478271,
-                        1.5588231086730957
-                    ],
-                    "LocalRotation": [
-                        -0.046420861035585403,
-                        -0.050344210118055344,
-                        -0.67628878355026245,
-                        0.73344671726226807
-                    ],
-                    "LocalScale": [
-                        0.99999994039535522,
-                        0.99999994039535522,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1200613227,
-            "ParentUID": 1702709571,
-            "PrefabID": 1414243045,
-            "IsPrefab": true,
-            "Name": "BOCAPEQUEPUNTA",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -163.56423950195313,
-                        -0.21429039537906647,
-                        -1.5588259696960449
-                    ],
-                    "LocalRotation": [
-                        -0.046420853585004807,
-                        -0.050344198942184448,
-                        -0.67628878355026245,
-                        0.73344671726226807
-                    ],
-                    "LocalScale": [
-                        0.99999988079071045,
-                        0.99999988079071045,
-                        0.99999994039535522
-                    ]
                 }
             ]
         },
@@ -11938,7 +11498,7 @@
             "IsActive": true,
             "IsStatic": false,
             "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
+            "ShowBoundingBoxes": true,
             "NavigationInfo": {
                 "isNavigable": false,
                 "navigationArea": 0
@@ -12036,6 +11596,456 @@
                             "float": 2
                         }
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 605804269,
+            "ParentUID": 1214947624,
+            "PrefabID": 1414243045,
+            "IsPrefab": true,
+            "Name": "MAIN",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -3.6978325843811035,
+                        -57.722248077392578,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0.048691451549530029,
+                        0.048151720315217972,
+                        0.70936745405197144,
+                        0.70150434970855713
+                    ],
+                    "LocalScale": [
+                        0.39370074868202209,
+                        0.39370074868202209,
+                        0.39370077848434448
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 997457623,
+            "ParentUID": 605804269,
+            "PrefabID": 1414243045,
+            "IsPrefab": true,
+            "Name": "LENGUA",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -36.574806213378906,
+                        2.42238450050354,
+                        13.056509971618652
+                    ],
+                    "LocalRotation": [
+                        -0.048691403120756149,
+                        -0.048151671886444092,
+                        -0.70936763286590576,
+                        0.70150423049926758
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 606603986,
+            "ParentUID": 605804269,
+            "PrefabID": 1414243045,
+            "IsPrefab": true,
+            "Name": "BOCAGRAN",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -180.25811767578125,
+                        -7.2956538200378418,
+                        1.2833660840988159
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        -0.046079803258180618,
+                        0.99893778562545776
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 142953547,
+            "ParentUID": 606603986,
+            "PrefabID": 1414243045,
+            "IsPrefab": true,
+            "Name": "BOCAGRANPUNTA",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        163.56413269042969,
+                        0.21430432796478271,
+                        1.5588231086730957
+                    ],
+                    "LocalRotation": [
+                        -0.046420861035585403,
+                        -0.050344210118055344,
+                        -0.67628878355026245,
+                        0.73344671726226807
+                    ],
+                    "LocalScale": [
+                        0.99999994039535522,
+                        0.99999994039535522,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1410754605,
+            "ParentUID": 605804269,
+            "PrefabID": 1414243045,
+            "IsPrefab": true,
+            "Name": "BOCAPEQUE",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -180.04975891113281,
+                        11.407363891601562,
+                        -1.2965205907821655
+                    ],
+                    "LocalRotation": [
+                        -0.034614797681570053,
+                        0.99001628160476685,
+                        -0.13649232685565948,
+                        -0.006296197883784771
+                    ],
+                    "LocalScale": [
+                        0.99999988079071045,
+                        1,
+                        0.99999988079071045
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1044820633,
+            "ParentUID": 1410754605,
+            "PrefabID": 1414243045,
+            "IsPrefab": true,
+            "Name": "BOCAPEQUEPUNTA",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -163.56423950195312,
+                        -0.21429039537906647,
+                        -1.5588259696960449
+                    ],
+                    "LocalRotation": [
+                        -0.046420853585004807,
+                        -0.050344198942184448,
+                        -0.67628878355026245,
+                        0.73344671726226807
+                    ],
+                    "LocalScale": [
+                        0.99999988079071045,
+                        0.99999988079071045,
+                        0.99999994039535522
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1244540702,
+            "ParentUID": 605804269,
+            "PrefabID": 1414243045,
+            "IsPrefab": true,
+            "Name": "SUELO",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        79.301979064941406,
+                        -1.7272378206253052,
+                        0.11630487442016602
+                    ],
+                    "LocalRotation": [
+                        -0.048691403120756149,
+                        -0.048151660710573196,
+                        -0.70936757326126099,
+                        0.70150423049926758
+                    ],
+                    "LocalScale": [
+                        1,
+                        0.36512818932533264,
+                        0.99999994039535522
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1158107599,
+            "ParentUID": 605804269,
+            "PrefabID": 1414243045,
+            "IsPrefab": true,
+            "Name": "DIENTES",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        261.1473388671875,
+                        -1.0875616073608398,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.046420857310295105,
+                        -0.050344206392765045,
+                        -0.67628878355026245,
+                        0.73344677686691284
+                    ],
+                    "LocalScale": [
+                        1.1452231407165527,
+                        1.1452231407165527,
+                        1.1452231407165527
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 893752938,
+            "ParentUID": 1214947624,
+            "PrefabID": 1414243045,
+            "IsPrefab": true,
+            "Name": "Particles",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1175423137,
+            "ParentUID": 893752938,
+            "PrefabID": 1414243045,
+            "IsPrefab": true,
+            "Name": "Idle",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 12,
+                    "particleSystemUID": 826473608,
+                    "particleSystemAssetsPath": "Assets\/ParticleSystems\/SarlaccIdle.particles",
+                    "stopSpawn": false,
+                    "tempDelete": false,
+                    "previewEnabled": true,
+                    "stopAndDeleteCheck": false
+                }
+            ]
+        },
+        {
+            "UID": 161439464,
+            "ParentUID": 1214947624,
+            "PrefabID": 1414243045,
+            "IsPrefab": true,
+            "Name": "Base",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        -29.366476058959961,
+                        6.3108872417680944e-30
+                    ],
+                    "LocalRotation": [
+                        -0.70710676908493042,
+                        0,
+                        0,
+                        0.70710676908493042
+                    ],
+                    "LocalScale": [
+                        0.60000002384185791,
+                        0.60000002384185791,
+                        0.60000002384185791
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1661616989,
+                    "Name": "Base.nemesh",
+                    "Path": "Library\/Meshes\/1661616989.nemesh",
+                    "File": "1661616989.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": 1,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "RenderLast": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 639810926,
+                        "Color": [
+                            0.40000000596046448,
+                            0.40000000596046448,
+                            0.40000000596046448,
+                            1
+                        ],
+                        "Name": "Base.nemat",
+                        "Path": "Library\/Materials\/639810926.nemat",
+                        "File": "639810926.nemat"
+                    },
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/\/Props\/sarlaac_arvala.png",
+                        "AssetsName": "sarlaac_arvala.png",
+                        "LibaryPath": "Library\/Textures\/1326288521.netex",
+                        "LibraryFile": "1326288521.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
                 }
             ]
         },
@@ -12208,87 +12218,6 @@
                         0.12999999523162842,
                         0.12999999523162842
                     ]
-                }
-            ]
-        },
-        {
-            "UID": 1247782419,
-            "ParentUID": 1663893585,
-            "PrefabID": 1414243045,
-            "IsPrefab": true,
-            "Name": "Base",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        -29.366476058959961,
-                        6.3108872417680944e-30
-                    ],
-                    "LocalRotation": [
-                        -0.70710676908493042,
-                        0,
-                        0,
-                        0.70710676908493042
-                    ],
-                    "LocalScale": [
-                        0.60000002384185791,
-                        0.60000002384185791,
-                        0.60000002384185791
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 1661616989,
-                    "Name": "Base.nemesh",
-                    "Path": "Library\/Meshes\/1661616989.nemesh",
-                    "File": "1661616989.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false,
-                    "Outline": false,
-                    "OutlineThickness": 1,
-                    "OutlineColor": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "RenderLast": false
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 639810926,
-                        "Color": [
-                            0.40000000596046448,
-                            0.40000000596046448,
-                            0.40000000596046448,
-                            1
-                        ],
-                        "Name": "Base.nemat",
-                        "Path": "Library\/Materials\/639810926.nemat",
-                        "File": "639810926.nemat"
-                    },
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/\/Props\/sarlaac_arvala.png",
-                        "AssetsName": "sarlaac_arvala.png",
-                        "LibaryPath": "Library\/Textures\/1326288521.netex",
-                        "LibraryFile": "1326288521.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
-                    }
                 }
             ]
         },
@@ -13656,7 +13585,7 @@
                     "LocalPosition": [
                         -0.6596454381942749,
                         122.56063079833984,
-                        129.59182739257813
+                        129.59182739257812
                     ],
                     "LocalRotation": [
                         -0.44619780778884888,
@@ -14577,6 +14506,11 @@
                             "Type": 1,
                             "Name": "stun",
                             "bool": false
+                        },
+                        {
+                            "Type": 2,
+                            "Name": "stunTime",
+                            "float": 0.75
                         }
                     ]
                 }
@@ -15263,51 +15197,6 @@
             ]
         },
         {
-            "UID": 1555973250,
-            "ParentUID": 984384323,
-            "PrefabID": 1414243045,
-            "IsPrefab": true,
-            "Name": "Idle",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 12,
-                    "particleSystemUID": 826473608,
-                    "particleSystemAssetsPath": "Assets\/ParticleSystems\/SarlaccIdle.particles",
-                    "stopSpawn": false,
-                    "tempDelete": false,
-                    "previewEnabled": true,
-                    "stopAndDeleteCheck": false
-                }
-            ]
-        },
-        {
             "UID": 1566714077,
             "ParentUID": 949601842,
             "PrefabID": 1338592388,
@@ -15375,42 +15264,6 @@
                         1,
                         0.99999994039535522,
                         0.99999994039535522
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 1583895163,
-            "ParentUID": 666753519,
-            "PrefabID": 1414243045,
-            "IsPrefab": true,
-            "Name": "LENGUA",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -36.574806213378906,
-                        2.42238450050354,
-                        13.056509971618652
-                    ],
-                    "LocalRotation": [
-                        -0.048691403120756149,
-                        -0.048151671886444092,
-                        -0.70936763286590576,
-                        0.70150423049926758
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
                     ]
                 }
             ]
@@ -16095,7 +15948,7 @@
                     "Type": 1,
                     "LocalPosition": [
                         -100.95917510986328,
-                        -3.1498532295227051,
+                        1.724884033203125,
                         13.711471557617188
                     ],
                     "LocalRotation": [
@@ -16368,8 +16221,116 @@
             ]
         },
         {
-            "UID": 1688226107,
-            "ParentUID": 44821015,
+            "UID": 1457409728,
+            "ParentUID": 1663893585,
+            "PrefabID": 1414243045,
+            "IsPrefab": true,
+            "Name": "MAIN",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -3.6978325843811035,
+                        -57.722248077392578,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0.048691451549530029,
+                        0.048151720315217972,
+                        0.70936745405197144,
+                        0.70150434970855713
+                    ],
+                    "LocalScale": [
+                        0.39370074868202209,
+                        0.39370074868202209,
+                        0.39370077848434448
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 610442603,
+            "ParentUID": 1457409728,
+            "PrefabID": 1414243045,
+            "IsPrefab": true,
+            "Name": "LENGUA",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -36.574806213378906,
+                        2.42238450050354,
+                        13.056509971618652
+                    ],
+                    "LocalRotation": [
+                        -0.048691403120756149,
+                        -0.048151671886444092,
+                        -0.70936763286590576,
+                        0.70150423049926758
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 767633112,
+            "ParentUID": 1457409728,
+            "PrefabID": 1414243045,
+            "IsPrefab": true,
+            "Name": "BOCAGRAN",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -180.25811767578125,
+                        -7.2956538200378418,
+                        1.2833660840988159
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        -0.046079803258180618,
+                        0.99893778562545776
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 622320958,
+            "ParentUID": 767633112,
             "PrefabID": 1414243045,
             "IsPrefab": true,
             "Name": "BOCAGRANPUNTA",
@@ -16400,6 +16361,312 @@
                         0.99999994039535522,
                         1
                     ]
+                }
+            ]
+        },
+        {
+            "UID": 496506185,
+            "ParentUID": 1457409728,
+            "PrefabID": 1414243045,
+            "IsPrefab": true,
+            "Name": "BOCAPEQUE",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -180.04975891113281,
+                        11.407363891601562,
+                        -1.2965205907821655
+                    ],
+                    "LocalRotation": [
+                        -0.034614797681570053,
+                        0.99001628160476685,
+                        -0.13649232685565948,
+                        -0.006296197883784771
+                    ],
+                    "LocalScale": [
+                        0.99999988079071045,
+                        1,
+                        0.99999988079071045
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 69245829,
+            "ParentUID": 496506185,
+            "PrefabID": 1414243045,
+            "IsPrefab": true,
+            "Name": "BOCAPEQUEPUNTA",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        -163.56423950195312,
+                        -0.21429039537906647,
+                        -1.5588259696960449
+                    ],
+                    "LocalRotation": [
+                        -0.046420853585004807,
+                        -0.050344198942184448,
+                        -0.67628878355026245,
+                        0.73344671726226807
+                    ],
+                    "LocalScale": [
+                        0.99999988079071045,
+                        0.99999988079071045,
+                        0.99999994039535522
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 419645974,
+            "ParentUID": 1457409728,
+            "PrefabID": 1414243045,
+            "IsPrefab": true,
+            "Name": "SUELO",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        79.301979064941406,
+                        -1.7272378206253052,
+                        0.11630487442016602
+                    ],
+                    "LocalRotation": [
+                        -0.048691403120756149,
+                        -0.048151660710573196,
+                        -0.70936757326126099,
+                        0.70150423049926758
+                    ],
+                    "LocalScale": [
+                        1,
+                        0.36512818932533264,
+                        0.99999994039535522
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1219081627,
+            "ParentUID": 1457409728,
+            "PrefabID": 1414243045,
+            "IsPrefab": true,
+            "Name": "DIENTES",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        261.1473388671875,
+                        -1.0875616073608398,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.046420857310295105,
+                        -0.050344206392765045,
+                        -0.67628878355026245,
+                        0.73344677686691284
+                    ],
+                    "LocalScale": [
+                        1.1452231407165527,
+                        1.1452231407165527,
+                        1.1452231407165527
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 524971864,
+            "ParentUID": 1663893585,
+            "PrefabID": 1414243045,
+            "IsPrefab": true,
+            "Name": "Particles",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 2033778674,
+            "ParentUID": 524971864,
+            "PrefabID": 1414243045,
+            "IsPrefab": true,
+            "Name": "Idle",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 12,
+                    "particleSystemUID": 826473608,
+                    "particleSystemAssetsPath": "Assets\/ParticleSystems\/SarlaccIdle.particles",
+                    "stopSpawn": false,
+                    "tempDelete": false,
+                    "previewEnabled": true,
+                    "stopAndDeleteCheck": false
+                }
+            ]
+        },
+        {
+            "UID": 889491434,
+            "ParentUID": 1663893585,
+            "PrefabID": 1414243045,
+            "IsPrefab": true,
+            "Name": "Base",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        -29.366476058959961,
+                        6.3108872417680944e-30
+                    ],
+                    "LocalRotation": [
+                        -0.70710676908493042,
+                        0,
+                        0,
+                        0.70710676908493042
+                    ],
+                    "LocalScale": [
+                        0.60000002384185791,
+                        0.60000002384185791,
+                        0.60000002384185791
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1661616989,
+                    "Name": "Base.nemesh",
+                    "Path": "Library\/Meshes\/1661616989.nemesh",
+                    "File": "1661616989.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": 1,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "RenderLast": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 639810926,
+                        "Color": [
+                            0.40000000596046448,
+                            0.40000000596046448,
+                            0.40000000596046448,
+                            1
+                        ],
+                        "Name": "Base.nemat",
+                        "Path": "Library\/Materials\/639810926.nemat",
+                        "File": "639810926.nemat"
+                    },
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/\/Props\/sarlaac_arvala.png",
+                        "AssetsName": "sarlaac_arvala.png",
+                        "LibaryPath": "Library\/Textures\/1326288521.netex",
+                        "LibraryFile": "1326288521.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
                 }
             ]
         },
@@ -16778,42 +17045,6 @@
                 },
                 {
                     "Type": 26
-                }
-            ]
-        },
-        {
-            "UID": 1702709571,
-            "ParentUID": 305190749,
-            "PrefabID": 1414243045,
-            "IsPrefab": true,
-            "Name": "BOCAPEQUE",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -180.04975891113281,
-                        11.407363891601563,
-                        -1.2965205907821655
-                    ],
-                    "LocalRotation": [
-                        -0.034614797681570053,
-                        0.99001628160476685,
-                        -0.13649232685565948,
-                        -0.006296197883784771
-                    ],
-                    "LocalScale": [
-                        0.99999988079071045,
-                        1,
-                        0.99999988079071045
-                    ]
                 }
             ]
         },
@@ -17335,42 +17566,6 @@
             ]
         },
         {
-            "UID": 1730543186,
-            "ParentUID": 305190749,
-            "PrefabID": 1414243045,
-            "IsPrefab": true,
-            "Name": "SUELO",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        79.301979064941406,
-                        -1.7272378206253052,
-                        0.11630487442016602
-                    ],
-                    "LocalRotation": [
-                        -0.048691403120756149,
-                        -0.048151660710573196,
-                        -0.70936757326126099,
-                        0.70150423049926758
-                    ],
-                    "LocalScale": [
-                        1,
-                        0.36512818932533264,
-                        0.99999994039535522
-                    ]
-                }
-            ]
-        },
-        {
             "UID": 1732023991,
             "ParentUID": 334172566,
             "PrefabID": 1442962815,
@@ -17784,7 +17979,7 @@
                     "LocalPosition": [
                         -71.633628845214844,
                         6.1515793800354004,
-                        53.774612426757813
+                        53.774612426757812
                     ],
                     "LocalRotation": [
                         0,
@@ -18042,7 +18237,7 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        108.25357055664063,
+                        108.25357055664062,
                         11.55301570892334,
                         76.606468200683594
                     ],
@@ -20021,87 +20216,6 @@
             ]
         },
         {
-            "UID": 1992485465,
-            "ParentUID": 1214947624,
-            "PrefabID": 1414243045,
-            "IsPrefab": true,
-            "Name": "Base",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        -29.366476058959961,
-                        6.3108872417680944e-30
-                    ],
-                    "LocalRotation": [
-                        -0.70710676908493042,
-                        0,
-                        0,
-                        0.70710676908493042
-                    ],
-                    "LocalScale": [
-                        0.60000002384185791,
-                        0.60000002384185791,
-                        0.60000002384185791
-                    ]
-                },
-                {
-                    "Type": 2,
-                    "UID": 1661616989,
-                    "Name": "Base.nemesh",
-                    "Path": "Library\/Meshes\/1661616989.nemesh",
-                    "File": "1661616989.nemesh",
-                    "ShowWireframe": false,
-                    "ShowBoundingBox": false,
-                    "Outline": false,
-                    "OutlineThickness": 1,
-                    "OutlineColor": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "RenderLast": false
-                },
-                {
-                    "Type": 3,
-                    "Material": {
-                        "UID": 639810926,
-                        "Color": [
-                            0.40000000596046448,
-                            0.40000000596046448,
-                            0.40000000596046448,
-                            1
-                        ],
-                        "Name": "Base.nemat",
-                        "Path": "Library\/Materials\/639810926.nemat",
-                        "File": "639810926.nemat"
-                    },
-                    "Texture": {
-                        "AssetsPath": "Assets\/Textures\/\/Props\/sarlaac_arvala.png",
-                        "AssetsName": "sarlaac_arvala.png",
-                        "LibaryPath": "Library\/Textures\/1326288521.netex",
-                        "LibraryFile": "1326288521.netex"
-                    },
-                    "Shader": {
-                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
-                        "AssetsName": "DefaultShader.shader",
-                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
-                        "LibraryFile": "800223282.neshader"
-                    }
-                }
-            ]
-        },
-        {
             "UID": 1995094254,
             "ParentUID": 1761183886,
             "PrefabID": 202576878,
@@ -20343,51 +20457,6 @@
             ]
         },
         {
-            "UID": 2013179041,
-            "ParentUID": 775952054,
-            "PrefabID": 1414243045,
-            "IsPrefab": true,
-            "Name": "Idle",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        0,
-                        0,
-                        0
-                    ],
-                    "LocalRotation": [
-                        0,
-                        0,
-                        0,
-                        1
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                },
-                {
-                    "Type": 12,
-                    "particleSystemUID": 826473608,
-                    "particleSystemAssetsPath": "Assets\/ParticleSystems\/SarlaccIdle.particles",
-                    "stopSpawn": false,
-                    "tempDelete": false,
-                    "previewEnabled": true,
-                    "stopAndDeleteCheck": false
-                }
-            ]
-        },
-        {
             "UID": 2022837859,
             "ParentUID": 529357164,
             "PrefabID": 0,
@@ -20535,42 +20604,6 @@
                     "LocalScale": [
                         1,
                         0.99999994039535522,
-                        0.99999994039535522
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 2033877184,
-            "ParentUID": 666753519,
-            "PrefabID": 1414243045,
-            "IsPrefab": true,
-            "Name": "SUELO",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        79.301979064941406,
-                        -1.7272378206253052,
-                        0.11630487442016602
-                    ],
-                    "LocalRotation": [
-                        -0.048691403120756149,
-                        -0.048151660710573196,
-                        -0.70936757326126099,
-                        0.70150423049926758
-                    ],
-                    "LocalScale": [
-                        1,
-                        0.36512818932533264,
                         0.99999994039535522
                     ]
                 }
@@ -20791,42 +20824,6 @@
                         1,
                         0.99999994039535522,
                         1
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 2083879842,
-            "ParentUID": 305190749,
-            "PrefabID": 1414243045,
-            "IsPrefab": true,
-            "Name": "DIENTES",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        261.1473388671875,
-                        -1.0875616073608398,
-                        0
-                    ],
-                    "LocalRotation": [
-                        -0.046420857310295105,
-                        -0.050344206392765045,
-                        -0.67628878355026245,
-                        0.73344677686691284
-                    ],
-                    "LocalScale": [
-                        1.1452231407165527,
-                        1.1452231407165527,
-                        1.1452231407165527
                     ]
                 }
             ]
@@ -21310,9 +21307,9 @@
                 {
                     "Type": 1,
                     "LocalPosition": [
-                        -0.19060134887695313,
+                        -0.19060134887695312,
                         1.2901343107223511,
-                        -1.5982437133789063
+                        -1.5982437133789062
                     ],
                     "LocalRotation": [
                         0,
@@ -21369,78 +21366,6 @@
                         1,
                         1,
                         1
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 2126834462,
-            "ParentUID": 305190749,
-            "PrefabID": 1414243045,
-            "IsPrefab": true,
-            "Name": "LENGUA",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        -36.574806213378906,
-                        2.42238450050354,
-                        13.056509971618652
-                    ],
-                    "LocalRotation": [
-                        -0.048691403120756149,
-                        -0.048151671886444092,
-                        -0.70936763286590576,
-                        0.70150423049926758
-                    ],
-                    "LocalScale": [
-                        1,
-                        1,
-                        1
-                    ]
-                }
-            ]
-        },
-        {
-            "UID": 2133577205,
-            "ParentUID": 666753519,
-            "PrefabID": 1414243045,
-            "IsPrefab": true,
-            "Name": "DIENTES",
-            "IsActive": true,
-            "IsStatic": false,
-            "IsSceneRoot": false,
-            "ShowBoundingBoxes": false,
-            "NavigationInfo": {
-                "isNavigable": false,
-                "navigationArea": 0
-            },
-            "Components": [
-                {
-                    "Type": 1,
-                    "LocalPosition": [
-                        261.1473388671875,
-                        -1.0875616073608398,
-                        0
-                    ],
-                    "LocalRotation": [
-                        -0.046420857310295105,
-                        -0.050344206392765045,
-                        -0.67628878355026245,
-                        0.73344677686691284
-                    ],
-                    "LocalScale": [
-                        1.1452231407165527,
-                        1.1452231407165527,
-                        1.1452231407165527
                     ]
                 }
             ]
