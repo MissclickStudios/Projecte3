@@ -13,6 +13,7 @@ class C_UI_Button;
 class C_UI_Text;
 class C_UI_Image;
 class C_Material;
+class R_Texture;
 
 class Player;
 class GroundItem;
@@ -26,6 +27,7 @@ public:
 
 	void Start() override;
 	void Update() override;
+	void CleanUp()override;
 
 	const GroundItem* GetItem() const { return item; }
 	void SetItem(GroundItem* item);
@@ -56,6 +58,8 @@ private:
 	C_UI_Text* rarityText = nullptr;
 	C_UI_Image* itemImage = nullptr;
 	C_Material* itemMaterial = nullptr;
+	R_Texture* currentItemTexture = nullptr;
+	R_Texture* atlasTexture = nullptr;
 
 	Player* player = nullptr;
 	GroundItem* item = nullptr;
