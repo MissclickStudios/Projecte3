@@ -108,6 +108,7 @@ public:
 	Prefab blaster;
 	Prefab sniper;
 	Prefab bomb;
+	Prefab bombProjectile;
 
 	std::string rightHandName;
 	std::string leftHandName;
@@ -182,6 +183,8 @@ private:
 
 	GameObject* bombGameObject = nullptr;
 	C_BoxCollider* bombCollider = nullptr;
+
+	GameObject* projectileGameObject = nullptr;
 	// Weapons
 	GameObject* blasterGameObject = nullptr;
 	Weapon* blasterWeapon = nullptr;

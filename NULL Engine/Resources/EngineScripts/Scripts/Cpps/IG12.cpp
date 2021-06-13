@@ -91,7 +91,7 @@ IG12* CreateIG12()
 	INSPECTOR_PREFAB(script->blaster);
 	INSPECTOR_PREFAB(script->sniper);
 	INSPECTOR_PREFAB(script->bomb);
-	
+	INSPECTOR_PREFAB(script->bombProjectile);
 	//Hand Name
 	INSPECTOR_STRING(script->rightHandName);
 	INSPECTOR_STRING(script->leftHandName);
@@ -146,7 +146,7 @@ void IG12::SetUp()
 
 		}
 	}
-	//Get bomb prefab
+	//Get Bomb prefab with crosshair and projectile
 	if (bomb.uid != NULL)
 	{
 		bombGameObject = App->scene->InstantiatePrefab(bomb.uid, App->scene->GetSceneRoot(), float3::zero, Quat());
@@ -156,12 +156,19 @@ void IG12::SetUp()
 		bombCollider = bombGameObject->GetComponent<C_BoxCollider>();
 		if (bombCollider != nullptr)
 			bombCollider->SetIsActive(false);
+		
+		crosshair = bombGameObject->FindChild("Aim");
 	}
 
-	crosshair = bombGameObject->FindChild("Aim");
 	crosshair->SetIsActive(false);
 	
 	bombAudio = new C_AudioSource(bombGameObject);
+
+	if(bombProjectile.uid != NULL)
+		projectileGameObject = App->scene->InstantiatePrefab(bombProjectile.uid, App->scene->GetSceneRoot(), float3::zero, Quat());
+
+	if (projectileGameObject)
+		projectileGameObject->SetIsActive(false);
 
 	// Create Weapons and save the Weapon script pointer
 	if (blaster.uid != NULL)
@@ -535,6 +542,8 @@ void IG12::ManageMovement()
 		attackDistance = 200.0f;
 		aimState = AimState::IDLE;
 
+		projectileGameObject->SetIsActive(true);
+
 		if (blasterWeapon)
 		{
 			blasterWeapon->fireRate = 0.0f;
@@ -561,6 +570,7 @@ void IG12::ManageMovement()
 			moveState = IG12State::IDLE;
 			attackDistance = userAttackDistance;
 
+			projectileGameObject->SetIsActive(false);
 			crosshair->SetIsActive(false);
 			bombingParticles->StopSpawn();
 			bombTimer.Stop();
@@ -681,6 +691,7 @@ void IG12::ManageMovement()
 		{
 			moveState = IG12State::IDLE;
 
+			projectileGameObject->SetIsActive(false);
 			crosshair->SetIsActive(false);
 			bombingParticles->StopSpawn();
 			bombTimer.Stop();
@@ -929,13 +940,22 @@ bool IG12::BombingAttack()
 	bombCollider->SetIsActive(false);
 	
 
-	if (bombTimer.IsActive() && bombTimer.ReadSec() >= bombFallingTime)
+	if (bombTimer.IsActive() && projectileGameObject->transform->GetWorldPosition().y < 2)
 	{
+		projectileGameObject->GetComponent<C_RigidBody>()->MakeStatic();
+		
+		/*if (bombingParticles != nullptr)
+			bombingParticles->ResumeSpawn();
+
+		bombExploding = true;*/
+		
 		bombTimer.Stop();
 
 		bombCollider->SetIsActive(true);
 
 		crosshair->SetIsActive(false);
+
+		projectileGameObject->SetIsActive(false);
 
 		if (bombAudio != nullptr)
 		{
@@ -944,7 +964,7 @@ bool IG12::BombingAttack()
 		}
 
 	}
-	else if (bombTimer.IsActive() && bombTimer.ReadSec() >= bombFallingTime * 0.9)
+	else if (bombTimer.IsActive() && projectileGameObject->transform->GetWorldPosition().y < 10)
 	{
 		if (bombingParticles != nullptr)
 			bombingParticles->ResumeSpawn();
@@ -957,7 +977,12 @@ bool IG12::BombingAttack()
 		playerPosition.y = player->transform->GetWorldPosition().z;
 		bombTimer.Start();
 		crosshair->SetIsActive(true);
-		bombGameObject->transform->SetWorldPosition(CalculateNextBomb(playerPosition.x, playerPosition.y));
+		float3 bombPos = CalculateNextBomb(playerPosition.x, playerPosition.y);
+		bombGameObject->transform->SetWorldPosition(bombPos);
+		projectileGameObject->SetIsActive(true);
+		projectileGameObject->transform->SetWorldPosition(float3(bombPos.x, 100, bombPos.z));
+		projectileGameObject->GetComponent<C_RigidBody>()->MakeDynamic();
+		projectileGameObject->GetComponent<C_RigidBody>()->AddForce(float3(0, -0.07, 0));
 	}
 
 	if (!bombingAttackTimer.IsActive())
@@ -1008,13 +1033,18 @@ bool IG12::BombingAndSpiralAttack()
 	bombCollider->SetIsActive(false);
 
 
-	if (bombTimer.IsActive() && bombTimer.ReadSec() >= bombFallingTime)
+	if (bombTimer.IsActive() && projectileGameObject->transform->GetWorldPosition().y < 2)
 	{
+		projectileGameObject->GetComponent<C_RigidBody>()->MakeStatic();
+
+
 		bombTimer.Stop();
 
 		bombCollider->SetIsActive(true);
 
 		crosshair->SetIsActive(false);
+
+		projectileGameObject->SetIsActive(false);
 
 		if (bombAudio != nullptr)
 		{
@@ -1023,7 +1053,7 @@ bool IG12::BombingAndSpiralAttack()
 		}
 
 	}
-	else if (bombTimer.IsActive() && bombTimer.ReadSec() >= bombFallingTime * 0.9)
+	else if (bombTimer.IsActive() && projectileGameObject->transform->GetWorldPosition().y < 10)
 	{
 		if (bombingParticles != nullptr)
 			bombingParticles->ResumeSpawn();
@@ -1036,13 +1066,22 @@ bool IG12::BombingAndSpiralAttack()
 		playerPosition.y = player->transform->GetWorldPosition().z;
 		bombTimer.Start();
 		crosshair->SetIsActive(true);
-		bombGameObject->transform->SetWorldPosition(CalculateNextBomb(playerPosition.x, playerPosition.y));
+		float3 bombPos = CalculateNextBomb(playerPosition.x, playerPosition.y);
+		bombGameObject->transform->SetWorldPosition(bombPos);
+		projectileGameObject->SetIsActive(true);
+		projectileGameObject->transform->SetWorldPosition(float3(bombPos.x, 100, bombPos.z));
+		projectileGameObject->GetComponent<C_RigidBody>()->MakeDynamic();
+		projectileGameObject->GetComponent<C_RigidBody>()->AddForce(float3(0, -0.07, 0));
 	}
 
-	if (!bombingAndSpiralAttackTimer.IsActive())
+	if (!bombingAndSpiralAttackTimer.IsActive() || specialAttackRot >= 360.0f * spiralAttackSpins)
+	{
+		projectileGameObject->SetIsActive(false);
+		crosshair->SetIsActive(false);
+		bombingParticles->StopSpawn();
+		bombTimer.Stop();
 		return false;
-	else if (specialAttackRot >= 360.0f * spiralAttackSpins)
-		return false;
+	}
 
 
 	return true;
