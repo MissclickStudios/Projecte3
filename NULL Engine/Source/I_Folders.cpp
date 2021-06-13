@@ -25,7 +25,7 @@ uint Importer::Folders::Save(const R_Folder* rFolder, char** buffer)
 	std::string errorString = "[ERROR] Importer: Could not Save Folder { " + std::string(rFolder->GetAssetsPath()) + " } in Library";
 
 	ParsonNode rootNode			= ParsonNode();
-	ParsonArray containedArray		= rootNode.SetArray("ContainedResources");
+	ParsonArray containedArray	= rootNode.SetArray("ContainedResources");
 
 	for (uint i = 0; i < rFolder->containedResources.size(); ++i)
 	{
@@ -65,7 +65,7 @@ bool Importer::Folders::Load(const char* buffer, R_Folder* rFolder)
 	}
 	
 	ParsonNode rootNode			= ParsonNode(buffer);
-	ParsonArray containedArray		= rootNode.GetArray("ContainedResources");
+	ParsonArray containedArray	= rootNode.GetArray("ContainedResources");
 	if (!rootNode.NodeIsValid())
 	{
 		LOG("%s! Error: Could not get the Root Node from the passed buffer.", errorString.c_str());

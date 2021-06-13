@@ -32,9 +32,9 @@ namespace Importer
 {
 	namespace Navigation
 	{
-		bool Import	(const char* buffer, R_NavMesh* rNavMesh);
-		uint Save	(R_NavMesh* rNavMesh, char** buffer);
-		bool Load	(const char* buffer, R_NavMesh* rNavMesh);
+		bool Import(const char* buffer, R_NavMesh* rNavMesh);
+		uint Save(R_NavMesh* rNavMesh, char** buffer);
+		bool Load(const char* buffer, R_NavMesh* rNavMesh);
 
 		namespace Utilities
 		{

@@ -11,44 +11,44 @@ public:
 	M_Window(bool isActive = true);
 	virtual ~M_Window();
 
-	bool Init				(ParsonNode& config) override;
-	bool CleanUp			() override;
+	bool Init(ParsonNode& config) override;
+	bool CleanUp() override;
 
-	bool LoadConfiguration	(ParsonNode& root) override;
-	bool SaveConfiguration	(ParsonNode& root) const override;
+	bool LoadConfiguration(ParsonNode& root) override;
+	bool SaveConfiguration(ParsonNode& root) const override;
 	
 public:
-	SDL_Window* GetWindow				() const;								// 
-	void		SetTitle				(const char* title);					// 
+	SDL_Window* GetWindow() const;												// 
+	void		SetTitle(const char* title);									// 
 
-	const char* GetIcon					() const;								// 
-	void		SetIcon					(const char* file);						// 
-	void		SetDefaultIcon			();										// 
+	const char* GetIcon() const;												// 
+	void		SetIcon(const char* file);										// 
+	void		SetDefaultIcon();												// 
 
-	uint		GetWidth				() const;								// 
-	uint		GetHeight				() const;								// 
-	void		GetMinMaxSize			(uint& minWidth, uint& minHeight, uint& maxWidth, uint& maxHeight) const;		// 
-	float		GetBrightness			() const;								// 
-	int			GetRefreshRate			() const;								// 
+	uint		GetWidth() const;												// 
+	uint		GetHeight() const;												// 
+	void		GetMinMaxSize(uint& minWidth, uint& minHeight, uint& maxWidth, uint& maxHeight) const;	// 
+	float		GetBrightness() const;											// 
+	int			GetRefreshRate() const;											// 
 
-	void		SetWidth				(uint width);							// 
-	void		SetHeight				(uint height);							// 
-	void		SetSize					(uint width, uint height);				// 
-	void		SetBrightness			(float brightness);						// 
+	void		SetWidth(uint width);											// 
+	void		SetHeight(uint height);											// 
+	void		SetSize(uint width, uint height);								// 
+	void		SetBrightness(float brightness);								// 
 
-	bool		IsMaximized				() const;								// 
-	bool		IsFullscreen			() const;								// 
-	bool		IsResizable				() const;								// 
-	bool		IsBorderless			() const;								// 
-	bool		IsFullscreenDesktop		() const;								// 
+	bool		IsMaximized() const;											// 
+	bool		IsFullscreen() const;											// 
+	bool		IsResizable() const;											// 
+	bool		IsBorderless() const;											// 
+	bool		IsFullscreenDesktop() const;									// 
 
-	void		SetMaximized			(bool setTo);							// 
-	void		SetFullscreen			(bool setTo);							// 
-	void		SetResizable			(bool setTo);							// 
-	void		SetBorderless			(bool setTo);							// 
-	void		SetFullscreenDesktop	(bool setTo);							// 
+	void		SetMaximized(bool setTo);										// 
+	void		SetFullscreen(bool setTo);										// 
+	void		SetResizable(bool setTo);										// 
+	void		SetBorderless(bool setTo);										// 
+	void		SetFullscreenDesktop(bool setTo);								// 
 
-	void		RecalculateWindowSize	();
+	void		RecalculateWindowSize();
 
 private:
 	SDL_Window*		window;														// The window we'll be rendering to

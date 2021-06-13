@@ -68,16 +68,16 @@ public:
 	virtual inline ComponentType GetType() const { return type; }						// This is needed to be able to use templeates for functions such as GetComponent<>();
 
 public:
-	const char*		GetNameFromType		() const;										// Will return a string with the name of the component. Depends on COMPONENT_TYPE.
-	const char*		GetTypesAsString	() const;
+	const char*		GetNameFromType() const;											// Will return a string with the name of the component. Depends on COMPONENT_TYPE.
+	const char*		GetTypesAsString() const;
 	
-	uint32			GetID				() const;										// Will return the component's ID.
-	void			ResetID				();												// Will reset the component's ID. WARNING: All references to this comp. will be lost (serialization).
+	uint32			GetID() const;														// Will return the component's ID.
+	void			ResetID();															// Will reset the component's ID. WARNING: All references to this comp. will be lost (serialization).
 
-	bool			IsActive			() const;										// 
-	virtual void	SetIsActive			(bool setTo);									// 
+	bool			IsActive() const;													// 
+	virtual void	SetIsActive(bool setTo);											// 
 
-	GameObject*		GetOwner			() const;										//
+	GameObject*		GetOwner() const;													//
 
 protected:
 	bool			isActive;

@@ -14,19 +14,17 @@ public:
 	C_Light(GameObject* owner, LightType lightType = LightType::NONE);
 	~C_Light();
 
-	bool Update		() override;
-	bool CleanUp	() override;
+	bool Update() override;
+	bool CleanUp() override;
 
-	bool SaveState	(ParsonNode& root) const override;
-	bool LoadState	(ParsonNode& root) override;
+	bool SaveState(ParsonNode& root) const override;
+	bool LoadState(ParsonNode& root) override;
 
-	inline LightType GetLightType() const { return lightType; }
-
-	inline DirectionalLight* GetDirectionalLight() { if(directional) return directional; }
-
-	inline PointLight* GetPointLight() { if (pointLight) return pointLight; }
-
-	static inline ComponentType GetType() { return ComponentType::LIGHT; }			// This is needed to be able to use templeates for functions such as GetComponent<>();
+public:
+	inline LightType			GetLightType() const	{ return lightType; }
+	inline DirectionalLight*	GetDirectionalLight()	{ if(directional) return directional; }
+	inline PointLight*			GetPointLight()			{ if (pointLight) return pointLight; }
+	static inline ComponentType	GetType()				{ return ComponentType::LIGHT; }			// This is needed to be able to use templeates for functions such as GetComponent<>();
 
 private:
 	LightType lightType;

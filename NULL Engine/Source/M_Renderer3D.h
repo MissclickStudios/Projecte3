@@ -139,12 +139,12 @@ struct ParticleRenderer
 	void Render();
 	void LoadBuffers();
 
-	uint VAO;
+	uint		VAO;
 
-	R_Texture* mat;
-	R_Shader* shader;
-	Color color;
-	float4x4 transform;
+	R_Texture*	mat;
+	R_Shader*	shader;
+	Color		color;
+	float4x4	transform;
 };
 
 #define MAX_LIGHTS 8

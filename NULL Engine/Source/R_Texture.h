@@ -47,19 +47,19 @@ public:
 	static inline ResourceType GetType() { return ResourceType::TEXTURE; }
 
 public:
-	Texture			GetTextureData			() const;
-	void			SetTextureData			(uint id, uint width, uint height, uint depth, uint bpp, uint bytes, TextureFormat format, bool compressed = true);
+	Texture			GetTextureData() const;
+	void			SetTextureData(uint id, uint width, uint height, uint depth, uint bpp, uint bytes, TextureFormat format, bool compressed = true);
 
-	uint			GetTextureID			() const;						// 
-	uint			GetTextureWidth			() const;						// 
-	uint			GetTextureHeight		() const;						// 
-	uint			GetTextureDepth			() const;						// 
-	uint			GetTextureBpp			() const;						// 
-	uint			GetTextureBytes			() const;						// 
-	TextureFormat	GetTextureFormat		() const;						// 
-	bool			TextureIsCompressed		() const;						// 
+	uint			GetTextureID() const;										// 
+	uint			GetTextureWidth() const;									// 
+	uint			GetTextureHeight() const;									// 
+	uint			GetTextureDepth() const;									// 
+	uint			GetTextureBpp() const;										// 
+	uint			GetTextureBytes() const;									// 
+	TextureFormat	GetTextureFormat() const;									// 
+	bool			TextureIsCompressed() const;								// 
 
-	const char*		GetTextureFormatString	() const;
+	const char*		GetTextureFormatString() const;
 
 private:
 	Texture			texData;
