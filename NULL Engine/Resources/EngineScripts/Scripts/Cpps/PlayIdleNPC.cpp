@@ -18,7 +18,7 @@ void NPCidlePlay::Awake()
 
 void NPCidlePlay::Start()
 {
-	offset_toStart=Random::LCG::GetBoundedRandomFloat(0.0f, 3.0f);
+	offset_toStart=Random::LCG::GetBoundedRandomFloat(1.f, 3.0f);
 	startAnimationTimer.Start();
 
 }

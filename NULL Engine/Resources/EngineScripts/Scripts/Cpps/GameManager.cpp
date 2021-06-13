@@ -96,8 +96,11 @@ void GameManager::Awake()
 				playerGameObject = App->scene->InstantiatePrefab(playerPrefab.uid, App->scene->GetSceneRoot(), spawnPoint,Quat::identity);
 			}
 
-			if(storyDialogState.defeatedIG11FirstTime && playerGameObject!= nullptr)
-				groguGameObject = App->scene->InstantiatePrefab(groguPrefab.uid, App->scene->GetSceneRoot(), playerGameObject->transform->GetLocalPosition(), Quat::identity);
+			if (storyDialogState.defeatedIG11FirstTime && playerGameObject != nullptr)
+			{
+				groguGameObject = App->scene->InstantiatePrefab(groguPrefab.uid, App->scene->GetSceneRoot(), playerSpawn->transform->GetLocalPosition(), Quat::identity, playerSpawn->transform->GetWorldPosition());
+
+			}
 
 			if (playerSpawn != nullptr && groguGameObject != nullptr && storyDialogState.defeatedIG11FirstTime)
 			{
