@@ -240,7 +240,7 @@ void Blurrg::Behavior()
 			{
 				Player* playerScript = (Player*)player->GetScript("Player");
 
-				playerScript->GiveCredits(Random::LCG::GetBoundedRandomUint(minCredits,maxCredits));
+				playerScript->GiveCredits(Random::LCG::GetBoundedRandomUint(minCredits, maxCredits));
 			}
 			deathTimer.Start();
 			state = BlurrgState::DEAD;

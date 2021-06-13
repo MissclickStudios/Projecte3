@@ -748,7 +748,7 @@ void IG12::ManageMovement()
 
 		tmp = (Player*)player->GetScript("Player");
 		if (tmp)
-			tmp->GiveBeskar(beskarValue);
+			tmp->GiveBeskar(4);
 
 		gameManager->KilledIG11(1); //This will trigger timer to start to leave room
 
