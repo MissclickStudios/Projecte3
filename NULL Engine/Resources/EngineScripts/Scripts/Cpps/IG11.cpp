@@ -506,6 +506,8 @@ void IG11::ManageMovement()
 		gameManager->KilledIG11(0);
 
 	case IG11State::DEAD:
+		if (dieAfterStun > 1)
+			deathTimer.Resume();
 		if (deathTimer.ReadSec() >= deathDuration)
 			Deactivate();
 		break;

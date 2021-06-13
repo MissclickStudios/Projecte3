@@ -5,7 +5,7 @@ Item* Item::CreateItem(ItemData* itemData, bool toBuy)
 	std::string name = itemData->name;
 	if (name == "Amplifier Barrel")
 		return (Item*)new AmplifierBarrel(itemData, toBuy);
-	else if (name == "Electrocuting Pulse")
+	else if (name == "Electro Pulse")
 		return (Item*)new ElectrocutingPulse(itemData, toBuy);
 	else if (name == "Cold Bullets")
 		return (Item*)new ColdBullets(itemData, toBuy);
@@ -13,7 +13,7 @@ Item* Item::CreateItem(ItemData* itemData, bool toBuy)
 		return (Item*)new LongBarrel(itemData, toBuy);
 	else if (name == "Rapid Fire")
 		return (Item*)new RapidFire(itemData, toBuy);
-	else if (name == "Extended Magazine")
+	else if (name == "Extended Mag")
 		return (Item*)new ExtendedMagazine(itemData, toBuy);
 	else if (name == "Fast Magazine")
 		return (Item*)new FastMagazine(itemData, toBuy);
@@ -27,7 +27,7 @@ Item* Item::CreateItem(ItemData* itemData, bool toBuy)
 		return (Item*)new BeskarIngots(itemData, toBuy);
 	else if (name == "Galactic Credit")
 		return (Item*)new GalacticCredit(itemData, toBuy);
-	else if (name == "Full Metal Jacket Bullets")
+	else if (name == "FMJ Bullets")
 		return (Item*)new JacketBullets(itemData, toBuy);
 	else if (name == "Premium Ticket")
 		return (Item*)new PremiumTicket(itemData, toBuy);

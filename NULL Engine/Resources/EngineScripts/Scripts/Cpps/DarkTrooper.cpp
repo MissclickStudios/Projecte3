@@ -281,12 +281,15 @@ void DarkTrooper::ManageMovement()
 		if (player)
 		{
 			Player* playerScript = (Player*)player->GetScript("Player");
-			playerScript->GiveCredits(Random::LCG::GetBoundedRandomUint(minCredits / 2, maxCredits / 2));
+			if (dieAfterStun == 0)
+				playerScript->GiveCredits(Random::LCG::GetBoundedRandomUint(minCredits, maxCredits));
 		}
 		deathTimer.Start();
 		moveState = DarkTrooperState::DEAD;
 
 	case DarkTrooperState::DEAD:
+		if (dieAfterStun > 1)
+			deathTimer.Resume();
 		if (deathTimer.ReadSec() >= deathDuration)
 			Deactivate();
 		break;
