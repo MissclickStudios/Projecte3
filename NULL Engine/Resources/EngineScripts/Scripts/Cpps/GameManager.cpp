@@ -173,7 +173,7 @@ void GameManager::Start()
 	if(cameraGameObject != nullptr)
 		cameraScript = (CameraMovement*)cameraGameObject->GetScript("CameraMovement");
 
-	if (strcmp(App->scene->GetCurrentScene(), levelNames.winScene.c_str()) == 0) //Win screen
+	if (strcmp(App->scene->GetCurrentScene(), levelNames.winScene.c_str()) == 0 || strcmp(App->scene->GetCurrentScene(), levelNames.loseScene.c_str()) == 0) //Win screen
 	{
 		SetUpWinScreen();
 	}
@@ -1230,7 +1230,7 @@ void GameManager::SetUpWinScreen()
 		timeString = std::to_string(hours) + ":";
 		timeString += std::to_string(minutes) + ":";
 		
-		if(seconds > 0)
+		if(seconds != 0)
 			timeString += std::to_string(seconds);
 		else
 			timeString += "00";

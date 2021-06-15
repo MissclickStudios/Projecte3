@@ -17,12 +17,13 @@ WinLoseSceneManager::~WinLoseSceneManager()
 
 void WinLoseSceneManager::Start()
 {
-	if (canvasObject)
-	{
-		C_Canvas* canvas = canvasObject->GetComponent<C_Canvas>();
-		if (canvas)
-			App->uiSystem->PushCanvas(canvas);
-	}
+	GameObject* tmp = App->scene->GetGameObjectByName("StatsCanvas");
+	C_Canvas* canvas = tmp->GetComponent<C_Canvas>();
+	if (canvas)
+		App->uiSystem->PushCanvas(canvas);
+	
+
+
 
 }
 
