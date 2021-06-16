@@ -8,6 +8,8 @@
 #include "M_Input.h"
 #include "Dependencies/glew/include/glew.h"
 #include "JSONParser.h"
+#include "M_Audio.h"
+#include "C_AudioSource.h"
 
 C_UI_Slider::C_UI_Slider(GameObject* owner, Rect2D rect) : C_UI(owner, ComponentType::UI_SLIDER, true, rect)
 {
@@ -51,6 +53,19 @@ bool C_UI_Slider::SaveState(ParsonNode& root) const
 	root.SetNumber("max value", maxValue);
 	root.SetNumber("offset", offset);
 	
+	C_Material* cMaterial = GetOwner()->GetComponent<C_Material>();
+	if (cMaterial) 
+	{
+		uint32 id = cMaterial->GetTextureID();
+		unsigned int spritesheetPixelWidth, spritesheetPixelHeight = 0; cMaterial->GetTextureSize(spritesheetPixelWidth, spritesheetPixelHeight);
+		if (spritesheetPixelWidth && spritesheetPixelHeight)
+		{
+			ParsonNode size = root.SetNode("textureSize");
+			size.SetInteger("textureWidth", spritesheetPixelWidth);
+			size.SetInteger("textureHeight", spritesheetPixelHeight);
+		}
+	}
+	
 	ParsonArray pixelCoords = root.SetArray("pixelCoords");
 	for (int i = 0; i < 16; ++i)
 		pixelCoords.SetNumber((double)pixelCoord[i]);
@@ -89,30 +104,43 @@ bool C_UI_Slider::LoadState(ParsonNode& root)
 		for (int i = 0; i < pixelCoords.size; ++i)
 			pixelCoord[i] = (int)pixelCoords.GetNumber(i);
 
-	ParsonNode node;
-	node = root.GetNode("unhover uncheck");
-	if (node.NodeIsValid())
+	ParsonNode size = root.GetNode("textureSize");
+	if (size.NodeIsValid())
 	{
-		unhoverUnchecked.proportionBeginX = node.GetNumber("x"); unhoverUnchecked.proportionBeginY = node.GetNumber("y");
-		unhoverUnchecked.proportionFinalX = node.GetNumber("w"); unhoverUnchecked.proportionFinalY = node.GetNumber("h");
+		int spritesheetPixelWidth = size.GetInteger("textureWidth");
+		int spritesheetPixelHeight = size.GetInteger("textureHeight");
+		unhoverUnchecked = GetTexturePosition(pixelCoord[0], pixelCoord[1], pixelCoord[2], pixelCoord[3], spritesheetPixelWidth, spritesheetPixelHeight);
+		hoverUnchecked = GetTexturePosition(pixelCoord[4], pixelCoord[5], pixelCoord[6], pixelCoord[7], spritesheetPixelWidth, spritesheetPixelHeight);
+		unhoverChecked = GetTexturePosition(pixelCoord[8], pixelCoord[9], pixelCoord[10], pixelCoord[11], spritesheetPixelWidth, spritesheetPixelHeight);
+		hoverChecked = GetTexturePosition(pixelCoord[12], pixelCoord[13], pixelCoord[14], pixelCoord[15], spritesheetPixelWidth, spritesheetPixelHeight);
 	}
-	node = root.GetNode("hover uncheck");
-	if (node.NodeIsValid())
+	else 
 	{
-		hoverUnchecked.proportionBeginX = node.GetNumber("x"); hoverUnchecked.proportionBeginY = node.GetNumber("y");
-		hoverUnchecked.proportionFinalX = node.GetNumber("w"); hoverUnchecked.proportionFinalY = node.GetNumber("h");
-	}
-	node = root.GetNode("unhover check");
-	if (node.NodeIsValid())
-	{
-		unhoverChecked.proportionBeginX = node.GetNumber("x"); unhoverChecked.proportionBeginY = node.GetNumber("y");
-		unhoverChecked.proportionFinalX = node.GetNumber("w"); unhoverChecked.proportionFinalY = node.GetNumber("h");
-	}
-	node = root.GetNode("hover check");
-	if (node.NodeIsValid())
-	{
-		hoverChecked.proportionBeginX = node.GetNumber("x"); hoverChecked.proportionBeginY = node.GetNumber("y");
-		hoverChecked.proportionFinalX = node.GetNumber("w"); hoverChecked.proportionFinalY = node.GetNumber("h");
+		ParsonNode node;
+		node = root.GetNode("unhover uncheck");
+		if (node.NodeIsValid())
+		{
+			unhoverUnchecked.proportionBeginX = node.GetNumber("x"); unhoverUnchecked.proportionBeginY = node.GetNumber("y");
+			unhoverUnchecked.proportionFinalX = node.GetNumber("w"); unhoverUnchecked.proportionFinalY = node.GetNumber("h");
+		}
+		node = root.GetNode("hover uncheck");
+		if (node.NodeIsValid())
+		{
+			hoverUnchecked.proportionBeginX = node.GetNumber("x"); hoverUnchecked.proportionBeginY = node.GetNumber("y");
+			hoverUnchecked.proportionFinalX = node.GetNumber("w"); hoverUnchecked.proportionFinalY = node.GetNumber("h");
+		}
+		node = root.GetNode("unhover check");
+		if (node.NodeIsValid())
+		{
+			unhoverChecked.proportionBeginX = node.GetNumber("x"); unhoverChecked.proportionBeginY = node.GetNumber("y");
+			unhoverChecked.proportionFinalX = node.GetNumber("w"); unhoverChecked.proportionFinalY = node.GetNumber("h");
+		}
+		node = root.GetNode("hover check");
+		if (node.NodeIsValid())
+		{
+			hoverChecked.proportionBeginX = node.GetNumber("x"); hoverChecked.proportionBeginY = node.GetNumber("y");
+			hoverChecked.proportionFinalX = node.GetNumber("w"); hoverChecked.proportionFinalY = node.GetNumber("h");
+		}
 	}
 
 	childOrder = root.GetInteger("childOrder");
@@ -121,6 +149,12 @@ bool C_UI_Slider::LoadState(ParsonNode& root)
 
 void C_UI_Slider::LoadBuffers()
 {
+	GLenum err = glGetError();
+	while (err != GL_NO_ERROR)
+	{
+		LOG("OpenGl error: %d", err);
+		err = glGetError();
+	}
 	const float texCoordsBuffer[] = {
 		0.0f, 1.0f, 0.0f, 1.0f,
 		1.0f, 0.0f, 1.0f, 0.0f,
@@ -155,6 +189,7 @@ void C_UI_Slider::HandleInput(C_UI** selectedUi)
 {
 	if (!IsActive())
 		return;
+
 	if (!hovered) 
 	{
 		if (*selectedUi == nullptr || *selectedUi == this)
@@ -166,16 +201,7 @@ void C_UI_Slider::HandleInput(C_UI** selectedUi)
 	else 
 	{
 		if (*selectedUi != this) 
-		{
 			hovered = false;
-			return;
-		}
-		if (!trackedVariable)
-			return;
-		else if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::POSITIVE_AXIS_DOWN)
-			*trackedVariable += (float)maxValue / (float)numRects;
-		else if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_DOWN || App->input->GetGameControllerAxis(0) == AxisState::NEGATIVE_AXIS_DOWN)
-			*trackedVariable -= (float)maxValue / (float)numRects;
 	}
 }
 
@@ -201,15 +227,14 @@ void C_UI_Slider::Draw2D()
 	glBindTexture(GL_TEXTURE_2D, id);
 
 	int checkedRects = 0;
-	if (*trackedVariable > maxValue)
-		maxValue = *trackedVariable;
-
-	checkedRects = ((*trackedVariable) * numRects) / maxValue;
+	checkedRects = (value * numRects) / maxValue;
+	if (maxValue <= 0)
+		checkedRects = 0;
 	Frame currentFrame;
 	if (hovered)
 		currentFrame = hoverChecked;
 	else
-		currentFrame = unhoverUnchecked;
+		currentFrame = unhoverChecked;
 
 	for (int i = 0; i < checkedRects; ++i) 
 	{
@@ -230,6 +255,41 @@ void C_UI_Slider::Draw2D()
 
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(newCoords), newCoords);
+		GLenum err = glGetError();
+		while (err != GL_NO_ERROR)
+		{
+			LOG("OpenGl error: %d", err);
+			unsigned int a = sizeof(newCoords);
+			int b = 500;
+			glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &b);
+			if (b != 96)
+			{
+				LOG("inputsize: %d existingSize: %d", a, b);
+				glBindBuffer(GL_ARRAY_BUFFER, 0);
+				// --- Delete Buffers
+				glDeleteBuffers(1, (GLuint*)&VAO);
+				glDeleteBuffers(1, (GLuint*)&VBO);
+				// --- Rebuild the buffers
+				glGenVertexArrays(1, &VAO);
+				glGenBuffers(1, &VBO);
+
+				glBindBuffer(GL_ARRAY_BUFFER, VBO);
+				glBufferData(GL_ARRAY_BUFFER, sizeof(newCoords), newCoords, GL_DYNAMIC_DRAW);
+
+				glBindVertexArray(VAO);
+
+				// position attribute
+				glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+				glEnableVertexAttribArray(0);
+
+				// texture coord attribute
+				glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+				glEnableVertexAttribArray(1);
+
+				glBindBuffer(GL_ARRAY_BUFFER, 0);
+			}
+			err = glGetError();
+		}
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		x += offset + rect.w;
@@ -274,42 +334,58 @@ void C_UI_Slider::Draw3D()
 {
 }
 
-void C_UI_Slider::InputValue(float* value, float maxValue)
+float C_UI_Slider::InputValue(float value, float maxValue, int numSquares)
 {
-	if (value)
-		return;
-
-	if (maxValue != -1)
+	if (value < 0)
+		value = 0;
+	if (maxValue >= 0)
 		this->maxValue = maxValue;
+	if (numSquares > 0)
+		numRects = numSquares;
+	if (value > this->maxValue)
+		value = this->maxValue;
+	
+	int checkedRects = (value * numRects) / this->maxValue;
+	this->value = checkedRects * (this->maxValue / ((float)numRects));
+	return this->value;
+}
 
-	trackedVariable = value;
-	int checkedRects = ((*trackedVariable) * numRects) / maxValue;
-	*trackedVariable = (float)numRects / this->maxValue * checkedRects;
+float C_UI_Slider::IncrementOneSquare()
+{
+	App->audio->aSourceUi->SetEvent("ui_navigate");
+	App->audio->aSourceUi->PlayFx(App->audio->aSourceUi->GetEventId());
+	if(value < maxValue)
+		value += (float)maxValue / (float)numRects;
+	return value;
+}
 
+float C_UI_Slider::DecrementOneSquare()
+{
+	App->audio->aSourceUi->SetEvent("ui_navigate");
+	App->audio->aSourceUi->PlayFx(App->audio->aSourceUi->GetEventId());
+	if (value > 0) //min 0??
+		value -= (float)maxValue / (float)numRects;
+	return value;
+}
+
+float C_UI_Slider::GetSliderValue() const
+{
+	return value;
+}
+
+bool C_UI_Slider::Hovered() const
+{
+	return hovered;
+}
+
+void C_UI_Slider::Hoverable(bool setTo)
+{
+	interactuable = setTo;
+	if (!interactuable)
+		hovered = false;
 }
 
 void C_UI_Slider::ResetInput()
 {
 	hovered = false;
-}
-
-Frame C_UI_Slider::GetTexturePosition(int pixelPosX, int pixelPosY, int pixelWidth, int pixelHeight)
-{
-	C_Material* cMaterial = GetOwner()->GetComponent<C_Material>();
-	if (!cMaterial)
-		return { 0, 0, 1, 1 };
-
-	uint32 id = cMaterial->GetTextureID();
-	unsigned int spritesheetPixelWidth, spritesheetPixelHeight = 0; cMaterial->GetTextureSize(spritesheetPixelWidth, spritesheetPixelHeight);
-	if (!spritesheetPixelWidth && !spritesheetPixelHeight)
-		return { 0, 0, 1, 1 };
-
-	Frame frame;
-	frame.proportionBeginX = (float)pixelPosX / spritesheetPixelWidth;
-	frame.proportionFinalX = ((float)pixelPosX + pixelWidth) / spritesheetPixelWidth;
-
-	frame.proportionBeginY = (float)pixelPosY / spritesheetPixelHeight;
-	frame.proportionFinalY = ((float)pixelPosY + pixelHeight) / spritesheetPixelHeight;
-
-	return frame;
 }

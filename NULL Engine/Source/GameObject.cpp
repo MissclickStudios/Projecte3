@@ -9,10 +9,18 @@
 
 #include "Application.h"
 #include "M_Renderer3D.h"																				// TMP. Move the Renderers generation elsewhere.
-
 #include "M_Camera3D.h"																					//TEMP. putting the cam if game time
 
 #include "R_Mesh.h"
+
+#include "RE_Mesh.h"
+#include "RE_Cuboid.h"
+#include "RE_Skeleton.h"
+#include "RE_Particle.h"
+
+#include "EmitterInstance.h"
+#include "Emitter.h"
+#include "Particle.h"
 
 #include "Component.h"
 #include "C_Transform.h"
@@ -31,12 +39,6 @@
 #include "C_CapsuleCollider.h"
 #include "C_ParticleSystem.h"
 #include "C_NavMeshAgent.h"
-//#include "C_PlayerController.h"
-//#include "C_BulletBehavior.h"
-//#include "C_PropBehavior.h"
-//#include "C_CameraBehavior.h"
-//#include "C_GateBehavior.h"
-
 #include "C_Canvas.h"
 #include "C_UI.h"
 #include "C_UI_Image.h"
@@ -44,7 +46,6 @@
 #include "C_UI_Button.h"
 #include "C_UI_Checkbox.h"
 #include "C_UI_Slider.h"
-
 #include "C_2DAnimator.h"
 
 #include "GameObject.h"
@@ -62,7 +63,6 @@ transform				(nullptr),
 isMasterRoot			(false),
 isSceneRoot				(false),
 isBone					(false),
-maintainThroughScenes	(false),
 toDelete				(false),
 show_bounding_boxes		(false)
 {
@@ -86,7 +86,6 @@ transform				(nullptr),
 isMasterRoot			(false),
 isSceneRoot				(false),
 isBone					(false),
-maintainThroughScenes	(false),
 toDelete				(false),
 show_bounding_boxes		(false)
 {
@@ -163,11 +162,12 @@ bool GameObject::SaveState(ParsonNode& root) const
 	root.SetBool("IsPrefab", isPrefab);
 
 	root.SetString("Name", name.c_str());
+
 	root.SetBool("IsActive", isActive);
 	root.SetBool("IsStatic", isStatic);
 	root.SetBool("IsSceneRoot", isSceneRoot);
-	root.SetBool("MaintainThroughScenes", maintainThroughScenes);
 	root.SetBool("ShowBoundingBoxes", show_bounding_boxes);
+
 	ParsonNode navNode = root.SetNode("NavigationInfo");
 	navNode.SetBool("isNavigable",isNavigable);
 	navNode.SetInteger("navigationArea", navigationArea);
@@ -195,7 +195,6 @@ bool GameObject::LoadState(ParsonNode& root)
 	isActive				= root.GetBool("IsActive");
 	isStatic				= root.GetBool("IsStatic");
 	isSceneRoot				= root.GetBool("IsSceneRoot");
-	maintainThroughScenes	= root.GetBool("MaintainThroughScenes");
 	show_bounding_boxes		= root.GetBool("ShowBoundingBoxes");
 
 	ParsonNode navNode = root.GetNode("NavigationInfo");
@@ -263,7 +262,8 @@ void GameObject::FreeComponents()
 		RELEASE(components[i]);
 	}
 
-	if(!components.empty()) components.clear();
+	if(!components.empty()) 
+		components.clear();
 }
 
 void GameObject::FreeChilds()
@@ -399,6 +399,100 @@ void GameObject::GetRenderers(std::vector<MeshRenderer>& meshRenderers, std::vec
 		if (collider && collider->ToShowCollider())
 		{
 			cuboidRenderers.push_back(CuboidRenderer(collider->GetCornerPoints(), CuboidType::COLLIDER));
+		}
+	}
+}
+
+void GameObject::GetRenderers(std::multimap<float, Renderer*>& renderers)
+{
+	if (toDelete)
+		return;
+	
+	float sortingValue = transform->GetWorldPosition().y;													// Create a namespace to handle different calculations for sorting values?
+
+	std::vector<C_Mesh*> cMeshes;	
+	GetComponents<C_Mesh>(cMeshes);
+
+	std::vector<C_ParticleSystem*> cParticles;
+	GetComponents<C_ParticleSystem>(cParticles);
+
+	C_Transform* cTransform = GetComponent<C_Transform>();
+	C_Material* cMaterial	= GetComponent<C_Material>();
+	C_Camera* cCamera		= GetComponent<C_Camera>();
+	C_Animator* cAnimator	= GetComponent<C_Animator>();
+
+	for (uint i = 0; i < cMeshes.size(); ++i)
+	{
+		if (cMeshes[i] != nullptr)
+		{
+			if (cMeshes[i]->IsActive() && cMeshes[i]->GetMesh() != nullptr)
+			{				
+				renderers.emplace(sortingValue, new RE_Mesh(cTransform, cMeshes[i], cMaterial));
+			}
+		}
+	}
+
+	cMeshes.clear();
+
+	for (uint i = 0; i < cParticles.size(); ++i)
+	{
+		if (cParticles[i] == nullptr /*|| cParticles[i]->resource == nullptr*/)
+			continue;
+
+		if (!cParticles[i]->IsActive() || cParticles[i]->emitterInstances.empty())
+			continue;
+
+		for (auto emInstance = cParticles[i]->emitterInstances.cbegin(); emInstance != cParticles[i]->emitterInstances.cend(); ++emInstance)
+		{
+			if ((*emInstance)->stopSpawn || (*emInstance)->GetEmitterTexture() == nullptr)
+				continue;
+
+			std::map<float, Particle*> activeParticles;
+			(*emInstance)->GetActiveParticles(activeParticles);
+
+			for (auto particleItem = activeParticles.cbegin(); particleItem != activeParticles.cend(); ++particleItem)
+			{
+				Particle* particle = particleItem->second;
+				renderers.emplace(sortingValue, new RE_Particle(particle->GetTransformAsPtr(), 1.0f, particle->color, (*emInstance)->GetEmitterTexture(), App->renderer->particleShader));
+			}
+
+			activeParticles.clear();
+		}
+	}
+
+	if (cCamera != nullptr)
+	{
+		if (!cCamera->FrustumIsHidden() && App->gameState != GameState::PLAY)
+		{
+			renderers.emplace(sortingValue, new RE_Cuboid(cCamera->GetFrustumVertices(), Cuboid_Type::FRUSTUM));
+		}
+	}
+
+	if (cAnimator != nullptr)
+	{
+		if (cAnimator->GetShowBones() || App->renderer->GetRenderSkeletons())
+		{
+			renderers.emplace(sortingValue, new RE_Skeleton(cAnimator->GetDisplayBones()));
+		}
+	}
+
+	if ((show_bounding_boxes || App->renderer->GetRenderBoundingBoxes()) && App->gameState != GameState::PLAY)
+	{
+		UpdateBoundingBoxes();																						// Make the call in C_Transform after receiving a dirty flag?
+
+		obb.GetCornerPoints(obb_vertices);
+		aabb.GetCornerPoints(aabb_vertices);
+
+		renderers.emplace(sortingValue, new RE_Cuboid(obb_vertices, Cuboid_Type::OBB));
+		renderers.emplace(sortingValue, new RE_Cuboid(aabb_vertices, Cuboid_Type::AABB));
+	}
+
+	if (App->renderer->GetRenderColliders())
+	{
+		C_BoxCollider* collider = GetComponent<C_BoxCollider>();
+		if (collider && collider->ToShowCollider())
+		{
+			renderers.emplace(sortingValue, new RE_Cuboid(collider->GetCornerPoints(), Cuboid_Type::COLLIDER));
 		}
 	}
 }
@@ -722,31 +816,6 @@ void GameObject::SetChildsIsStatic(const bool setTo, GameObject* parent)
 	}
 }
 
-bool GameObject::GetMaintainThroughScenes() const
-{
-	return maintainThroughScenes;
-}
-
-void GameObject::SetMaintainThroughScenes(const bool setTo)
-{
-	maintainThroughScenes = setTo;
-
-	std::vector<GameObject*> childs;
-	std::vector<GameObject*> parents;
-
-	GetAllChilds(childs);
-	GetAllParents(parents);
-
-	for (auto child = childs.cbegin(); child != childs.cend(); ++child)
-	{
-		(*child)->maintainThroughScenes = setTo;
-	}
-	for (auto parent = parents.cbegin(); parent != parents.cend(); ++parent)
-	{
-		(*parent)->maintainThroughScenes = setTo;
-	}
-}
-
 uint32 GameObject::GetParentUID() const
 {
 	return parent_uid;
@@ -899,7 +968,7 @@ void GameObject::GetUiComponents(std::vector<C_UI*>& uiComponents)
 {
 	for (uint i = 0; i < components.size(); ++i)
 	{																					
-		if (components[i] != nullptr && (components[i]->GetType() == ComponentType::UI_BUTTON || components[i]->GetType() == ComponentType::UI_IMAGE || components[i]->GetType() == ComponentType::UI_TEXT) || components[i]->GetType() == ComponentType::UI_CHECKBOX || components[i]->GetType() == ComponentType::UI_IMAGE || components[i]->GetType() == ComponentType::UI_TEXT || components[i]->GetType() == ComponentType::UI_SLIDER)
+		if (components[i] != nullptr && (components[i]->GetType() == ComponentType::UI_BUTTON || components[i]->GetType() == ComponentType::UI_IMAGE || components[i]->GetType() == ComponentType::UI_TEXT || components[i]->GetType() == ComponentType::UI_CHECKBOX || components[i]->GetType() == ComponentType::UI_IMAGE || components[i]->GetType() == ComponentType::UI_TEXT || components[i]->GetType() == ComponentType::UI_SLIDER))
 			uiComponents.push_back((C_UI*)components[i]);						
 	}																						
 }
@@ -908,7 +977,7 @@ C_UI* GameObject::GetUiComponent()
 {
 	for (uint i = 0; i < components.size(); ++i)
 	{
-		if (components[i] != nullptr && (components[i]->GetType() == ComponentType::UI_BUTTON || components[i]->GetType() == ComponentType::UI_IMAGE || components[i]->GetType() == ComponentType::UI_TEXT || components[i]->GetType() == ComponentType::UI_CHECKBOX || components[i]->GetType() == ComponentType::UI_IMAGE || components[i]->GetType() == ComponentType::UI_TEXT) || components[i]->GetType() == ComponentType::UI_SLIDER)
+		if (components[i] != nullptr && (components[i]->GetType() == ComponentType::UI_BUTTON || components[i]->GetType() == ComponentType::UI_IMAGE || components[i]->GetType() == ComponentType::UI_TEXT || components[i]->GetType() == ComponentType::UI_CHECKBOX || components[i]->GetType() == ComponentType::UI_IMAGE || components[i]->GetType() == ComponentType::UI_TEXT || components[i]->GetType() == ComponentType::UI_SLIDER))
 			return (C_UI*)components[i];
 	}
 	return nullptr;
@@ -918,7 +987,7 @@ void GameObject::SetUiChildOrder(int index)
 {
 	for (uint i = 0; i < components.size(); ++i)
 	{
-		if (components[i] != nullptr && (components[i]->GetType() == ComponentType::UI_BUTTON || components[i]->GetType() == ComponentType::UI_IMAGE || components[i]->GetType() == ComponentType::UI_TEXT || components[i]->GetType() == ComponentType::UI_CHECKBOX))
+		if (components[i] != nullptr && (components[i]->GetType() == ComponentType::UI_BUTTON || components[i]->GetType() == ComponentType::UI_IMAGE || components[i]->GetType() == ComponentType::UI_TEXT || components[i]->GetType() == ComponentType::UI_CHECKBOX || components[i]->GetType() == ComponentType::UI_TEXT || components[i]->GetType() == ComponentType::UI_SLIDER))
 			((C_UI*)components[i])->childOrder = index;
 	}
 }

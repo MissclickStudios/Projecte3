@@ -40,6 +40,9 @@
     <Filter Include="DialogSystem">
       <UniqueIdentifier>{ed3459db-f6b8-4548-a1d0-92a6eaf4371e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene managers">
+      <UniqueIdentifier>{4b7fcf41-3f9b-45c5-988d-334d17e16707}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Scripts\Headers\ScriptMacros.h">
@@ -192,6 +195,21 @@
     <ClInclude Include="..\Assets\Scripts\IG12.h">
       <Filter>Objects\Entities</Filter>
     </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\PlayerItemMenuManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\HUBGate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\BarrelExplosion.h">
+      <Filter>Objects\Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\CreditsSceneManager.h">
+      <Filter>Scene managers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Assets\Scripts\PlayIdleNPC.h">
+      <Filter>Objects\Environment</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Scripts\Helpers\CrossDllHelper.cpp">
@@ -328,6 +346,21 @@
     </ClCompile>
     <ClCompile Include="Scripts\Cpps\IG12.cpp">
       <Filter>Objects\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\PlayerItemMenuManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\HUBGate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\BarrelExplosion.cpp">
+      <Filter>Objects\Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\CreditsSceneManager.cpp">
+      <Filter>Scene managers</Filter>
+    </ClCompile>
+    <ClCompile Include="Scripts\Cpps\PlayIdleNPC.cpp">
+      <Filter>Objects\Environment</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

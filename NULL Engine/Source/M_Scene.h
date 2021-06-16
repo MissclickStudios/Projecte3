@@ -13,7 +13,6 @@ namespace math
 	class float3;
 }
 
-class C_AudioSource;
 class ParsonNode;
 class Primitive;
 class Resource;
@@ -44,14 +43,13 @@ public:
 	bool			SaveConfiguration(ParsonNode& root) const override;
 	bool			LoadConfiguration(ParsonNode& root) override;
 
-public:																									// --- GAME OBJECTS METHODS ---
-	bool			SaveScene(const char* sceneName = nullptr) const;									// If no name is given the scene_root node's name will be used.
-	bool			LoadScene(const char* path);														// For now asks for full path
-	bool			CleanUpCurrentScene(std::vector<GameObject*>& parentMaintained);
+public:																													// --- GAME OBJECTS METHODS ---
+	bool			SaveScene(const char* sceneName = nullptr) const;													// If no name is given the scene_root node's name will be used.
+	bool			LoadScene(const char* path);																		// For now asks for full path
 
 	void			SaveCurrentScene();
-	bool			SaveSceneAs(const char* sceneName = nullptr);										// To be called from editor
-	bool			NewScene();																			// Opens a new scene
+	bool			SaveSceneAs(const char* sceneName = nullptr);														// To be called from editor
+	bool			NewScene();																							// Opens a new scene
 	
 	void			UpdateSceneFromRoot(GameObject* root);
 	void			RefreshSceneTransforms();
@@ -61,98 +59,94 @@ public:																									// --- GAME OBJECTS METHODS ---
 	GameObject*		LoadPrefabIntoScene(ParsonNode* a, GameObject* parent);
 	void			LoadPrefabObject(GameObject* gameObject, ParsonNode* node);
 	
-	GameObject*		InstantiatePrefab(uint prefabID,GameObject* parent,float3 position,Quat rotation);
+	GameObject*		InstantiatePrefab(uint prefabID,GameObject* parent,float3 position,Quat rotation,float3 globalPos = float3::zero);
 
-	std::vector<GameObject*>*	GetGameObjects			();
+	std::vector<GameObject*>*	GetGameObjects();
 	
-	GameObject*		CreateGameObject					(const char* name = nullptr, GameObject* parent = nullptr);			// 
-	void			DeleteGameObject					(GameObject* gameObject, int index = -1);							// 
+	GameObject*		CreateGameObject(const char* name = nullptr, GameObject* parent = nullptr);							// 
+	void			DeleteGameObject(GameObject* gameObject, int index = -1);											// 
 
-	void			AddGameObjectToVector				(GameObject* gameObject);											//
+	void			AddGameObjectToVector(GameObject* gameObject);														//
 
-	void			AddGameObjectToScene				(GameObject* gameObject,GameObject* parent = nullptr);				// Will integrate the game object into scene as well as its childs
-	void			AddGameObjectChildrenToScene		(GameObject* gameObject);											// Recursive call to add the chidlren
+	void			AddGameObjectToScene(GameObject* gameObject,GameObject* parent = nullptr);							// Will integrate the game object into scene as well as its childs
+	void			AddGameObjectChildrenToScene(GameObject* gameObject);												// Recursive call to add the children
 
-	//void			CopyGameObject(GameObject* gameObject); //TODO copy game Object
+	GameObject*		GenerateGameObjectsFromModel(const R_Model* rModel, const float3& scale = float3::zero);			//
+	bool			ApplyTextureToSelectedGameObject(const uint32& textureUid);											//
 
-	GameObject*		GenerateGameObjectsFromModel		(const R_Model* rModel, const float3& scale = float3::zero);		//
-	bool			ApplyTextureToSelectedGameObject	(const uint32& textureUid);											//
+	void			CreateComponentsFromModelNode(const ModelNode& modelNode, GameObject* gameObject);
+	void			CreateAnimationComponentFromModel(const R_Model* rModel, GameObject* gameObject);
 
-	void			CreateComponentsFromModelNode		(const ModelNode& modelNode, GameObject* gameObject);
-	void			CreateAnimationComponentFromModel	(const R_Model* rModel, GameObject* gameObject);
+public:																													// --- MASTER ROOT & SCENE ROOT METHODS ---
+	void			CreateMasterRoot();																					// 
+	void			DeleteMasterRoot();																					// 
+	GameObject*		GetMasterRoot() const;																				// 
 
-public:																														// --- MASTER ROOT & SCENE ROOT METHODS ---
-	void			CreateMasterRoot					();																	// 
-	void			DeleteMasterRoot					();																	// 
-	GameObject*		GetMasterRoot						() const;															// 
+	const char*		GetCurrentScene() const;
+	const char*		GetCurrentSceneJson() const;
+	void			CreateSceneRoot(const char* sceneName);																//
+	GameObject*		GetSceneRoot() const;																				//
+	void			SetSceneRoot(GameObject* gameObject);																//
+	void			ChangeSceneName(const char* newName);																//
 
-	const char*		GetCurrentScene						() const;
-	void			CreateSceneRoot						(const char* sceneName);											//
-	GameObject*		GetSceneRoot						() const;															//
-	void			SetSceneRoot						(GameObject* gameObject);											//
-	void			ChangeSceneName						(const char* newName);												//
+	void			CreateSceneCamera(const char* cameraName);
+	C_Camera*		GetCullingCamera() const;
+	void			SetCullingCamera(C_Camera* cullingCamera);
+	bool			GameObjectIsInsideCullingCamera(GameObject* gameObject);
+	GameObject*		GetGameObjectByUID(uint32 UID);
+	GameObject*		GetGameObjectByName(const char* name);
+public:																													// --- SELECTED GAME OBJECT METHODS ---
+	GameObject*		GetSelectedGameObject() const;																		// 
+	void			SetSelectedGameObject(GameObject* gameObject);														// 
+	void			DeleteSelectedGameObject();																			// 
 
-	void			CreateSceneCamera					(const char* cameraName);
-	C_Camera*		GetCullingCamera					() const;
-	void			SetCullingCamera					(C_Camera* cullingCamera);
-	bool			GameObjectIsInsideCullingCamera		(GameObject* gameObject);
-	GameObject*		GetGameObjectByUID					(uint32 UID);
-	GameObject*		GetGameObjectByName					(const char* name);
-public:																														// --- SELECTED GAME OBJECT METHODS ---
-	GameObject*		GetSelectedGameObject				() const;															// 
-	void			SetSelectedGameObject				(GameObject* gameObject);											// 
-	void			DeleteSelectedGameObject			();																	// 
+public:																													// --- SELECT THROUGH RAYCAST
+	void			SelectGameObjectThroughRaycast(const LineSegment& ray);
+	void			GetRaycastHits(const LineSegment& ray, std::map<float, GameObject*>& hits);
+	void			GetFaces(const std::vector<float>& vertices, std::vector<Triangle>& faces);
 
-public:																														// --- SELECT THROUGH RAYCAST
-	void			SelectGameObjectThroughRaycast		(const LineSegment& ray);
-	void			GetRaycastHits						(const LineSegment& ray, std::map<float, GameObject*>& hits);
-	void			GetFaces							(const std::vector<float>& vertices, std::vector<Triangle>& faces);
+public:																													// --- SCENE LIGHT METHODS
+	void			AddSceneLight(GameObject* light);																	// Set the light in the scene with the given
+	bool			CheckSceneLight();																					// Check if there is a light already in the scene
+	bool			SceneHasLights();
+	void			GetAllLights(std::vector<GameObject*>& allLights);													// Return the light in the scene
+	void			GetDirLights(std::vector<GameObject*>& dirLights);
+	void			GetPointLights(std::vector<GameObject*>& pointLights);
 
-public:																														// --- SCENE LIGHT METHODS
-	void			AddSceneLight						(GameObject* light);												// Set the light in the scene with the given
-	bool			CheckSceneLight						();																	// Check if there is a light already in the scene
-	bool			SceneHasLights						();
-	void			GetAllLights						(std::vector<GameObject*>& allLights);								// Return the light in the scene
-	void			GetDirLights						(std::vector<GameObject*>& dirLights);
-	void			GetPointLights						(std::vector<GameObject*>& pointLights);
+	void			NextRoom();
+	void			ScriptChangeScene(const std::string& sceneName);
+	void			DoSceneTransition(R_Shader* screenShader, float transitionSpeed);
 
-	void NextRoom();
-
-	void HandleCopyGO();
-
-	void ResolveScriptGoPointer(const uint32 uid, GameObject** object);
-
-	void ShowFPS();
-
-	void ScriptChangeScene(const std::string& sceneName);
-
-	void DoSceneTransition(R_Shader* screenShader, float transitionSpeed);
+	void			HandleCopyGO();
+	void			ResolveScriptGoPointer(const uint32 uid, GameObject** object);
 	
+	void			ShowFPS();
+
+public:
+	bool creditsMainMenu = false;
+
 private:
 	std::vector<GameObject*> gameObjects;
-	std::multimap<uint32, std::pair<uint32, std::string>> models;															// Models currently loaded on scene and their correspondent GO.
-																															// <goUID, <rUID, rAssetName>>
+	std::multimap<uint32, std::pair<uint32, std::string>> models;														// Models currently loaded on scene and their correspondent GO.
+																														// <goUID, <rUID, rAssetName>>
 
-	GameObject*						masterRoot;																				// Root of everything. Parent of all scenes.
-	GameObject*						sceneRoot;																				// Root of the current scene.
-	GameObject*						animationRoot;																			// TMP Just for the 3rd Assignment Delivery
-	GameObject*						selectedGameObject;																		// Represents the game object that's currently being selected.
-	GameObject* showFps;
-	//GameObject* copiedGO = nullptr;
+	GameObject*		masterRoot;																							// Root of everything. Parent of all scenes.
+	GameObject*		sceneRoot;																							// Root of the current scene.
+	GameObject*		animationRoot;																						// TMP Just for the 3rd Assignment Delivery
+	GameObject*		selectedGameObject;																					// Represents the game object that's currently being selected.
+	GameObject*		showFps;
 
-	C_Camera*						cullingCamera;																			// Culling Camera
+	C_Camera*		cullingCamera;																						// Culling Camera
 
-	C_AudioSource*					music = nullptr;
-
-	std::string currentScene;
+	std::string		currentScene;
 
 	std::vector<std::pair<uint32, GameObject**>> toAdd;
 
 private:
-	bool nextScene = false;
-	bool noTransitions = false;
-	float transitionProgresion;
-	std::string nextSceneName;
+	bool			nextScene = false;
+	bool			noTransitions = false;
+	float			transitionProgresion;
+	std::string		nextSceneName;
 
 	friend class EngineApplication;
 };

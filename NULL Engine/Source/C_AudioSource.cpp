@@ -62,7 +62,6 @@ bool C_AudioSource::SaveState(ParsonNode& root) const
 	eventInfoArray.SetString(eventName.c_str());
 	eventInfoArray.SetNumber(eventId);
 
-
 	return true;
 }
 
@@ -76,13 +75,14 @@ bool C_AudioSource::LoadState(ParsonNode& root)
 	return true;
 }
 
-void C_AudioSource::SetEvent(std::string name,  unsigned int id)
+void C_AudioSource::SetEvent(std::string name,  unsigned int id, bool loop)
 {
+	isLoopeable = loop;
 	eventName = name;
 	eventId = id;
 }
 
-void C_AudioSource::SetEvent(std::string name)
+void C_AudioSource::SetEvent(std::string name, bool loop)
 {
 	std::map<std::string, unsigned int>::const_iterator it = App->audio->eventMap.find(name);
 
@@ -91,6 +91,8 @@ void C_AudioSource::SetEvent(std::string name)
 		eventName = (*it).first;
 		eventId = (*it).second;
 	}
+
+	isLoopeable = loop;
 }
 
 void C_AudioSource::GetEvent(std::string* deu, unsigned int* ola) const
@@ -111,11 +113,7 @@ unsigned int C_AudioSource::GetEventId() const
 
 void C_AudioSource::PlayFx(unsigned int eventId)
 {
-	//if (!isPlaying)
-	//{
-		wwiseObject->PlayEvent(eventId);
-	//	isPlaying = true;
-	//}
+	wwiseObject->PlayEvent(eventId);
 }
 
 void C_AudioSource::PlayFx(std::string name)
@@ -123,40 +121,24 @@ void C_AudioSource::PlayFx(std::string name)
 	std::map<std::string, unsigned int>::const_iterator it = App->audio->eventMap.find(name);
 
 	if (it != App->audio->eventMap.end())
-	{
-		if (!isPlaying)
-		{
-			wwiseObject->PlayEvent(eventId);
-			isPlaying = true;
-		}
+	{	
+		wwiseObject->PlayEvent(eventId);
 	}
 }
 
 void C_AudioSource::PauseFx(unsigned int eventId)
 {
-	if (isPlaying)
-	{
-		wwiseObject->PauseEvent(eventId);
-		isPlaying = false;
-	}
+	wwiseObject->PauseEvent(eventId);
 }
 
 void C_AudioSource::ResumeFx(unsigned int eventId)
 {
-	if (!isPlaying)
-	{
-		wwiseObject->ResumeEvent(eventId);
-		isPlaying = true;
-	}
+	wwiseObject->ResumeEvent(eventId);
 }
 
 void C_AudioSource::StopFx(unsigned int eventId)
 {
-	if (isPlaying)
-	{
-		wwiseObject->StopEvent(eventId);
-		isPlaying = false;
-	}
+	wwiseObject->StopEvent(eventId);
 }
 
 float C_AudioSource::GetVolume()

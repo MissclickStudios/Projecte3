@@ -8,11 +8,13 @@
 #include "C_Animator.h"
 #include "C_ParticleSystem.h"
 #include "C_BoxCollider.h"
+#include "C_AudioSource.h"
 
 #include "SarlaacTrap.h"
 
-SarlaacTrap::SarlaacTrap() : Script()
+SarlaacTrap::SarlaacTrap() : Object()
 {
+	baseType = ObjectType::EXPLOSIVE_BARREL; // cant be bothered creating this useless type, i rather prefer shotting myself in the foot than staving myself in the heart
 }
 
 SarlaacTrap::~SarlaacTrap()
@@ -21,32 +23,63 @@ SarlaacTrap::~SarlaacTrap()
 
 void SarlaacTrap::Start()
 {
-
 	sarlaacAnimator = gameObject->GetComponent<C_Animator>();
+	sarlaacAnimator->PlayClip("Preview", animationName.c_str(), 0u);
 
-	GameObject* idleParticlesGO = gameObject->FindChild("Idle");
-	GameObject* attackParticlesGO = gameObject->FindChild("Attack");
+	sarlaacAudio = new C_AudioSource(gameObject);
+	sarlaccAttackAudio = new C_AudioSource(gameObject);
 
-	idleParticles = (idleParticlesGO != nullptr) ? idleParticlesGO->GetComponent<C_ParticleSystem>() : nullptr;
-	attackParticles = (attackParticlesGO != nullptr) ? attackParticlesGO->GetComponent<C_ParticleSystem>() : nullptr;
+	if (sarlaacAudio != nullptr)
+		sarlaacAudio->SetEvent("sarlacc_active");
 
-	(idleParticles != nullptr) ? idleParticles->StopSpawn() : LOG("[ERROR] SarlaccTrap Script: Could not find { IDLE } Particle System!");
-	(attackParticles != nullptr) ? attackParticles->StopSpawn() : LOG("[ERROR] SarlaccTrap Script: Could not find { ATTACK } Particle System!");
+	if (sarlaccAttackAudio != nullptr)
+		sarlaccAttackAudio->SetEvent("sarlacc_attack");
+
+	GameObject* particlesGO = gameObject->FindChild("Idle");
+	idleParticles	= (particlesGO != nullptr) ? particlesGO->GetComponent<C_ParticleSystem>() : nullptr;
+
+	particlesGO		= gameObject->FindChild("Attack");
+	attackParticles = (particlesGO != nullptr) ? particlesGO->GetComponent<C_ParticleSystem>() : nullptr;
+
+	/*if (idleParticles != nullptr)
+		idleParticles->StopSpawn();
+
+	if (attackParticles != nullptr)
+		attackParticles->StopSpawn();*/
 }
 
 void SarlaacTrap::Update()
 {	
+	if (paused)
+		return;
+
+	if (!initialized)
+	{
+		sarlaacAnimator->PlayClip("Preview", animationName.c_str(), 0u);
+		initialized = true;
+	}
+
 	switch (state)
 	{
 
 	case SarlaacState::IDLE:
-		if (idleParticles != nullptr)
-			idleParticles->ResumeSpawn();
+
+		//idleParticles->ResumeSpawn();
+
 		break;
 
 	case SarlaacState::DAMAGING:
 
 		state = SarlaacState::SLEEPING;
+
+		//Animator play clip
+		sarlaacAnimator->PlayClip("Preview", animationName.c_str(), 0u);
+
+		if (sarlaccAttackAudio != nullptr)
+			sarlaccAttackAudio->PlayFx(sarlaccAttackAudio->GetEventId());
+
+		//idleParticles->StopSpawn();
+		
 
 		break;
 
@@ -71,13 +104,16 @@ void SarlaacTrap::Update()
 		{
 			state = SarlaacState::IDLE;
 			animationTimer = 0.f;
-
-			if (attackParticles != nullptr)
-				attackParticles->StopSpawn();
 		}
 		else
 		{
 			animationTimer += MC_Time::Game::GetDT();
+
+			/*if(animationTimer >= (sleepingTime * 0.25f))
+				attackParticles->ResumeSpawn();
+
+			if (animationTimer >= (sleepingTime * 0.5f))
+				attackParticles->StopSpawn();*/
 		}
 
 		break;
@@ -87,10 +123,18 @@ void SarlaacTrap::Update()
 
 void SarlaacTrap::CleanUp()
 {
+	if (sarlaacAudio != nullptr)
+		delete sarlaacAudio;
+
+	if (sarlaccAttackAudio != nullptr)
+		delete sarlaccAttackAudio;
 }
 
 void SarlaacTrap::OnTriggerRepeat(GameObject* object)
 {
+	if (paused)
+		return;
+
 	Entity* entity = (Entity*)GetObjectScript(object, ObjectType::ENTITY);
 
 	if (!entity)
@@ -108,7 +152,10 @@ void SarlaacTrap::OnTriggerRepeat(GameObject* object)
 
 		case SarlaacState::DAMAGING:
 
-			entity->TakeDamage(damage);
+			if(entity->type == EntityType::PLAYER)
+				entity->TakeDamage(mandoDamage);
+			else
+				entity->TakeDamage(enemyDamage);
 
 			break;
 
@@ -121,20 +168,25 @@ void SarlaacTrap::OnTriggerRepeat(GameObject* object)
 			break;
 	}
 	
-	
-
 }
 
 void SarlaacTrap::StartMoving()
 {
 	state = SarlaacState::MOVING;
 
-	if (idleParticles != nullptr)
-		idleParticles->StopSpawn();
-
-	if (attackParticles != nullptr)
-		attackParticles->ResumeSpawn();
-
 	//Animator play clip
-	sarlaacAnimator->PlayClip("Preview",animationName.c_str(), 0u);
+	//sarlaacAnimator->PlayClip("Preview",animationName.c_str(), 0u);
+
+	if (sarlaacAudio != nullptr)
+		sarlaacAudio->PlayFx(sarlaacAudio->GetEventId());
+}
+
+SarlaacTrap* CreateSarlaacTrap() {
+	SarlaacTrap* script = new SarlaacTrap();
+	INSPECTOR_INPUT_INT(script->mandoDamage);
+	INSPECTOR_INPUT_INT(script->enemyDamage);
+	INSPECTOR_STRING(script->animationName);
+	INSPECTOR_DRAGABLE_FLOAT(script->activationTime);
+	INSPECTOR_DRAGABLE_FLOAT(script->sleepingTime);
+	return script;
 }

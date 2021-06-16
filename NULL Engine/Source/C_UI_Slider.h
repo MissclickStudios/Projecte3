@@ -27,11 +27,15 @@ public:
 	void Draw2D() override;
 	void Draw3D() override;
 
-	void InputValue(float* value, float maxValue = -1);
+	float InputValue(float value, float maxValue = -1, int numSquares = -1);
+	float IncrementOneSquare();
+	float DecrementOneSquare();
+	float GetSliderValue() const;
+	bool Hovered()const;
+	void Hoverable(bool setTo);
 
 private:
 	void ResetInput()override;
-	Frame GetTexturePosition(int pixelPosX, int pixelPosY, int pixelWidth, int pixelHeight);
 
 private:
 	unsigned int VAO;
@@ -46,8 +50,8 @@ private:
 
 	bool hovered = false;
 	int numRects = 1;
-	float maxValue = 0;
-	float* trackedVariable = nullptr;
+	float maxValue = 1;
+	float value = 0;
 	float offset = 0.1f;
 	//int minValue = 0; ??
 

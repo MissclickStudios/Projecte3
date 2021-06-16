@@ -3,6 +3,7 @@
 
 #include "M_Scene.h"
 #include "M_Input.h"
+#include "M_Audio.h"
 
 #include "C_Material.h"
 #include "C_Transform.h"
@@ -14,6 +15,7 @@
 
 #include "C_UI_Button.h"
 #include "C_Canvas.h"
+#include "C_AudioSource.h"
 
 #include "Dependencies/glew/include/glew.h"
 //#include "OpenGL.h"
@@ -112,6 +114,8 @@ void C_UI_Button::HandleInput(C_UI** selectedUi)
 		}
 		break;
 	case UIButtonState::PRESSEDIN:
+		App->audio->aSourceUi->SetEvent("ui_click");
+		App->audio->aSourceUi->PlayFx(App->audio->aSourceUi->GetEventId());
 		state = UIButtonState::PRESSED;
 		break;
 	case UIButtonState::PRESSED:
@@ -187,6 +191,42 @@ void C_UI_Button::Draw2D()
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(newCoords), newCoords);
+	GLenum err = glGetError();
+	while (err != GL_NO_ERROR)
+	{
+		LOG("OpenGl error: %d", err);
+		unsigned int a = sizeof(newCoords);
+		int b = 500;
+		glGetBufferParameteriv(GL_ARRAY_BUFFER, GL_BUFFER_SIZE, &b);
+		if (b != 96)
+		{
+			LOG("inputsize: %d existingSize: %d", a, b);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			// --- Delete Buffers
+			glDeleteBuffers(1, (GLuint*)&VAO);
+			glDeleteBuffers(1, (GLuint*)&VBO);
+			// --- Rebuild the buffers
+			glGenVertexArrays(1, &VAO);
+			glGenBuffers(1, &VBO);
+	
+			glBindBuffer(GL_ARRAY_BUFFER, VBO);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(newCoords), newCoords, GL_DYNAMIC_DRAW);
+	
+			glBindVertexArray(VAO);
+	
+			// position attribute
+			glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+			glEnableVertexAttribArray(0);
+	
+			// texture coord attribute
+			glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+			glEnableVertexAttribArray(1);
+
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+	
+		}
+		err = glGetError();
+	}
 
 	glBindVertexArray(VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -233,28 +273,6 @@ void C_UI_Button::ResetInput()
 	state = UIButtonState::IDLE;
 }
 
-Frame C_UI_Button::GetTexturePosition(int pixelPosX, int pixelPosY, int pixelWidth, int pixelHeight)
-{
-
-	C_Material* cMaterial = GetOwner()->GetComponent<C_Material>();
-	if (!cMaterial)
-		return { 0, 0, 1, 1 };
-
-	uint32 id = cMaterial->GetTextureID();
-	unsigned int spritesheetPixelWidth, spritesheetPixelHeight = 0; cMaterial->GetTextureSize(spritesheetPixelWidth, spritesheetPixelHeight);
-	if (!spritesheetPixelWidth && !spritesheetPixelHeight)
-		return { 0, 0, 1, 1 };
-
-	Frame frame;
-	frame.proportionBeginX = (float)pixelPosX / spritesheetPixelWidth;
-	frame.proportionFinalX = ((float)pixelPosX + pixelWidth) / spritesheetPixelWidth;
-
-	frame.proportionBeginY = (float)pixelPosY / spritesheetPixelHeight;
-	frame.proportionFinalY = ((float)pixelPosY + pixelHeight) / spritesheetPixelHeight;
-
-	return frame;
-}
-
 bool C_UI_Button::SaveState(ParsonNode& root) const
 {
 	root.SetNumber("Type", (uint)GetType());
@@ -269,6 +287,18 @@ bool C_UI_Button::SaveState(ParsonNode& root) const
 	root.SetNumber("hoveredr", hovered.r); root.SetNumber("hoveredg", hovered.g); root.SetNumber("hoveredb", hovered.b); root.SetNumber("hovereda", hovered.a);
 	root.SetNumber("pressedr", pressed.r); root.SetNumber("pressedg", pressed.g); root.SetNumber("pressedb", pressed.b); root.SetNumber("presseda", pressed.a);
 	
+	C_Material* cMaterial = GetOwner()->GetComponent<C_Material>();
+	if (cMaterial)
+	{
+		uint32 id = cMaterial->GetTextureID();
+		unsigned int spritesheetPixelWidth, spritesheetPixelHeight = 0; cMaterial->GetTextureSize(spritesheetPixelWidth, spritesheetPixelHeight);
+		if (spritesheetPixelWidth && spritesheetPixelHeight)
+		{
+			ParsonNode size = root.SetNode("textureSize");
+			size.SetInteger("textureWidth", spritesheetPixelWidth);
+			size.SetInteger("textureHeight", spritesheetPixelHeight);
+		}
+	}
 	//textCoords
 	ParsonArray pixelCoords = root.SetArray("pixelCoords");
 	for (int i = 0; i < 4; ++i)
@@ -307,12 +337,22 @@ bool C_UI_Button::LoadState(ParsonNode& root)
 		for (int i = 0; i < pixelCoords.size; ++i)
 			pixelCoord[i] = (int)pixelCoords.GetNumber(i);
 
-	ParsonNode node;
-	node = root.GetNode("textureCoords");
-	if (node.NodeIsValid())
+	ParsonNode size = root.GetNode("textureSize");
+	if (size.NodeIsValid())
 	{
-		textCoord.proportionBeginX = node.GetNumber("x"); textCoord.proportionBeginY = node.GetNumber("y");
-		textCoord.proportionFinalX = node.GetNumber("w"); textCoord.proportionFinalY = node.GetNumber("h");
+		int spritesheetPixelWidth = size.GetInteger("textureWidth");
+		int spritesheetPixelHeight = size.GetInteger("textureHeight");
+		textCoord = GetTexturePosition(pixelCoord[0], pixelCoord[1], pixelCoord[2], pixelCoord[3], spritesheetPixelWidth, spritesheetPixelHeight);
+	}
+	else 
+	{
+		ParsonNode node;
+		node = root.GetNode("textureCoords");
+		if (node.NodeIsValid())
+		{
+			textCoord.proportionBeginX = node.GetNumber("x"); textCoord.proportionBeginY = node.GetNumber("y");
+			textCoord.proportionFinalX = node.GetNumber("w"); textCoord.proportionFinalY = node.GetNumber("h");
+		}
 	}
 
 	childOrder = root.GetInteger("childOrder");

@@ -44,48 +44,45 @@ public:
 	virtual inline ResourceType GetType() { return type; }
 
 public:
-	ResourceType		GetType					() const;											// 
-	const char*			GetTypeAsString			() const;											// 
+	ResourceType	GetType() const;																// 
+	const char*		GetTypeAsString() const;														// 
 	
-	uint32				GetUID					() const;											// 
-	void				ForceUID				(const uint32& UID);								// 
+	uint32			GetUID() const;																	// 
+	void			ForceUID(const uint32& UID);													// 
 	
-	uint				GetReferences			() const;											// 
-	void				SetReferences			(const uint& references);							// 
-	void				ModifyReferences		(int modification);									//
+	uint			GetReferences() const;															// 
+	void			SetReferences(const uint& references);											// 
+	void			ModifyReferences(int modification);												//
 
 public:
-	const char*			GetAssetsPath			() const;											// 
-	const char*			GetAssetsFile			() const;											// 
-	const char*			GetLibraryPath			() const;											// 
-	const char*			GetLibraryFile			() const;											// 
+	const char*		GetAssetsPath() const;															// 
+	const char*		GetAssetsFile() const;															// 
+	const char*		GetLibraryPath() const;															// 
+	const char*		GetLibraryFile() const;															// 
 
-	void				SetAssetsPath			(const char* assetsPath);							// 
-	void				SetAssetsFile			(const char* assetsFile);							// 
-	void				SetLibraryPath			(const char* libraryPath);							// 
-	void				SetLibraryFile			(const char* libraryFile);							// 
+	void			SetAssetsPath(const char* assetsPath);											// 
+	void			SetAssetsFile(const char* assetsFile);											// 
+	void			SetLibraryPath(const char* libraryPath);										// 
+	void			SetLibraryFile(const char* libraryFile);										// 
 
-	void				SetAssetsPathAndFile	(const char* assetsPath, const char* assetsFile);	// 
-	void				SetLibraryPathAndFile	();													// 
-
-	//ImporterSettings	GetImporterSettings	();
-	//void				SetImporterSettings	(ImporterSettings importer_settings);
+	void			SetAssetsPathAndFile(const char* assetsPath, const char* assetsFile);			// 
+	void			SetLibraryPathAndFile();														// 
 
 public:
-	bool hasForcedUID;
+	bool			hasForcedUID;
 
 private:
-	ResourceType		type;
+	ResourceType	type;
 
-	uint32				uid;															// UID for this Resource.
-	uint				references;
+	uint32			uid;																			// UID for this Resource.
+	uint			references;
 
-	std::string			assetsPath;														// Path of the file in the Assets directory. Will be used to avoid making duplicates.
-	std::string			assetsFile;														// File and extension string of the texture in the Assets directory.
-	std::string			libraryPath;													// Path of the file in the Library directory. Will be used to avoid making duplicates.
-	std::string			libraryFile;													// File and extension string of the texture in the Library directory.
+	std::string		assetsPath;																		// Path of the file in the Assets directory. Will be used to avoid making duplicates.
+	std::string		assetsFile;																		// File and extension string of the texture in the Assets directory.
+	std::string		libraryPath;																	// Path of the file in the Library directory. Will be used to avoid making duplicates.
+	std::string		libraryFile;																	// File and extension string of the texture in the Library directory.
 
-	ImportSettings		importSettings;
+	ImportSettings	importSettings;
 };
 
 #endif // !__RESOURCE_H__

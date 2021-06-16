@@ -164,7 +164,7 @@ bool C_Script::LoadState(ParsonNode& root)
 							(*(float3*)inspectorVariables[i].ptr).z = variable.GetNumber("float3z");
 							break;
 						case InspectorScriptData::STRING:
-							*(std::string*)inspectorVariables[i].ptr = variable.GetString("string"); break;
+							App->scriptManager->SetString(inspectorVariables[i].ptr, variable.GetString("string")); break;
 						case InspectorScriptData::DataType::PREFAB:
 							*(Prefab*)inspectorVariables[i].ptr = App->resourceManager->prefabs[(unsigned int)variable.GetInteger("prefab")]; break;
 						case InspectorScriptData::DataType::GAMEOBJECT:  //TODO: FINISH THIS !!!!

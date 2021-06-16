@@ -1,0 +1,530 @@
+{
+    "ModTime": 1623517919,
+    "Models In Scene": [
+        {
+            "GameObjectUID": 1444845295,
+            "ModelResourceUID": 1068552071,
+            "ModelAssetsPath": "Assets\/Models\/Primitives\/plane.fbx"
+        }
+    ],
+    "Game Objects": [
+        {
+            "UID": 57158828,
+            "ParentUID": 442196747,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "CreditsText",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": true,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 22,
+                    "Text": "Creditsu",
+                    "Color": [
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    "X": -0.36500000953674316,
+                    "Y": -0.10499999672174454,
+                    "W": 0.056000001728534698,
+                    "H": 0.0010000000474974513,
+                    "childOrder": 0
+                }
+            ]
+        },
+        {
+            "UID": 442196747,
+            "ParentUID": 575581970,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Canvas",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": true,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        0.99999964237213135,
+                        1,
+                        0.99999964237213135
+                    ]
+                },
+                {
+                    "Type": 5,
+                    "FarPlane": 300,
+                    "MinFOV": 1,
+                    "MaxFOV": 120,
+                    "Culling": false,
+                    "OrthogonalView": false,
+                    "HideFrustum": true
+                },
+                {
+                    "Type": 13,
+                    "Canvas": {
+                        "IsActive": true,
+                        "X": 0,
+                        "Y": 0,
+                        "W": 1.0926049947738647,
+                        "H": 0.5787392258644104
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 518770563,
+            "ParentUID": 575581970,
+            "PrefabID": 316805506,
+            "IsPrefab": true,
+            "Name": "Game Manager",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        4.5547666549682617,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 8,
+                    "Is Static": true,
+                    "Filter": " void"
+                },
+                {
+                    "Type": 9,
+                    "Is Trigger": false,
+                    "Show Collider": true,
+                    "Size X": 1000,
+                    "Size Y": 100,
+                    "Size Z": 1000,
+                    "Center X": 0,
+                    "Center Y": -75,
+                    "Center Z": 0
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 1796064373,
+                    "AssetsPath": "Assets\/Scripts\/\/GameManager.h",
+                    "DataName": "GameManager",
+                    "HasInspector": true,
+                    "InspectorVariables": [
+                        {
+                            "Type": 1,
+                            "Name": "enabled",
+                            "bool": true
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "mainMenuScene",
+                            "string": "MainMenu"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "SpawnPointName",
+                            "string": "PlayerSpawn"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "loseSceneName",
+                            "string": "Assets\/Scenes\/LoseScene.json"
+                        },
+                        {
+                            "Type": 5,
+                            "Name": "cameraName",
+                            "string": "GameCameraVS2"
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "l1Easy",
+                            "int": 1
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "l1Intermediate",
+                            "int": 4
+                        },
+                        {
+                            "Type": 7,
+                            "Name": "level1",
+                            "vectorstring": [
+                                "Level1_Room3B.json",
+                                "Level1_Room7B.json",
+                                "Level1_Room1B.json",
+                                "Level1_Room2B.json",
+                                "Level1_Room6B.json",
+                                "Level1_Room4B.json",
+                                "Level1_Room5B.json"
+                            ]
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "RuinsEasy",
+                            "int": 1
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "RuinsIntermediate",
+                            "int": 4
+                        },
+                        {
+                            "Type": 7,
+                            "Name": "level1Ruins",
+                            "vectorstring": [
+                                "Level1_Ruins2B.json",
+                                "Level1_Ruins7B.json",
+                                "Level1_Ruins1B.json",
+                                "Level1_Ruins3B.json",
+                                "Level1_Ruins5B.json",
+                                "Level1_Ruins4B.json",
+                                "Level1_Ruins6B.json"
+                            ]
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "playerPrefab",
+                            "prefab": 390555474
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "groguPrefab",
+                            "prefab": 13642032
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "chestPrefab",
+                            "prefab": 673064202
+                        },
+                        {
+                            "Type": 0,
+                            "Name": "chestSpawnChance",
+                            "int": 60
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "mistPlane1",
+                            "prefab": 236149164
+                        },
+                        {
+                            "Type": 4,
+                            "Name": "mistPlane2",
+                            "prefab": 0
+                        },
+                        {
+                            "Type": 3,
+                            "Name": "mistPlane1Position",
+                            "float3x": 0,
+                            "float3y": 0,
+                            "float3z": 0
+                        },
+                        {
+                            "Type": 3,
+                            "Name": "mistPlane2Position",
+                            "float3x": 0,
+                            "float3y": 0,
+                            "float3z": 0
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 575581970,
+            "ParentUID": 156367541,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "MainScene",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": true,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 676702653,
+            "ParentUID": 575581970,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "CreditsSceneManager",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                },
+                {
+                    "Type": 24,
+                    "ResourceUID": 1370535963,
+                    "AssetsPath": "Assets\/Scripts\/\/CreditsSceneManager.h",
+                    "DataName": "CreditsSceneManager",
+                    "HasInspector": false
+                }
+            ]
+        },
+        {
+            "UID": 981754286,
+            "ParentUID": 575581970,
+            "PrefabID": 129017146,
+            "IsPrefab": true,
+            "Name": "PlayerSpawn",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        72.925308227539063,
+                        -132.45834350585938,
+                        61.394397735595703
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "UID": 1292774068,
+            "ParentUID": 1444845295,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "Plane001",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        -21.899999618530273,
+                        2.7999999523162842
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0.7071068286895752,
+                        0,
+                        0.7071068286895752
+                    ],
+                    "LocalScale": [
+                        16.270000457763672,
+                        57.75,
+                        1
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 1016193486,
+                    "Name": "Plane001.nemesh",
+                    "Path": "Library\/Meshes\/1016193486.nemesh",
+                    "File": "1016193486.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false,
+                    "Outline": false,
+                    "OutlineThickness": 1,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "RenderLast": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 1705422038,
+                        "Color": [
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            1
+                        ],
+                        "Name": "Plane001.nemat",
+                        "Path": "Library\/Materials\/1705422038.nemat",
+                        "File": "1705422038.nemat"
+                    },
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/UI\/Credits.png",
+                        "AssetsName": "Credits.png",
+                        "LibaryPath": "Library\/Textures\/106143218.netex",
+                        "LibraryFile": "106143218.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ]
+        },
+        {
+            "UID": 1444845295,
+            "ParentUID": 575581970,
+            "PrefabID": 0,
+            "IsPrefab": false,
+            "Name": "CreditsPlane",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": true,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        2.6770000457763672,
+                        -4.7968406677246094,
+                        1.1039999723434448
+                    ],
+                    "LocalRotation": [
+                        -0.40692180395126343,
+                        -0.57828611135482788,
+                        0.40692177414894104,
+                        0.57828575372695923
+                    ],
+                    "LocalScale": [
+                        1.0000002384185791,
+                        1,
+                        1
+                    ]
+                }
+            ]
+        }
+    ],
+    "NavMesh": {
+        "UID": 806275127,
+        "Assets Path": "Assets\/Navigation\/Level1_Ruins5B.navmesh"
+    }
+} 

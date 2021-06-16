@@ -6,6 +6,7 @@
 #include "MathGeoLib/include/Math/Quat.h"
 
 class Player;
+class IG12;
 class GameManager;
 
 class SCRIPTS_API CameraMovement : public Script {
@@ -25,6 +26,7 @@ public:
 	float shakeMagnitude = 0.0f;
 	//Player variables
 	Player* playerScript;
+	IG12* ig12Script;
 	GameObject* player = nullptr;
 	std::string playerName = "Mandalorian";
 

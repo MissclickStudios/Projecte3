@@ -48,40 +48,52 @@ Weapon::Weapon() : Object()
 
 Weapon::~Weapon()
 {
+	delete shootAudio;
+	delete reloadAudio;
 }
 
 void Weapon::Start()
 {
 	fireRateTimer.Stop();
 	reloadTimer.Stop();
-
-	for (uint i = 0; i < gameObject->components.size(); ++i)
-	{
-		if (gameObject->components[i]->GetType() == ComponentType::AUDIOSOURCE)
-		{
-			C_AudioSource* source = (C_AudioSource*)gameObject->components[i];
-			std::string name = source->GetEventName();
-
-			if (name == "weapon_laser_01")
-			{
-				shootAudio = source;
-				shootAudio->SetVolume(0.5f);
-			}
-			else if (name == "weapon_laser_02_02")
-			{
-				shootAudio = source;
-				shootAudio->SetVolume(0.25f);
-			}
-			else if (name == "weapon_reload_01")
-				reloadAudio = source;
-			else if (name == "weapon_reload_02")
-				reloadAudio = source;
-		}
-	}
 }
 
 void Weapon::Update()
 {
+	
+	if (paused)
+		return;
+
+	if (shootAudio == nullptr && reloadAudio == nullptr)
+	{
+		shootAudio = new C_AudioSource(gameObject);
+		reloadAudio = new C_AudioSource(gameObject);
+
+		shootAudio->SetEvent(shootAudioString);
+		reloadAudio->SetEvent(reloadAudioString);
+
+		/*switch (type)
+		{
+		case WeaponType::BLASTER:
+			shootAudio->SetEvent("blaster_mando_shot");
+			reloadAudio->SetEvent("blaster_mando_reload");
+			break;
+		case WeaponType::SHOTGUN:
+			shootAudio->SetEvent("shotgun_mando_shot");
+			reloadAudio->SetEvent("shotgun_mando_reload");
+			break;
+		case WeaponType::SNIPER:
+			shootAudio->SetEvent("sniper_mando_shot");
+			reloadAudio->SetEvent("sniper_mando_reload");
+			break;
+		case WeaponType::MINIGUN:
+			shootAudio->SetEvent("minigun_mando_shot");
+			reloadAudio->SetEvent("minigun_mando_reload");
+			break;
+		}*/
+			
+	}
+
 	if (updateProjectiles)
 	{
 		updateProjectiles = false;
@@ -90,8 +102,8 @@ void Weapon::Update()
 
 	if (weaponModel)
 	{
-		weaponModel->transform->SetLocalPosition(position);
-		weaponModel->transform->SetLocalEulerRotation(rotation);
+		weaponModel->transform->SetLocalPosition(defPosition);
+		weaponModel->transform->SetLocalEulerRotation(defRotation);
 		weaponModel->transform->SetLocalScale(scale);
 	}
 }
@@ -105,6 +117,7 @@ void Weapon::CleanUp()
 
 void Weapon::OnPause()
 {
+	paused = true;
 	//fireRateTimer.Pause();
 	reloadTimer.Pause();
 
@@ -113,6 +126,7 @@ void Weapon::OnPause()
 
 void Weapon::OnResume()
 {
+	paused = false;
 	//fireRateTimer.Resume();
 	reloadTimer.Resume();
 
@@ -133,7 +147,7 @@ ShootState Weapon::Shoot(float2 direction)
 			FireProjectile(direction);
 		}
 		
-		ammo -= projectilesPerShot;
+		ammo -= 1;
 		if (ammo < 0)
 			ammo = 0;
 
@@ -145,15 +159,19 @@ ShootState Weapon::Shoot(float2 direction)
 
 bool Weapon::Reload()
 {
+	if (ammo == MaxAmmo())
+		return true;
 	if (!reloadTimer.IsActive())
+	{
 		reloadTimer.Start();
+		if (reloadAudio)
+			reloadAudio->PlayFx(reloadAudio->GetEventId());
+	}
+
 	else if (reloadTimer.ReadSec() >= reloadTime)
 	{
 		reloadTimer.Stop();
 		ammo = MaxAmmo();
-
-		if (reloadAudio)
-			reloadAudio->PlayFx(reloadAudio->GetEventId());
 
 		return true;
 	}
@@ -169,12 +187,25 @@ void Weapon::SetOwnership(EntityType type, GameObject* hand, std::string handNam
 
 	SetUp();
 
-	if (this->hand != nullptr && weaponModelPrefab.uid != NULL)
+	if (this->hand != nullptr)
 	{
-		GameObject* skeletonHand = GetHand(this->hand->parent, handName);
-		if (skeletonHand)
-			weaponModel = App->resourceManager->LoadPrefab(weaponModelPrefab.uid, skeletonHand); // Load the prefab onto a gameobject
+		if (weaponModelPrefab.uid != NULL)
+		{
+			GameObject* skeletonHand = this->hand->parent->FindChild(handName.c_str());
+			if (skeletonHand)
+				weaponModel = App->resourceManager->LoadPrefab(weaponModelPrefab.uid, skeletonHand); // Load the prefab onto a gameobject
+		}
+		
+		if (weaponModel != nullptr)
+			barrel = GetWeaponBarrel(weaponModel, "Barrel");
+		else if (handName == "LHand")
+			barrel = GetWeaponBarrel(this->hand->parent, "SecondaryBarrel");
+		else
+			barrel = GetWeaponBarrel(this->hand->parent, "Barrel");
 	}
+
+	
+		
 
 	if (type == EntityType::PLAYER)
 	{
@@ -302,7 +333,7 @@ void Weapon::SpreadModify(Perk* perk)
 
 void Weapon::FreezeBullets(Perk* perk)
 {
-	onHitEffects.emplace_back(Effect(EffectType::FROZEN, perk->Duration(), perk->Amount()));
+	onHitEffects.emplace_back(Effect(EffectType::FROZEN, perk->Duration(), false, perk->Amount()));
 }
 
 void Weapon::StunBullets(Perk* perk)
@@ -331,7 +362,7 @@ void Weapon::SpreadProjectiles(float2 direction)
 		{
 			direction = float2(cos * direction.x + (-sin * direction.y), sin * direction.x + (cos * direction.y));
 		}
-		else if (i == int(projectilesPerShot / 2))
+		/*else if (i == int(projectilesPerShot / 2))
 		{
 			direction = initialDirection;
 			sin = math::Sin(DegToRad(-shotSpreadArea));
@@ -339,9 +370,13 @@ void Weapon::SpreadProjectiles(float2 direction)
 
 			direction = float2(cos * direction.x + (-sin * direction.y), sin * direction.x + (cos * direction.y));
 
-		}
+		}*/
 		else if (i >= projectilesPerShot / 2)
 		{
+			direction = initialDirection;
+			sin = math::Sin(DegToRad(-shotSpreadArea));
+			cos = math::Cos(DegToRad(-shotSpreadArea));
+
 			direction = float2(cos * direction.x + (-sin * direction.y), sin * direction.x + (cos * direction.y));
 		}
 	}
@@ -357,6 +392,22 @@ GameObject* Weapon::GetHand(GameObject* object, std::string handName)
 			return object->childs[i];
 
 		GameObject* output = GetHand(object->childs[i], handName);
+		if (output != nullptr)
+			return output;
+	}
+	return nullptr;
+}
+
+GameObject* Weapon::GetWeaponBarrel(GameObject* object, std::string barrelName)
+{
+	for (int i = 0; i < object->childs.size(); ++i)
+	{
+		std::string name = object->childs[i]->GetName();
+		bool check = (name == barrelName);
+		if (check)
+			return object->childs[i];
+
+		GameObject* output = GetWeaponBarrel(object->childs[i], barrelName);
 		if (output != nullptr)
 			return output;
 	}
@@ -439,9 +490,9 @@ void Weapon::FireProjectile(float2 direction)
 		return;
 
 	float3 position = float3::zero;
-	if (hand)
+	if (barrel)
 	{
-		position = hand->transform->GetWorldPosition();
+		position = barrel->transform->GetWorldPosition();
 		float3 spread = SpreadRadius();
 		if (!spread.IsZero())
 		{
@@ -468,6 +519,9 @@ void Weapon::FireProjectile(float2 direction)
 			float3 aimDirection = { direction.x, 0.0f, direction.y };
 			rigidBody->TransformMovesRigidBody(true);
 			rigidBody->SetLinearVelocity(aimDirection * ProjectileSpeed());
+			rigidBody->UseGravity(false);
+			rigidBody->FreezePositionY(false);
+			rigidBody->DisableY(true);
 		}
 
 		if (projectile->bulletScript)

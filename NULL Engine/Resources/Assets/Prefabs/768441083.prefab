@@ -1,0 +1,1954 @@
+{
+    "ModTime": 1623434816,
+    "UID": 2021693977,
+    "ParentUID": 1474137658,
+    "PrefabID": 768441083,
+    "IsPrefab": true,
+    "Name": "IG11-GOLD",
+    "IsActive": true,
+    "IsStatic": false,
+    "IsSceneRoot": false,
+    "ShowBoundingBoxes": true,
+    "NavigationInfo": {
+        "isNavigable": false,
+        "navigationArea": 0
+    },
+    "Components": [
+        {
+            "Type": 1,
+            "LocalPosition": [
+                16.318683624267578,
+                3.7003707885742188,
+                -7.7769036293029785
+            ],
+            "LocalRotation": [
+                0,
+                0,
+                0,
+                1
+            ],
+            "LocalScale": [
+                0.074000000953674316,
+                0.074000000953674316,
+                0.074000000953674316
+            ]
+        },
+        {
+            "Type": 6,
+            "Animations": [
+                {
+                    "UID": 1470997705,
+                    "Name": "Take 001.neanimat",
+                    "Path": "Library\/Animations\/1470997705.neanimat",
+                    "File": "1470997705.neanimat"
+                }
+            ],
+            "Clips": [
+                {
+                    "AnimationUID": 1470997705,
+                    "Name": "DoubleSpecial",
+                    "Start": 477,
+                    "End": 590,
+                    "Speed": 0.28999999165534973,
+                    "Duration": 389.65518188476563,
+                    "DurationInSeconds": 16.235631942749023,
+                    "Loop": false
+                },
+                {
+                    "AnimationUID": 1470997705,
+                    "Name": "Reload",
+                    "Start": 390,
+                    "End": 408,
+                    "Speed": 1,
+                    "Duration": 18,
+                    "DurationInSeconds": 0.75,
+                    "Loop": false
+                },
+                {
+                    "AnimationUID": 1470997705,
+                    "Name": "Run",
+                    "Start": 121,
+                    "End": 144,
+                    "Speed": 1,
+                    "Duration": 23,
+                    "DurationInSeconds": 0.95833331346511841,
+                    "Loop": true
+                },
+                {
+                    "AnimationUID": 1470997705,
+                    "Name": "Shoot",
+                    "Start": 277,
+                    "End": 312,
+                    "Speed": 1,
+                    "Duration": 35,
+                    "DurationInSeconds": 1.4583333730697632,
+                    "Loop": true
+                },
+                {
+                    "AnimationUID": 1470997705,
+                    "Name": "SpecialAttack",
+                    "Start": 159,
+                    "End": 267,
+                    "Speed": 0.27000001072883606,
+                    "Duration": 399.99996948242188,
+                    "DurationInSeconds": 16.666666030883789,
+                    "Loop": false
+                },
+                {
+                    "AnimationUID": 1470997705,
+                    "Name": "Talk",
+                    "Start": 0,
+                    "End": 118,
+                    "Speed": 1,
+                    "Duration": 118,
+                    "DurationInSeconds": 4.9166665077209473,
+                    "Loop": true
+                }
+            ],
+            "Tracks": []
+        },
+        {
+            "Type": 8,
+            "Is Static": false,
+            "Filter": " enemy",
+            "Mass": 10,
+            "Density": 1,
+            "Linear Damping": 0,
+            "Angular Damping": 0,
+            "Use Gravity": true,
+            "Is Kinematic": true,
+            "Freeze Position X": false,
+            "Freeze Position Y": false,
+            "Freeze Position Z": false,
+            "Freeze Rotation X": true,
+            "Freeze Rotation Y": true,
+            "Freeze Rotation Z": true
+        },
+        {
+            "Type": 9,
+            "Is Trigger": false,
+            "Show Collider": true,
+            "Size X": 5,
+            "Size Y": 20,
+            "Size Z": 3,
+            "Center X": 0,
+            "Center Y": 10,
+            "Center Z": 0
+        },
+        {
+            "Type": 24,
+            "ResourceUID": 1967475610,
+            "AssetsPath": "Assets\/Scripts\/\/IG11.h",
+            "DataName": "IG11",
+            "HasInspector": true,
+            "InspectorVariables": [
+                {
+                    "Type": 5,
+                    "Name": "playerName",
+                    "string": "Mandalorian"
+                },
+                {
+                    "Type": 2,
+                    "Name": "health",
+                    "float": 400
+                },
+                {
+                    "Type": 2,
+                    "Name": "maxHealth",
+                    "float": 400
+                },
+                {
+                    "Type": 2,
+                    "Name": "speed",
+                    "float": 30
+                },
+                {
+                    "Type": 2,
+                    "Name": "attackSpeed",
+                    "float": 0.20000000298023224
+                },
+                {
+                    "Type": 2,
+                    "Name": "damage",
+                    "float": 1
+                },
+                {
+                    "Type": 2,
+                    "Name": "defense",
+                    "float": 1
+                },
+                {
+                    "Type": 2,
+                    "Name": "maxHealthModifier",
+                    "float": 0
+                },
+                {
+                    "Type": 2,
+                    "Name": "speedModifier",
+                    "float": 1
+                },
+                {
+                    "Type": 2,
+                    "Name": "attackSpeedModifier",
+                    "float": 1
+                },
+                {
+                    "Type": 2,
+                    "Name": "damageModifier",
+                    "float": 1
+                },
+                {
+                    "Type": 2,
+                    "Name": "defenseModifier",
+                    "float": 1
+                },
+                {
+                    "Type": 2,
+                    "Name": "cooldownModifier",
+                    "float": 1
+                },
+                {
+                    "Type": 2,
+                    "Name": "deathDuration",
+                    "float": 0
+                },
+                {
+                    "Type": 2,
+                    "Name": "chaseDistance",
+                    "float": 200
+                },
+                {
+                    "Type": 2,
+                    "Name": "chaseSpeedModifier",
+                    "float": 1.25
+                },
+                {
+                    "Type": 2,
+                    "Name": "fleeDistance",
+                    "float": 0
+                },
+                {
+                    "Type": 2,
+                    "Name": "attackDistance",
+                    "float": 70
+                },
+                {
+                    "Type": 2,
+                    "Name": "spiralAttackSpeed",
+                    "float": 250
+                },
+                {
+                    "Type": 2,
+                    "Name": "spiralAttackSpins",
+                    "float": 2
+                },
+                {
+                    "Type": 2,
+                    "Name": "spiralAttackHp",
+                    "float": 200
+                },
+                {
+                    "Type": 2,
+                    "Name": "spiralAttackCooldown",
+                    "float": 15
+                },
+                {
+                    "Type": 2,
+                    "Name": "UAttackShots",
+                    "float": 20
+                },
+                {
+                    "Type": 2,
+                    "Name": "UAttackCooldown",
+                    "float": 5
+                },
+                {
+                    "Type": 4,
+                    "Name": "blaster",
+                    "prefab": 2046813174
+                },
+                {
+                    "Type": 4,
+                    "Name": "sniper",
+                    "prefab": 2046813174
+                },
+                {
+                    "Type": 5,
+                    "Name": "rightHandName",
+                    "string": "RHand"
+                },
+                {
+                    "Type": 5,
+                    "Name": "leftHandName",
+                    "string": "LHand"
+                },
+                {
+                    "Type": 0,
+                    "Name": "beskarValue",
+                    "int": 2
+                },
+                {
+                    "Type": 6,
+                    "Name": "healthBarCanvasObject",
+                    "gameobject": 429666908
+                },
+                {
+                    "Type": 5,
+                    "Name": "lifeBarImageStr",
+                    "string": "BossLife"
+                },
+                {
+                    "Type": 5,
+                    "Name": "bossIconStr",
+                    "string": "BossIcon"
+                }
+            ]
+        }
+    ],
+    "Children": [
+        {
+            "UID": 1017361702,
+            "ParentUID": 2021693977,
+            "PrefabID": 768441083,
+            "IsPrefab": true,
+            "Name": "DestinationPoints",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ],
+            "Children": [
+                {
+                    "UID": 554921299,
+                    "ParentUID": 1017361702,
+                    "PrefabID": 768441083,
+                    "IsPrefab": true,
+                    "Name": "Point 1",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                281.07693481445313,
+                                659.3179931640625
+                            ],
+                            "LocalRotation": [
+                                -0.087155744433403015,
+                                0,
+                                0,
+                                0.99619472026824951
+                            ],
+                            "LocalScale": [
+                                1.0000001192092896,
+                                1,
+                                1
+                            ]
+                        }
+                    ],
+                    "Children": []
+                }
+            ]
+        },
+        {
+            "UID": 1146210829,
+            "ParentUID": 2021693977,
+            "PrefabID": 768441083,
+            "IsPrefab": true,
+            "Name": "Mesh",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        -0.7071068286895752,
+                        0,
+                        0,
+                        0.70710670948028564
+                    ],
+                    "LocalScale": [
+                        2.5399999618530273,
+                        2.5399997234344482,
+                        2.5399997234344482
+                    ]
+                },
+                {
+                    "Type": 2,
+                    "UID": 818279091,
+                    "Name": "IG11.nemesh",
+                    "Path": "Library\/Meshes\/818279091.nemesh",
+                    "File": "818279091.nemesh",
+                    "ShowWireframe": false,
+                    "ShowBoundingBox": false,
+                    "Outline": true,
+                    "OutlineThickness": 1,
+                    "OutlineColor": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "RenderLast": false
+                },
+                {
+                    "Type": 3,
+                    "Material": {
+                        "UID": 962406895,
+                        "Color": [
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            0.80000001192092896,
+                            1
+                        ],
+                        "Name": "IG11.nemat",
+                        "Path": "Library\/Materials\/962406895.nemat",
+                        "File": "962406895.nemat"
+                    },
+                    "Texture": {
+                        "AssetsPath": "Assets\/Textures\/\/Enemies\/IG11\/IG11_Texture.png",
+                        "AssetsName": "IG11_Texture.png",
+                        "LibaryPath": "Library\/Textures\/1828717129.netex",
+                        "LibraryFile": "1828717129.netex"
+                    },
+                    "Shader": {
+                        "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                        "AssetsName": "DefaultShader.shader",
+                        "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                        "LibraryFile": "800223282.neshader"
+                    }
+                }
+            ],
+            "Children": []
+        },
+        {
+            "UID": 1770393209,
+            "ParentUID": 2021693977,
+            "PrefabID": 768441083,
+            "IsPrefab": true,
+            "Name": "Skeleton",
+            "IsActive": true,
+            "IsStatic": false,
+            "IsSceneRoot": false,
+            "ShowBoundingBoxes": false,
+            "NavigationInfo": {
+                "isNavigable": false,
+                "navigationArea": 0
+            },
+            "Components": [
+                {
+                    "Type": 1,
+                    "LocalPosition": [
+                        0,
+                        0,
+                        0
+                    ],
+                    "LocalRotation": [
+                        0,
+                        0,
+                        0,
+                        1
+                    ],
+                    "LocalScale": [
+                        1,
+                        1,
+                        1
+                    ]
+                }
+            ],
+            "Children": [
+                {
+                    "UID": 324050884,
+                    "ParentUID": 1770393209,
+                    "PrefabID": 768441083,
+                    "IsPrefab": true,
+                    "Name": "HandLeft",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                33.762496948242188,
+                                110.00000762939453,
+                                100
+                            ],
+                            "LocalRotation": [
+                                0,
+                                -1.4901161193847656e-08,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        }
+                    ],
+                    "Children": []
+                },
+                {
+                    "UID": 768448401,
+                    "ParentUID": 1770393209,
+                    "PrefabID": 768441083,
+                    "IsPrefab": true,
+                    "Name": "group",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                0,
+                                0,
+                                0
+                            ],
+                            "LocalRotation": [
+                                0,
+                                0,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        }
+                    ],
+                    "Children": [
+                        {
+                            "UID": 1399654274,
+                            "ParentUID": 768448401,
+                            "PrefabID": 768441083,
+                            "IsPrefab": true,
+                            "Name": "Hip",
+                            "IsActive": true,
+                            "IsStatic": false,
+                            "IsSceneRoot": false,
+                            "ShowBoundingBoxes": false,
+                            "NavigationInfo": {
+                                "isNavigable": false,
+                                "navigationArea": 0
+                            },
+                            "Components": [
+                                {
+                                    "Type": 1,
+                                    "LocalPosition": [
+                                        0.312379390001297,
+                                        124.92849731445313,
+                                        0
+                                    ],
+                                    "LocalRotation": [
+                                        0,
+                                        0,
+                                        -0.70710676908493042,
+                                        0.70710676908493042
+                                    ],
+                                    "LocalScale": [
+                                        0.99999994039535522,
+                                        0.99999994039535522,
+                                        1
+                                    ]
+                                }
+                            ],
+                            "Children": [
+                                {
+                                    "UID": 613119820,
+                                    "ParentUID": 1399654274,
+                                    "PrefabID": 768441083,
+                                    "IsPrefab": true,
+                                    "Name": "Legs",
+                                    "IsActive": true,
+                                    "IsStatic": false,
+                                    "IsSceneRoot": false,
+                                    "ShowBoundingBoxes": false,
+                                    "NavigationInfo": {
+                                        "isNavigable": false,
+                                        "navigationArea": 0
+                                    },
+                                    "Components": [
+                                        {
+                                            "Type": 1,
+                                            "LocalPosition": [
+                                                8.4167642593383789,
+                                                0,
+                                                0
+                                            ],
+                                            "LocalRotation": [
+                                                0,
+                                                0,
+                                                0,
+                                                1
+                                            ],
+                                            "LocalScale": [
+                                                1,
+                                                1,
+                                                1
+                                            ]
+                                        }
+                                    ],
+                                    "Children": [
+                                        {
+                                            "UID": 24087673,
+                                            "ParentUID": 613119820,
+                                            "PrefabID": 768441083,
+                                            "IsPrefab": true,
+                                            "Name": "LLeg",
+                                            "IsActive": true,
+                                            "IsStatic": false,
+                                            "IsSceneRoot": false,
+                                            "ShowBoundingBoxes": false,
+                                            "NavigationInfo": {
+                                                "isNavigable": false,
+                                                "navigationArea": 0
+                                            },
+                                            "Components": [
+                                                {
+                                                    "Type": 1,
+                                                    "LocalPosition": [
+                                                        -0.75433981418609619,
+                                                        -9.2935085296630859,
+                                                        -1.5580799579620361
+                                                    ],
+                                                    "LocalRotation": [
+                                                        0,
+                                                        0,
+                                                        -0.037360098212957382,
+                                                        0.9993019700050354
+                                                    ],
+                                                    "LocalScale": [
+                                                        1,
+                                                        1,
+                                                        1
+                                                    ]
+                                                }
+                                            ],
+                                            "Children": [
+                                                {
+                                                    "UID": 276542983,
+                                                    "ParentUID": 24087673,
+                                                    "PrefabID": 768441083,
+                                                    "IsPrefab": true,
+                                                    "Name": "LKnee",
+                                                    "IsActive": true,
+                                                    "IsStatic": false,
+                                                    "IsSceneRoot": false,
+                                                    "ShowBoundingBoxes": false,
+                                                    "NavigationInfo": {
+                                                        "isNavigable": false,
+                                                        "navigationArea": 0
+                                                    },
+                                                    "Components": [
+                                                        {
+                                                            "Type": 1,
+                                                            "LocalPosition": [
+                                                                55.681301116943359,
+                                                                -3.6823699474334717,
+                                                                7.7038402557373047
+                                                            ],
+                                                            "LocalRotation": [
+                                                                0,
+                                                                0,
+                                                                0.035318538546562195,
+                                                                0.99937611818313599
+                                                            ],
+                                                            "LocalScale": [
+                                                                0.99999994039535522,
+                                                                0.99999994039535522,
+                                                                1
+                                                            ]
+                                                        }
+                                                    ],
+                                                    "Children": [
+                                                        {
+                                                            "UID": 1301577001,
+                                                            "ParentUID": 276542983,
+                                                            "PrefabID": 768441083,
+                                                            "IsPrefab": true,
+                                                            "Name": "LAnkle",
+                                                            "IsActive": true,
+                                                            "IsStatic": false,
+                                                            "IsSceneRoot": false,
+                                                            "ShowBoundingBoxes": false,
+                                                            "NavigationInfo": {
+                                                                "isNavigable": false,
+                                                                "navigationArea": 0
+                                                            },
+                                                            "Components": [
+                                                                {
+                                                                    "Type": 1,
+                                                                    "LocalPosition": [
+                                                                        46.627300262451172,
+                                                                        0.70139998197555542,
+                                                                        -7.444159984588623
+                                                                    ],
+                                                                    "LocalRotation": [
+                                                                        0,
+                                                                        0,
+                                                                        0,
+                                                                        1
+                                                                    ],
+                                                                    "LocalScale": [
+                                                                        1,
+                                                                        1,
+                                                                        1
+                                                                    ]
+                                                                }
+                                                            ],
+                                                            "Children": [
+                                                                {
+                                                                    "UID": 1342705084,
+                                                                    "ParentUID": 1301577001,
+                                                                    "PrefabID": 768441083,
+                                                                    "IsPrefab": true,
+                                                                    "Name": "LFoot",
+                                                                    "IsActive": true,
+                                                                    "IsStatic": false,
+                                                                    "IsSceneRoot": false,
+                                                                    "ShowBoundingBoxes": false,
+                                                                    "NavigationInfo": {
+                                                                        "isNavigable": false,
+                                                                        "navigationArea": 0
+                                                                    },
+                                                                    "Components": [
+                                                                        {
+                                                                            "Type": 1,
+                                                                            "LocalPosition": [
+                                                                                15.430720329284668,
+                                                                                -0.87669998407363892,
+                                                                                3.3758399486541748
+                                                                            ],
+                                                                            "LocalRotation": [
+                                                                                0,
+                                                                                0,
+                                                                                0,
+                                                                                1
+                                                                            ],
+                                                                            "LocalScale": [
+                                                                                1,
+                                                                                1,
+                                                                                1
+                                                                            ]
+                                                                        }
+                                                                    ],
+                                                                    "Children": []
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "UID": 1834069584,
+                                            "ParentUID": 613119820,
+                                            "PrefabID": 768441083,
+                                            "IsPrefab": true,
+                                            "Name": "RLeg",
+                                            "IsActive": true,
+                                            "IsStatic": false,
+                                            "IsSceneRoot": false,
+                                            "ShowBoundingBoxes": false,
+                                            "NavigationInfo": {
+                                                "isNavigable": false,
+                                                "navigationArea": 0
+                                            },
+                                            "Components": [
+                                                {
+                                                    "Type": 1,
+                                                    "LocalPosition": [
+                                                        -0.75423717498779297,
+                                                        9.2935104370117188,
+                                                        -1.5580799579620361
+                                                    ],
+                                                    "LocalRotation": [
+                                                        -0.0046017351560294628,
+                                                        -0.0059154834598302841,
+                                                        0.037348885089159012,
+                                                        0.99927419424057007
+                                                    ],
+                                                    "LocalScale": [
+                                                        0.99999994039535522,
+                                                        1,
+                                                        0.99999994039535522
+                                                    ]
+                                                }
+                                            ],
+                                            "Children": [
+                                                {
+                                                    "UID": 1626271800,
+                                                    "ParentUID": 1834069584,
+                                                    "PrefabID": 768441083,
+                                                    "IsPrefab": true,
+                                                    "Name": "RKnee",
+                                                    "IsActive": true,
+                                                    "IsStatic": false,
+                                                    "IsSceneRoot": false,
+                                                    "ShowBoundingBoxes": false,
+                                                    "NavigationInfo": {
+                                                        "isNavigable": false,
+                                                        "navigationArea": 0
+                                                    },
+                                                    "Components": [
+                                                        {
+                                                            "Type": 1,
+                                                            "LocalPosition": [
+                                                                55.681190490722656,
+                                                                3.6823339462280273,
+                                                                7.7038388252258301
+                                                            ],
+                                                            "LocalRotation": [
+                                                                0.0050133839249610901,
+                                                                0.0023709903471171856,
+                                                                -0.037080701440572739,
+                                                                0.99929690361022949
+                                                            ],
+                                                            "LocalScale": [
+                                                                1,
+                                                                1,
+                                                                1
+                                                            ]
+                                                        }
+                                                    ],
+                                                    "Children": [
+                                                        {
+                                                            "UID": 1408433804,
+                                                            "ParentUID": 1626271800,
+                                                            "PrefabID": 768441083,
+                                                            "IsPrefab": true,
+                                                            "Name": "RAnkle",
+                                                            "IsActive": true,
+                                                            "IsStatic": false,
+                                                            "IsSceneRoot": false,
+                                                            "ShowBoundingBoxes": false,
+                                                            "NavigationInfo": {
+                                                                "isNavigable": false,
+                                                                "navigationArea": 0
+                                                            },
+                                                            "Components": [
+                                                                {
+                                                                    "Type": 1,
+                                                                    "LocalPosition": [
+                                                                        46.627300262451172,
+                                                                        -0.70139700174331665,
+                                                                        -7.4441590309143066
+                                                                    ],
+                                                                    "LocalRotation": [
+                                                                        0,
+                                                                        0,
+                                                                        0,
+                                                                        1
+                                                                    ],
+                                                                    "LocalScale": [
+                                                                        1,
+                                                                        1,
+                                                                        1
+                                                                    ]
+                                                                }
+                                                            ],
+                                                            "Children": [
+                                                                {
+                                                                    "UID": 976089437,
+                                                                    "ParentUID": 1408433804,
+                                                                    "PrefabID": 768441083,
+                                                                    "IsPrefab": true,
+                                                                    "Name": "RFoot",
+                                                                    "IsActive": true,
+                                                                    "IsStatic": false,
+                                                                    "IsSceneRoot": false,
+                                                                    "ShowBoundingBoxes": false,
+                                                                    "NavigationInfo": {
+                                                                        "isNavigable": false,
+                                                                        "navigationArea": 0
+                                                                    },
+                                                                    "Components": [
+                                                                        {
+                                                                            "Type": 1,
+                                                                            "LocalPosition": [
+                                                                                15.430729866027832,
+                                                                                0.87674617767333984,
+                                                                                3.3758389949798584
+                                                                            ],
+                                                                            "LocalRotation": [
+                                                                                0,
+                                                                                0,
+                                                                                0,
+                                                                                1
+                                                                            ],
+                                                                            "LocalScale": [
+                                                                                1,
+                                                                                1,
+                                                                                1
+                                                                            ]
+                                                                        }
+                                                                    ],
+                                                                    "Children": []
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "UID": 1664813706,
+                                    "ParentUID": 1399654274,
+                                    "PrefabID": 768441083,
+                                    "IsPrefab": true,
+                                    "Name": "Back",
+                                    "IsActive": true,
+                                    "IsStatic": false,
+                                    "IsSceneRoot": false,
+                                    "ShowBoundingBoxes": false,
+                                    "NavigationInfo": {
+                                        "isNavigable": false,
+                                        "navigationArea": 0
+                                    },
+                                    "Components": [
+                                        {
+                                            "Type": 1,
+                                            "LocalPosition": [
+                                                -6.8785572052001953,
+                                                0.14224860072135925,
+                                                0
+                                            ],
+                                            "LocalRotation": [
+                                                0.036816928535699844,
+                                                0,
+                                                0,
+                                                0.99932205677032471
+                                            ],
+                                            "LocalScale": [
+                                                1,
+                                                0.99999994039535522,
+                                                0.99999994039535522
+                                            ]
+                                        }
+                                    ],
+                                    "Children": [
+                                        {
+                                            "UID": 489763425,
+                                            "ParentUID": 1664813706,
+                                            "PrefabID": 768441083,
+                                            "IsPrefab": true,
+                                            "Name": "Back1",
+                                            "IsActive": true,
+                                            "IsStatic": false,
+                                            "IsSceneRoot": false,
+                                            "ShowBoundingBoxes": false,
+                                            "NavigationInfo": {
+                                                "isNavigable": false,
+                                                "navigationArea": 0
+                                            },
+                                            "Components": [
+                                                {
+                                                    "Type": 1,
+                                                    "LocalPosition": [
+                                                        -16.346630096435547,
+                                                        -0.18575720489025116,
+                                                        0
+                                                    ],
+                                                    "LocalRotation": [
+                                                        0,
+                                                        0,
+                                                        0,
+                                                        1
+                                                    ],
+                                                    "LocalScale": [
+                                                        1,
+                                                        1,
+                                                        1
+                                                    ]
+                                                }
+                                            ],
+                                            "Children": [
+                                                {
+                                                    "UID": 1426237721,
+                                                    "ParentUID": 489763425,
+                                                    "PrefabID": 768441083,
+                                                    "IsPrefab": true,
+                                                    "Name": "Back2",
+                                                    "IsActive": true,
+                                                    "IsStatic": false,
+                                                    "IsSceneRoot": false,
+                                                    "ShowBoundingBoxes": false,
+                                                    "NavigationInfo": {
+                                                        "isNavigable": false,
+                                                        "navigationArea": 0
+                                                    },
+                                                    "Components": [
+                                                        {
+                                                            "Type": 1,
+                                                            "LocalPosition": [
+                                                                -19.876020431518555,
+                                                                -0.18575720489025116,
+                                                                0
+                                                            ],
+                                                            "LocalRotation": [
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                1
+                                                            ],
+                                                            "LocalScale": [
+                                                                1,
+                                                                1,
+                                                                1
+                                                            ]
+                                                        }
+                                                    ],
+                                                    "Children": [
+                                                        {
+                                                            "UID": 301833257,
+                                                            "ParentUID": 1426237721,
+                                                            "PrefabID": 768441083,
+                                                            "IsPrefab": true,
+                                                            "Name": "Back3",
+                                                            "IsActive": true,
+                                                            "IsStatic": false,
+                                                            "IsSceneRoot": false,
+                                                            "ShowBoundingBoxes": false,
+                                                            "NavigationInfo": {
+                                                                "isNavigable": false,
+                                                                "navigationArea": 0
+                                                            },
+                                                            "Components": [
+                                                                {
+                                                                    "Type": 1,
+                                                                    "LocalPosition": [
+                                                                        -19.69025993347168,
+                                                                        0.37151440978050232,
+                                                                        -5.8971838523547149e-10
+                                                                    ],
+                                                                    "LocalRotation": [
+                                                                        -0.019220078364014626,
+                                                                        0.99981528520584106,
+                                                                        -4.3703312968546015e-08,
+                                                                        8.4013629386703315e-10
+                                                                    ],
+                                                                    "LocalScale": [
+                                                                        1,
+                                                                        1,
+                                                                        1
+                                                                    ]
+                                                                }
+                                                            ],
+                                                            "Children": [
+                                                                {
+                                                                    "UID": 175423462,
+                                                                    "ParentUID": 301833257,
+                                                                    "PrefabID": 768441083,
+                                                                    "IsPrefab": true,
+                                                                    "Name": "LClav",
+                                                                    "IsActive": true,
+                                                                    "IsStatic": false,
+                                                                    "IsSceneRoot": false,
+                                                                    "ShowBoundingBoxes": false,
+                                                                    "NavigationInfo": {
+                                                                        "isNavigable": false,
+                                                                        "navigationArea": 0
+                                                                    },
+                                                                    "Components": [
+                                                                        {
+                                                                            "Type": 1,
+                                                                            "LocalPosition": [
+                                                                                -0.34534379839897156,
+                                                                                -14.7216796875,
+                                                                                -1.0197869642070145e-06
+                                                                            ],
+                                                                            "LocalRotation": [
+                                                                                0,
+                                                                                0,
+                                                                                0,
+                                                                                1
+                                                                            ],
+                                                                            "LocalScale": [
+                                                                                1,
+                                                                                1,
+                                                                                1
+                                                                            ]
+                                                                        }
+                                                                    ],
+                                                                    "Children": [
+                                                                        {
+                                                                            "UID": 1639774528,
+                                                                            "ParentUID": 175423462,
+                                                                            "PrefabID": 768441083,
+                                                                            "IsPrefab": true,
+                                                                            "Name": "LShoulder",
+                                                                            "IsActive": true,
+                                                                            "IsStatic": false,
+                                                                            "IsSceneRoot": false,
+                                                                            "ShowBoundingBoxes": false,
+                                                                            "NavigationInfo": {
+                                                                                "isNavigable": false,
+                                                                                "navigationArea": 0
+                                                                            },
+                                                                            "Components": [
+                                                                                {
+                                                                                    "Type": 1,
+                                                                                    "LocalPosition": [
+                                                                                        -4.9288439750671387,
+                                                                                        -16.100629806518555,
+                                                                                        0.31004390120506287
+                                                                                    ],
+                                                                                    "LocalRotation": [
+                                                                                        -0.53255409002304077,
+                                                                                        -0.46500805020332336,
+                                                                                        0.54326939582824707,
+                                                                                        0.45278263092041016
+                                                                                    ],
+                                                                                    "LocalScale": [
+                                                                                        1.0000001192092896,
+                                                                                        1,
+                                                                                        1
+                                                                                    ]
+                                                                                }
+                                                                            ],
+                                                                            "Children": [
+                                                                                {
+                                                                                    "UID": 1600982708,
+                                                                                    "ParentUID": 1639774528,
+                                                                                    "PrefabID": 768441083,
+                                                                                    "IsPrefab": true,
+                                                                                    "Name": "LElbow",
+                                                                                    "IsActive": true,
+                                                                                    "IsStatic": false,
+                                                                                    "IsSceneRoot": false,
+                                                                                    "ShowBoundingBoxes": false,
+                                                                                    "NavigationInfo": {
+                                                                                        "isNavigable": false,
+                                                                                        "navigationArea": 0
+                                                                                    },
+                                                                                    "Components": [
+                                                                                        {
+                                                                                            "Type": 1,
+                                                                                            "LocalPosition": [
+                                                                                                -6.4301691055297852,
+                                                                                                -40.839309692382813,
+                                                                                                0.1240151971578598
+                                                                                            ],
+                                                                                            "LocalRotation": [
+                                                                                                -0.0062324744649231434,
+                                                                                                -0.15913623571395874,
+                                                                                                -0.025286708027124405,
+                                                                                                0.98691308498382568
+                                                                                            ],
+                                                                                            "LocalScale": [
+                                                                                                1,
+                                                                                                1,
+                                                                                                1
+                                                                                            ]
+                                                                                        }
+                                                                                    ],
+                                                                                    "Children": [
+                                                                                        {
+                                                                                            "UID": 2027391519,
+                                                                                            "ParentUID": 1600982708,
+                                                                                            "PrefabID": 768441083,
+                                                                                            "IsPrefab": true,
+                                                                                            "Name": "Lwrist",
+                                                                                            "IsActive": true,
+                                                                                            "IsStatic": false,
+                                                                                            "IsSceneRoot": false,
+                                                                                            "ShowBoundingBoxes": false,
+                                                                                            "NavigationInfo": {
+                                                                                                "isNavigable": false,
+                                                                                                "navigationArea": 0
+                                                                                            },
+                                                                                            "Components": [
+                                                                                                {
+                                                                                                    "Type": 1,
+                                                                                                    "LocalPosition": [
+                                                                                                        -6.7146968841552734,
+                                                                                                        -39.55609130859375,
+                                                                                                        -1.9252560138702393
+                                                                                                    ],
+                                                                                                    "LocalRotation": [
+                                                                                                        0,
+                                                                                                        0,
+                                                                                                        0,
+                                                                                                        1
+                                                                                                    ],
+                                                                                                    "LocalScale": [
+                                                                                                        1,
+                                                                                                        1,
+                                                                                                        1
+                                                                                                    ]
+                                                                                                }
+                                                                                            ],
+                                                                                            "Children": [
+                                                                                                {
+                                                                                                    "UID": 636209832,
+                                                                                                    "ParentUID": 2027391519,
+                                                                                                    "PrefabID": 768441083,
+                                                                                                    "IsPrefab": true,
+                                                                                                    "Name": "LHand",
+                                                                                                    "IsActive": true,
+                                                                                                    "IsStatic": false,
+                                                                                                    "IsSceneRoot": false,
+                                                                                                    "ShowBoundingBoxes": false,
+                                                                                                    "NavigationInfo": {
+                                                                                                        "isNavigable": false,
+                                                                                                        "navigationArea": 0
+                                                                                                    },
+                                                                                                    "Components": [
+                                                                                                        {
+                                                                                                            "Type": 1,
+                                                                                                            "LocalPosition": [
+                                                                                                                -5.0929269790649414,
+                                                                                                                -20.550920486450195,
+                                                                                                                -0.60682141780853271
+                                                                                                            ],
+                                                                                                            "LocalRotation": [
+                                                                                                                0,
+                                                                                                                0,
+                                                                                                                0,
+                                                                                                                1
+                                                                                                            ],
+                                                                                                            "LocalScale": [
+                                                                                                                1,
+                                                                                                                1,
+                                                                                                                1
+                                                                                                            ]
+                                                                                                        }
+                                                                                                    ],
+                                                                                                    "Children": [
+                                                                                                        {
+                                                                                                            "UID": 1302184890,
+                                                                                                            "ParentUID": 636209832,
+                                                                                                            "PrefabID": 768441083,
+                                                                                                            "IsPrefab": true,
+                                                                                                            "Name": "Blaster Model",
+                                                                                                            "IsActive": true,
+                                                                                                            "IsStatic": false,
+                                                                                                            "IsSceneRoot": false,
+                                                                                                            "ShowBoundingBoxes": false,
+                                                                                                            "NavigationInfo": {
+                                                                                                                "isNavigable": false,
+                                                                                                                "navigationArea": 0
+                                                                                                            },
+                                                                                                            "Components": [
+                                                                                                                {
+                                                                                                                    "Type": 1,
+                                                                                                                    "LocalPosition": [
+                                                                                                                        6.4896240234375,
+                                                                                                                        6.530517578125,
+                                                                                                                        10.535415649414063
+                                                                                                                    ],
+                                                                                                                    "LocalRotation": [
+                                                                                                                        4.889444227273998e-08,
+                                                                                                                        -2.1653253412523554e-08,
+                                                                                                                        5.2154071283894154e-08,
+                                                                                                                        1
+                                                                                                                    ],
+                                                                                                                    "LocalScale": [
+                                                                                                                        0.99999994039535522,
+                                                                                                                        0.99999994039535522,
+                                                                                                                        0.9999997615814209
+                                                                                                                    ]
+                                                                                                                }
+                                                                                                            ],
+                                                                                                            "Children": [
+                                                                                                                {
+                                                                                                                    "UID": 169562100,
+                                                                                                                    "ParentUID": 1302184890,
+                                                                                                                    "PrefabID": 768441083,
+                                                                                                                    "IsPrefab": true,
+                                                                                                                    "Name": "SecondaryBarrel",
+                                                                                                                    "IsActive": true,
+                                                                                                                    "IsStatic": false,
+                                                                                                                    "IsSceneRoot": false,
+                                                                                                                    "ShowBoundingBoxes": false,
+                                                                                                                    "NavigationInfo": {
+                                                                                                                        "isNavigable": false,
+                                                                                                                        "navigationArea": 0
+                                                                                                                    },
+                                                                                                                    "Components": [
+                                                                                                                        {
+                                                                                                                            "Type": 1,
+                                                                                                                            "LocalPosition": [
+                                                                                                                                -14.603271484375,
+                                                                                                                                -43.221916198730469,
+                                                                                                                                -18.837615966796875
+                                                                                                                            ],
+                                                                                                                            "LocalRotation": [
+                                                                                                                                -7.6461765274871141e-07,
+                                                                                                                                -8.6357090367528144e-07,
+                                                                                                                                -2.3096836798686127e-07,
+                                                                                                                                1
+                                                                                                                            ],
+                                                                                                                            "LocalScale": [
+                                                                                                                                1.0000002384185791,
+                                                                                                                                0.99999845027923584,
+                                                                                                                                0.99999767541885376
+                                                                                                                            ]
+                                                                                                                        }
+                                                                                                                    ],
+                                                                                                                    "Children": []
+                                                                                                                },
+                                                                                                                {
+                                                                                                                    "UID": 925476514,
+                                                                                                                    "ParentUID": 1302184890,
+                                                                                                                    "PrefabID": 768441083,
+                                                                                                                    "IsPrefab": true,
+                                                                                                                    "Name": "BlasterMesh",
+                                                                                                                    "IsActive": true,
+                                                                                                                    "IsStatic": false,
+                                                                                                                    "IsSceneRoot": false,
+                                                                                                                    "ShowBoundingBoxes": false,
+                                                                                                                    "NavigationInfo": {
+                                                                                                                        "isNavigable": false,
+                                                                                                                        "navigationArea": 0
+                                                                                                                    },
+                                                                                                                    "Components": [
+                                                                                                                        {
+                                                                                                                            "Type": 1,
+                                                                                                                            "LocalPosition": [
+                                                                                                                                0,
+                                                                                                                                0,
+                                                                                                                                0
+                                                                                                                            ],
+                                                                                                                            "LocalRotation": [
+                                                                                                                                0.6330222487449646,
+                                                                                                                                -0.75440651178359985,
+                                                                                                                                -0.11161892861127853,
+                                                                                                                                0.13302218914031982
+                                                                                                                            ],
+                                                                                                                            "LocalScale": [
+                                                                                                                                0.5,
+                                                                                                                                0.5,
+                                                                                                                                0.5
+                                                                                                                            ]
+                                                                                                                        },
+                                                                                                                        {
+                                                                                                                            "Type": 2,
+                                                                                                                            "UID": 106224982,
+                                                                                                                            "Name": "Blaster.nemesh",
+                                                                                                                            "Path": "Library\/Meshes\/106224982.nemesh",
+                                                                                                                            "File": "106224982.nemesh",
+                                                                                                                            "ShowWireframe": false,
+                                                                                                                            "ShowBoundingBox": false,
+                                                                                                                            "Outline": false,
+                                                                                                                            "OutlineThickness": -2147483648,
+                                                                                                                            "OutlineColor": [
+                                                                                                                                0,
+                                                                                                                                0,
+                                                                                                                                0,
+                                                                                                                                0
+                                                                                                                            ],
+                                                                                                                            "RenderLast": false
+                                                                                                                        },
+                                                                                                                        {
+                                                                                                                            "Type": 3,
+                                                                                                                            "Material": {
+                                                                                                                                "UID": 1703275201,
+                                                                                                                                "Color": [
+                                                                                                                                    0.58823531866073608,
+                                                                                                                                    0.58823531866073608,
+                                                                                                                                    0.58823531866073608,
+                                                                                                                                    1
+                                                                                                                                ],
+                                                                                                                                "Name": "Blaster.nemat",
+                                                                                                                                "Path": "Library\/Materials\/1703275201.nemat",
+                                                                                                                                "File": "1703275201.nemat"
+                                                                                                                            },
+                                                                                                                            "Texture": {
+                                                                                                                                "AssetsPath": "Assets\/Textures\/\/Weapons\/blaster.png",
+                                                                                                                                "AssetsName": "blaster.png",
+                                                                                                                                "LibaryPath": "Library\/Textures\/186960503.netex",
+                                                                                                                                "LibraryFile": "186960503.netex"
+                                                                                                                            },
+                                                                                                                            "Shader": {
+                                                                                                                                "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                                                                                                                                "AssetsName": "DefaultShader.shader",
+                                                                                                                                "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                                                                                                                                "LibraryFile": "800223282.neshader"
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                    ],
+                                                                                                                    "Children": []
+                                                                                                                }
+                                                                                                            ]
+                                                                                                        }
+                                                                                                    ]
+                                                                                                }
+                                                                                            ]
+                                                                                        }
+                                                                                    ]
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                {
+                                                                    "UID": 1496313308,
+                                                                    "ParentUID": 301833257,
+                                                                    "PrefabID": 768441083,
+                                                                    "IsPrefab": true,
+                                                                    "Name": "RClav",
+                                                                    "IsActive": true,
+                                                                    "IsStatic": false,
+                                                                    "IsSceneRoot": false,
+                                                                    "ShowBoundingBoxes": false,
+                                                                    "NavigationInfo": {
+                                                                        "isNavigable": false,
+                                                                        "navigationArea": 0
+                                                                    },
+                                                                    "Components": [
+                                                                        {
+                                                                            "Type": 1,
+                                                                            "LocalPosition": [
+                                                                                -1.4748480319976807,
+                                                                                14.651679992675781,
+                                                                                1.0178699767493526e-06
+                                                                            ],
+                                                                            "LocalRotation": [
+                                                                                0,
+                                                                                0,
+                                                                                0,
+                                                                                1
+                                                                            ],
+                                                                            "LocalScale": [
+                                                                                1,
+                                                                                1,
+                                                                                1
+                                                                            ]
+                                                                        }
+                                                                    ],
+                                                                    "Children": [
+                                                                        {
+                                                                            "UID": 1100366122,
+                                                                            "ParentUID": 1496313308,
+                                                                            "PrefabID": 768441083,
+                                                                            "IsPrefab": true,
+                                                                            "Name": "RShoulder",
+                                                                            "IsActive": true,
+                                                                            "IsStatic": false,
+                                                                            "IsSceneRoot": false,
+                                                                            "ShowBoundingBoxes": false,
+                                                                            "NavigationInfo": {
+                                                                                "isNavigable": false,
+                                                                                "navigationArea": 0
+                                                                            },
+                                                                            "Components": [
+                                                                                {
+                                                                                    "Type": 1,
+                                                                                    "LocalPosition": [
+                                                                                        -6.151547908782959,
+                                                                                        15.674460411071777,
+                                                                                        0.31004568934440613
+                                                                                    ],
+                                                                                    "LocalRotation": [
+                                                                                        -0.41151866316795349,
+                                                                                        -0.5511741042137146,
+                                                                                        0.44678544998168945,
+                                                                                        0.57205092906951904
+                                                                                    ],
+                                                                                    "LocalScale": [
+                                                                                        0.99999994039535522,
+                                                                                        1,
+                                                                                        0.99999994039535522
+                                                                                    ]
+                                                                                }
+                                                                            ],
+                                                                            "Children": [
+                                                                                {
+                                                                                    "UID": 534685858,
+                                                                                    "ParentUID": 1100366122,
+                                                                                    "PrefabID": 768441083,
+                                                                                    "IsPrefab": true,
+                                                                                    "Name": "RElbow",
+                                                                                    "IsActive": true,
+                                                                                    "IsStatic": false,
+                                                                                    "IsSceneRoot": false,
+                                                                                    "ShowBoundingBoxes": false,
+                                                                                    "NavigationInfo": {
+                                                                                        "isNavigable": false,
+                                                                                        "navigationArea": 0
+                                                                                    },
+                                                                                    "Components": [
+                                                                                        {
+                                                                                            "Type": 1,
+                                                                                            "LocalPosition": [
+                                                                                                -9.5478391647338867,
+                                                                                                40.224739074707031,
+                                                                                                0.12402059882879257
+                                                                                            ],
+                                                                                            "LocalRotation": [
+                                                                                                -0.01817263662815094,
+                                                                                                0.028498068451881409,
+                                                                                                0.0005833448376506567,
+                                                                                                0.99942851066589355
+                                                                                            ],
+                                                                                            "LocalScale": [
+                                                                                                1,
+                                                                                                0.99999994039535522,
+                                                                                                1
+                                                                                            ]
+                                                                                        }
+                                                                                    ],
+                                                                                    "Children": [
+                                                                                        {
+                                                                                            "UID": 420023447,
+                                                                                            "ParentUID": 534685858,
+                                                                                            "PrefabID": 768441083,
+                                                                                            "IsPrefab": true,
+                                                                                            "Name": "RWrist",
+                                                                                            "IsActive": true,
+                                                                                            "IsStatic": false,
+                                                                                            "IsSceneRoot": false,
+                                                                                            "ShowBoundingBoxes": false,
+                                                                                            "NavigationInfo": {
+                                                                                                "isNavigable": false,
+                                                                                                "navigationArea": 0
+                                                                                            },
+                                                                                            "Components": [
+                                                                                                {
+                                                                                                    "Type": 1,
+                                                                                                    "LocalPosition": [
+                                                                                                        -9.7331027984619141,
+                                                                                                        38.923370361328125,
+                                                                                                        -1.9252510070800781
+                                                                                                    ],
+                                                                                                    "LocalRotation": [
+                                                                                                        0,
+                                                                                                        0,
+                                                                                                        0,
+                                                                                                        1
+                                                                                                    ],
+                                                                                                    "LocalScale": [
+                                                                                                        1,
+                                                                                                        1,
+                                                                                                        1
+                                                                                                    ]
+                                                                                                }
+                                                                                            ],
+                                                                                            "Children": [
+                                                                                                {
+                                                                                                    "UID": 855491183,
+                                                                                                    "ParentUID": 420023447,
+                                                                                                    "PrefabID": 768441083,
+                                                                                                    "IsPrefab": true,
+                                                                                                    "Name": "RHand",
+                                                                                                    "IsActive": true,
+                                                                                                    "IsStatic": false,
+                                                                                                    "IsSceneRoot": false,
+                                                                                                    "ShowBoundingBoxes": false,
+                                                                                                    "NavigationInfo": {
+                                                                                                        "isNavigable": false,
+                                                                                                        "navigationArea": 0
+                                                                                                    },
+                                                                                                    "Components": [
+                                                                                                        {
+                                                                                                            "Type": 1,
+                                                                                                            "LocalPosition": [
+                                                                                                                -6.6559238433837891,
+                                                                                                                20.098810195922852,
+                                                                                                                -0.60681849718093872
+                                                                                                            ],
+                                                                                                            "LocalRotation": [
+                                                                                                                0,
+                                                                                                                0,
+                                                                                                                0,
+                                                                                                                1
+                                                                                                            ],
+                                                                                                            "LocalScale": [
+                                                                                                                1,
+                                                                                                                1,
+                                                                                                                1
+                                                                                                            ]
+                                                                                                        }
+                                                                                                    ],
+                                                                                                    "Children": [
+                                                                                                        {
+                                                                                                            "UID": 1001093062,
+                                                                                                            "ParentUID": 855491183,
+                                                                                                            "PrefabID": 768441083,
+                                                                                                            "IsPrefab": true,
+                                                                                                            "Name": "Blaster Model",
+                                                                                                            "IsActive": true,
+                                                                                                            "IsStatic": false,
+                                                                                                            "IsSceneRoot": false,
+                                                                                                            "ShowBoundingBoxes": false,
+                                                                                                            "NavigationInfo": {
+                                                                                                                "isNavigable": false,
+                                                                                                                "navigationArea": 0
+                                                                                                            },
+                                                                                                            "Components": [
+                                                                                                                {
+                                                                                                                    "Type": 1,
+                                                                                                                    "LocalPosition": [
+                                                                                                                        3.2301025390625,
+                                                                                                                        -9.5070037841796875,
+                                                                                                                        12.714706420898438
+                                                                                                                    ],
+                                                                                                                    "LocalRotation": [
+                                                                                                                        4.0046845839469825e-08,
+                                                                                                                        -9.3132168643705882e-09,
+                                                                                                                        0,
+                                                                                                                        1
+                                                                                                                    ],
+                                                                                                                    "LocalScale": [
+                                                                                                                        1,
+                                                                                                                        0.99999898672103882,
+                                                                                                                        1.0000022649765015
+                                                                                                                    ]
+                                                                                                                }
+                                                                                                            ],
+                                                                                                            "Children": [
+                                                                                                                {
+                                                                                                                    "UID": 200706849,
+                                                                                                                    "ParentUID": 1001093062,
+                                                                                                                    "PrefabID": 768441083,
+                                                                                                                    "IsPrefab": true,
+                                                                                                                    "Name": "BlasterMesh",
+                                                                                                                    "IsActive": true,
+                                                                                                                    "IsStatic": false,
+                                                                                                                    "IsSceneRoot": false,
+                                                                                                                    "ShowBoundingBoxes": false,
+                                                                                                                    "NavigationInfo": {
+                                                                                                                        "isNavigable": false,
+                                                                                                                        "navigationArea": 0
+                                                                                                                    },
+                                                                                                                    "Components": [
+                                                                                                                        {
+                                                                                                                            "Type": 1,
+                                                                                                                            "LocalPosition": [
+                                                                                                                                9.1552734375e-05,
+                                                                                                                                -0.00018310546875,
+                                                                                                                                0
+                                                                                                                            ],
+                                                                                                                            "LocalRotation": [
+                                                                                                                                0.60818201303482056,
+                                                                                                                                0.79259836673736572,
+                                                                                                                                0.034605566412210464,
+                                                                                                                                -0.02655378170311451
+                                                                                                                            ],
+                                                                                                                            "LocalScale": [
+                                                                                                                                0.49999994039535522,
+                                                                                                                                0.5,
+                                                                                                                                0.5
+                                                                                                                            ]
+                                                                                                                        },
+                                                                                                                        {
+                                                                                                                            "Type": 2,
+                                                                                                                            "UID": 106224982,
+                                                                                                                            "Name": "Blaster.nemesh",
+                                                                                                                            "Path": "Library\/Meshes\/106224982.nemesh",
+                                                                                                                            "File": "106224982.nemesh",
+                                                                                                                            "ShowWireframe": false,
+                                                                                                                            "ShowBoundingBox": false,
+                                                                                                                            "Outline": false,
+                                                                                                                            "OutlineThickness": -2147483648,
+                                                                                                                            "OutlineColor": [
+                                                                                                                                0,
+                                                                                                                                0,
+                                                                                                                                0,
+                                                                                                                                0
+                                                                                                                            ],
+                                                                                                                            "RenderLast": false
+                                                                                                                        },
+                                                                                                                        {
+                                                                                                                            "Type": 3,
+                                                                                                                            "Material": {
+                                                                                                                                "UID": 1703275201,
+                                                                                                                                "Color": [
+                                                                                                                                    0.58823531866073608,
+                                                                                                                                    0.58823531866073608,
+                                                                                                                                    0.58823531866073608,
+                                                                                                                                    1
+                                                                                                                                ],
+                                                                                                                                "Name": "Blaster.nemat",
+                                                                                                                                "Path": "Library\/Materials\/1703275201.nemat",
+                                                                                                                                "File": "1703275201.nemat"
+                                                                                                                            },
+                                                                                                                            "Texture": {
+                                                                                                                                "AssetsPath": "Assets\/Textures\/\/Weapons\/blaster.png",
+                                                                                                                                "AssetsName": "blaster.png",
+                                                                                                                                "LibaryPath": "Library\/Textures\/186960503.netex",
+                                                                                                                                "LibraryFile": "186960503.netex"
+                                                                                                                            },
+                                                                                                                            "Shader": {
+                                                                                                                                "AssetsPath": "Assets\/Shaders\/DefaultShader.shader",
+                                                                                                                                "AssetsName": "DefaultShader.shader",
+                                                                                                                                "LibaryPath": "Library\/Shaders\/800223282.neshader",
+                                                                                                                                "LibraryFile": "800223282.neshader"
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                    ],
+                                                                                                                    "Children": []
+                                                                                                                },
+                                                                                                                {
+                                                                                                                    "UID": 1512667075,
+                                                                                                                    "ParentUID": 1001093062,
+                                                                                                                    "PrefabID": 768441083,
+                                                                                                                    "IsPrefab": true,
+                                                                                                                    "Name": "Barrel",
+                                                                                                                    "IsActive": true,
+                                                                                                                    "IsStatic": false,
+                                                                                                                    "IsSceneRoot": false,
+                                                                                                                    "ShowBoundingBoxes": false,
+                                                                                                                    "NavigationInfo": {
+                                                                                                                        "isNavigable": false,
+                                                                                                                        "navigationArea": 0
+                                                                                                                    },
+                                                                                                                    "Components": [
+                                                                                                                        {
+                                                                                                                            "Type": 1,
+                                                                                                                            "LocalPosition": [
+                                                                                                                                -11.710708618164063,
+                                                                                                                                44.423431396484375,
+                                                                                                                                -19.809844970703125
+                                                                                                                            ],
+                                                                                                                            "LocalRotation": [
+                                                                                                                                -4.6566128730773926e-10,
+                                                                                                                                1.3969838619232178e-09,
+                                                                                                                                -7.4505805969238281e-09,
+                                                                                                                                1
+                                                                                                                            ],
+                                                                                                                            "LocalScale": [
+                                                                                                                                1,
+                                                                                                                                1,
+                                                                                                                                1
+                                                                                                                            ]
+                                                                                                                        }
+                                                                                                                    ],
+                                                                                                                    "Children": []
+                                                                                                                }
+                                                                                                            ]
+                                                                                                        }
+                                                                                                    ]
+                                                                                                }
+                                                                                            ]
+                                                                                        }
+                                                                                    ]
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                {
+                                                                    "UID": 2109847615,
+                                                                    "ParentUID": 301833257,
+                                                                    "PrefabID": 768441083,
+                                                                    "IsPrefab": true,
+                                                                    "Name": "Neck",
+                                                                    "IsActive": true,
+                                                                    "IsStatic": false,
+                                                                    "IsSceneRoot": false,
+                                                                    "ShowBoundingBoxes": false,
+                                                                    "NavigationInfo": {
+                                                                        "isNavigable": false,
+                                                                        "navigationArea": 0
+                                                                    },
+                                                                    "Components": [
+                                                                        {
+                                                                            "Type": 1,
+                                                                            "LocalPosition": [
+                                                                                9.6665143966674805,
+                                                                                0,
+                                                                                -1.5571309575079795e-08
+                                                                            ],
+                                                                            "LocalRotation": [
+                                                                                0,
+                                                                                0,
+                                                                                0,
+                                                                                1
+                                                                            ],
+                                                                            "LocalScale": [
+                                                                                1,
+                                                                                1,
+                                                                                1
+                                                                            ]
+                                                                        }
+                                                                    ],
+                                                                    "Children": [
+                                                                        {
+                                                                            "UID": 804856859,
+                                                                            "ParentUID": 2109847615,
+                                                                            "PrefabID": 768441083,
+                                                                            "IsPrefab": true,
+                                                                            "Name": "Head",
+                                                                            "IsActive": true,
+                                                                            "IsStatic": false,
+                                                                            "IsSceneRoot": false,
+                                                                            "ShowBoundingBoxes": false,
+                                                                            "NavigationInfo": {
+                                                                                "isNavigable": false,
+                                                                                "navigationArea": 0
+                                                                            },
+                                                                            "Components": [
+                                                                                {
+                                                                                    "Type": 1,
+                                                                                    "LocalPosition": [
+                                                                                        17.069889068603516,
+                                                                                        0.84242892265319824,
+                                                                                        3.0889211188878107e-08
+                                                                                    ],
+                                                                                    "LocalRotation": [
+                                                                                        -2.781418402264535e-07,
+                                                                                        0,
+                                                                                        0,
+                                                                                        1
+                                                                                    ],
+                                                                                    "LocalScale": [
+                                                                                        1,
+                                                                                        1,
+                                                                                        1
+                                                                                    ]
+                                                                                }
+                                                                            ],
+                                                                            "Children": [
+                                                                                {
+                                                                                    "UID": 1678023244,
+                                                                                    "ParentUID": 804856859,
+                                                                                    "PrefabID": 768441083,
+                                                                                    "IsPrefab": true,
+                                                                                    "Name": "HeadEnd",
+                                                                                    "IsActive": true,
+                                                                                    "IsStatic": false,
+                                                                                    "IsSceneRoot": false,
+                                                                                    "ShowBoundingBoxes": false,
+                                                                                    "NavigationInfo": {
+                                                                                        "isNavigable": false,
+                                                                                        "navigationArea": 0
+                                                                                    },
+                                                                                    "Components": [
+                                                                                        {
+                                                                                            "Type": 1,
+                                                                                            "LocalPosition": [
+                                                                                                31.748149871826172,
+                                                                                                1.0351879596710205,
+                                                                                                2.0604309369787188e-08
+                                                                                            ],
+                                                                                            "LocalRotation": [
+                                                                                                0,
+                                                                                                0,
+                                                                                                0,
+                                                                                                1
+                                                                                            ],
+                                                                                            "LocalScale": [
+                                                                                                1,
+                                                                                                1,
+                                                                                                1
+                                                                                            ]
+                                                                                        }
+                                                                                    ],
+                                                                                    "Children": []
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "UID": 1445454588,
+                    "ParentUID": 1770393209,
+                    "PrefabID": 768441083,
+                    "IsPrefab": true,
+                    "Name": "HandRight",
+                    "IsActive": true,
+                    "IsStatic": false,
+                    "IsSceneRoot": false,
+                    "ShowBoundingBoxes": false,
+                    "NavigationInfo": {
+                        "isNavigable": false,
+                        "navigationArea": 0
+                    },
+                    "Components": [
+                        {
+                            "Type": 1,
+                            "LocalPosition": [
+                                -37.907180786132813,
+                                110.00000762939453,
+                                99.999992370605469
+                            ],
+                            "LocalRotation": [
+                                0,
+                                -1.4901161193847656e-08,
+                                0,
+                                1
+                            ],
+                            "LocalScale": [
+                                1,
+                                1,
+                                1
+                            ]
+                        }
+                    ],
+                    "Children": []
+                }
+            ]
+        }
+    ]
+} 

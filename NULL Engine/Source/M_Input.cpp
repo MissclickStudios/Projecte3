@@ -1,3 +1,7 @@
+#include "Profiler.h"
+
+#include "Macros.h"
+
 #include "Application.h"																						// ATTENTION: Globals.h already included in Module.h
 #include "M_Window.h"
 #include "M_Renderer3D.h"
@@ -7,50 +11,65 @@
 #include "M_Input.h"
 
 #include "MemoryManager.h"
-#include "Profiler.h"
 
 #define MAX_KEYS 300
 #define MAX_DIR_LENGTH 300
 
 M_Input::M_Input(bool isActive) : Module("Input", isActive)
 {
+	keyboardReceivedInput		= false;
+	mouseReceivedInput			= false;
+	gameControllerReceivedInput	= false;
+	
+	// --- KEYBOARD INITIALIZATION
 	keyboard = new KeyState[MAX_KEYS];
 	memset(keyboard, 0, sizeof(KeyState) * MAX_KEYS);
 
 	maxNumScancodes = (uint)SDL_NUM_SCANCODES;
 
-	mouseX = 0;
-	mouseY = 0;
-	mouseZ = 0;
+	// --- MOUSE INITIALIZTAION
+	mouseX			= 0;
+	mouseY			= 0;
+	mouseZ			= 0;
 
-	mouseMotionX = 0;
-	mouseMotionY = 0;
+	mouseMotionX	= 0;
+	mouseMotionY	= 0;
 
-	mouseWheelX = 0;
-	mouseWheelY = 0;
+	mouseWheelX		= 0;
+	mouseWheelY		= 0;
 
-	prevMousePosX = 0;
-	prevMousePosY = 0;
+	prevMousePosX	= 0;
+	prevMousePosY	= 0;
 
+	// --- GAME CONTROLLER INITIALIZATION
 	gameController.buttons = new ButtonState[NUM_CONTROLLER_BUTTONS];
 	memset(gameController.buttons, 0, sizeof(ButtonState) * NUM_CONTROLLER_BUTTONS);		// 0 = BUTTON_IDLE
 
-	gameController.triggers = new ButtonState[NUM_CONTROLLER_TRIGGERS];					// Only 2 triggers are supported for a given game controller.
-	memset(gameController.triggers, 0, sizeof(ButtonState) * NUM_CONTROLLER_TRIGGERS);	// 0 = BUTTON_IDLE
+	gameController.triggers = new ButtonState[NUM_CONTROLLER_TRIGGERS];						// Only 2 triggers are supported for a given game controller.
+	memset(gameController.triggers, 0, sizeof(ButtonState) * NUM_CONTROLLER_TRIGGERS);		// 0 = BUTTON_IDLE
 
 	gameController.axis = new AxisState[NUM_CONTROLLER_AXIS];								// Only 4 axis are supported for a given game controller.
 	memset(gameController.axis, 0, sizeof(AxisState) * NUM_CONTROLLER_AXIS);				// 0 = AXIS_IDLE
 
-	gameController.id = nullptr;
-	gameController.index = CONTROLLER_INDEX;
+	gameController.id		= nullptr;
+	gameController.joystick = nullptr;
+	gameController.index	= CONTROLLER_INDEX;
+
 	gameController.max_axis_input_threshold = 0.5f;
 	gameController.min_axis_input_threshold = 0.2f;
+	gameController.max_positive_threshold	= (int)(gameController.max_axis_input_threshold * MAX_AXIS);
+	gameController.max_negative_threshold	= -(int)(gameController.max_axis_input_threshold * MAX_AXIS);
+	gameController.min_positive_threshold	= (int)(gameController.min_axis_input_threshold * MAX_AXIS);
+	gameController.min_negative_threshold	= -(int)(gameController.min_axis_input_threshold * MAX_AXIS);
 }
 
 // Destructor
 M_Input::~M_Input()
 {
-	delete[] keyboard;
+	RELEASE(keyboard);
+	RELEASE(gameController.buttons);
+	RELEASE(gameController.triggers);
+	RELEASE(gameController.axis);
 }
 
 // Called before render is available
@@ -87,295 +106,15 @@ bool M_Input::Init(ParsonNode& config)
 UpdateStatus M_Input::PreUpdate(float dt)
 {
 	OPTICK_CATEGORY("M_Input PreUpdate", Optick::Category::Module)
-
-	OPTICK_CATEGORY("M_Input PreUpdate: Keyboard", Optick::Category::Input)
 	SDL_PumpEvents();
 
-	const Uint8* keys = SDL_GetKeyboardState(NULL);
+	GatherKeyboardInputs();
 
-	for (int i = 0; i < MAX_KEYS; ++i)
-	{
-		if (keys[i] == 1)
-		{
-			if (keyboard[i] == KeyState::KEY_IDLE)
-			{
-				keyboard[i] = KeyState::KEY_DOWN;
-			}
-			else
-			{
-				keyboard[i] = KeyState::KEY_REPEAT;
-			}
-		}
-		else
-		{
-			if (keyboard[i] == KeyState::KEY_REPEAT || keyboard[i] == KeyState::KEY_DOWN)
-			{
-				keyboard[i] = KeyState::KEY_UP;
-			}
-			else
-			{
-				keyboard[i] = KeyState::KEY_IDLE;
-			}
-		}
-	}
+	GatherMouseInputs();
 
-	OPTICK_CATEGORY("M_Input PreUpdate: Mouse", Optick::Category::Input)
+	GatherGameControllerInputs();
 
-	Uint32 buttons = SDL_GetMouseState(&mouseX, &mouseY);
-
-	mouseX /= SCREEN_SIZE;
-	mouseY /= SCREEN_SIZE;
-	mouseZ = 0;
-
-	for (int i = 0; i < 5; ++i)
-	{
-		if (buttons & SDL_BUTTON(i))
-		{
-			if (mouseButtons[i] == KeyState::KEY_IDLE)
-			{
-				mouseButtons[i] = KeyState::KEY_DOWN;
-			}
-			else
-			{
-				mouseButtons[i] = KeyState::KEY_REPEAT;
-			}
-		}
-		else
-		{
-			if (mouseButtons[i] == KeyState::KEY_REPEAT || mouseButtons[i] == KeyState::KEY_DOWN)
-			{
-				mouseButtons[i] = KeyState::KEY_UP;
-			}
-			else
-			{
-				mouseButtons[i] = KeyState::KEY_IDLE;
-			}
-		}
-	}
-
-	mouseMotionX = mouseMotionY = 0;
-
-	OPTICK_CATEGORY("M_Input PreUpdate: Events", Optick::Category::Input)
-	bool quit = false;
-	SDL_Event event;
-	while (SDL_PollEvent(&event))
-	{
-		//Process other modules input
-		for (std::vector<Module*>::const_iterator it = modulesProcessInput.cbegin(); it != modulesProcessInput.cend(); ++it)
-		{
-			if ((*it)->IsActive())
-				(*it)->ProcessInput(event);
-		}
-
-		switch (event.type)
-		{
-		case SDL_MOUSEWHEEL:
-			mouseWheelX = event.wheel.x;
-			mouseWheelY = event.wheel.y;
-			mouseZ = event.wheel.y;
-			break;
-
-		case SDL_MOUSEMOTION:
-			mouseX = event.motion.x / SCREEN_SIZE;
-			mouseY = event.motion.y / SCREEN_SIZE;
-
-			mouseMotionX = event.motion.xrel / SCREEN_SIZE;
-			mouseMotionY = event.motion.yrel / SCREEN_SIZE;
-			break;
-
-		case SDL_QUIT:
-			quit = true;
-			break;
-
-		case SDL_WINDOWEVENT:
-			if (event.window.windowID == SDL_GetWindowID(App->window->GetWindow()))
-			{
-				if (WindowSizeWasManipulated(event.window.event))
-				{
-					App->renderer->OnResize();
-				}
-
-				if (event.window.event == SDL_WINDOWEVENT_CLOSE)
-				{
-					App->quit = true;
-					return UpdateStatus::STOP;
-				}
-			}
-
-			break;
-
-		case SDL_DROPFILE:
-			if (event.drop.file != nullptr)
-			{
-				//App->resourceManager->ImportFile(event.drop.file);
-				App->resourceManager->DragAndDrop(event.drop.file);
-				//Importer::ImportFile(event.drop.file);
-			}
-			else
-			{
-				LOG("[ERROR] Input: String from SDL_DROPFILE Event was nullptr!");
-			}
-
-			SDL_free(event.drop.file);
-
-			break;
-
-		case SDL_CONTROLLERDEVICEADDED:
-			if (gameController.id == nullptr)
-			{
-				if (SDL_NumJoysticks() > 0)
-				{
-					if (SDL_IsGameController(CONTROLLER_INDEX))
-					{
-						gameController.id = SDL_GameControllerOpen(CONTROLLER_INDEX);
-					}
-				}
-				else
-				{
-					LOG("No joysticks currently attached to the system. SDL_Error: %s\n", SDL_GetError());
-				}
-			}
-		}
-	}
-
-	OPTICK_CATEGORY("M_Input PreUpdate: Controller", Optick::Category::Input)
-
-	if (SDL_GameControllerGetAttached(gameController.id))														// Returns true if the given game controller is open and currently connected.
-	{
-		// --- GAME CONTROLLER BUTTON STATES ---
-		for (int i = 0; i < SDL_CONTROLLER_BUTTON_MAX; ++i)														// Will iterate through all the buttons available. Same as the keyboard key loop.
-		{
-			if (SDL_GameControllerGetButton(gameController.id, SDL_GameControllerButton(i)) == SDL_PRESSED)	// Gets the current state of a button in a controller. 1 = PRESSED / 0 = RELEASED.
-			{
-				if (gameController.buttons[i] == ButtonState::BUTTON_IDLE)
-				{
-					gameController.buttons[i] = ButtonState::BUTTON_DOWN;
-				}
-				else
-				{
-					gameController.buttons[i] = ButtonState::BUTTON_REPEAT;
-				}
-			}
-			else
-			{
-				if (gameController.buttons[i] == ButtonState::BUTTON_DOWN || gameController.buttons[i] == ButtonState::BUTTON_REPEAT)
-				{
-					gameController.buttons[i] = ButtonState::BUTTON_UP;
-				}
-				else
-				{
-					gameController.buttons[i] = ButtonState::BUTTON_IDLE;
-				}
-			}
-		}
-
-		// --- GAME CONTROLLER TRIGGER STATES ---
-		for (int i = 0; i < NUM_CONTROLLER_TRIGGERS; ++i)
-		{
-			int trigger_value = SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(TRIGGER_INDEX + i));
-			//LOG("CURRENT AXIS VALUE IS: %d", trigger_value);
-
-			if (trigger_value > gameController.max_axis_input_threshold* MAX_AXIS)
-			{
-				if (gameController.triggers[i] == ButtonState::BUTTON_IDLE)
-				{
-					gameController.triggers[i] = ButtonState::BUTTON_DOWN;
-				}
-				else
-				{
-					gameController.triggers[i] = ButtonState::BUTTON_REPEAT;
-				}
-			}
-			else
-			{
-				if (gameController.triggers[i] == ButtonState::BUTTON_DOWN || gameController.triggers[i] == ButtonState::BUTTON_REPEAT)
-				{
-					gameController.triggers[i] = ButtonState::BUTTON_UP;
-				}
-				else
-				{
-					gameController.triggers[i] = ButtonState::BUTTON_IDLE;
-				}
-			}
-		}
-
-		// --- GAME CONTROLLER AXIS STATES ---
-		int max_positive_threshold = (int)(gameController.max_axis_input_threshold * MAX_AXIS);			//Maybe make it part of the GameController struct.
-		int max_negative_threshold = -(int)(gameController.max_axis_input_threshold * MAX_AXIS);
-		int min_positive_threshold = (int)(gameController.min_axis_input_threshold * MAX_AXIS);
-		int min_negative_threshold = -(int)(gameController.min_axis_input_threshold * MAX_AXIS);
-
-		for (int i = 0; i < NUM_CONTROLLER_AXIS; ++i)
-		{
-			int axis_value = SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(i));		//Getting the current axis value of the given joystick.
-
-			if (abs(axis_value) < (int)(gameController.min_axis_input_threshold * MAX_AXIS))
-			{
-				axis_value = 0;																				// Safety check to compensate for the controller's joystick dead value.
-			}
-
-			//LOG("CURRENT AXIS VALUE IS: %d", axis_value);
-
-			if (axis_value > max_positive_threshold)														// The joystick is all the way into the positive (BOTTOM / RIGHT).
-			{
-				if (gameController.axis[i] == AxisState::AXIS_IDLE)
-				{
-					gameController.axis[i] = AxisState::POSITIVE_AXIS_DOWN;
-				}
-				else
-				{
-					gameController.axis[i] = AxisState::POSITIVE_AXIS_REPEAT;
-				}
-			}
-			else
-			{
-				if (axis_value < min_positive_threshold && axis_value > min_negative_threshold)			// The joystick is within the min threshold. (No negative axis input)
-				{
-					if (gameController.axis[i] == AxisState::POSITIVE_AXIS_DOWN || gameController.axis[i] == AxisState::POSITIVE_AXIS_REPEAT)
-					{
-						gameController.axis[i] = AxisState::POSITIVE_AXIS_RELEASE;
-					}
-					else
-					{
-						gameController.axis[i] = AxisState::AXIS_IDLE;
-					}
-				}
-			}
-
-			if (axis_value < max_negative_threshold)														// The joystick is all the way into the negative (TOP / LEFT).
-			{
-				if (gameController.axis[i] == AxisState::AXIS_IDLE)
-				{
-					gameController.axis[i] = AxisState::NEGATIVE_AXIS_DOWN;
-				}
-				else
-				{
-					gameController.axis[i] = AxisState::NEGATIVE_AXIS_REPEAT;
-				}
-			}
-			else if (axis_value > min_negative_threshold&& axis_value < min_positive_threshold)													// The joystick is not past the positive threshold. (No positive axis input)
-			{
-				if (gameController.axis[i] == AxisState::NEGATIVE_AXIS_DOWN || gameController.axis[i] == AxisState::NEGATIVE_AXIS_REPEAT)
-				{
-					gameController.axis[i] = AxisState::NEGATIVE_AXIS_RELEASE;
-				}
-				else
-				{
-					gameController.axis[i] = AxisState::AXIS_IDLE;
-				}
-			}
-		}
-	}
-	else																											// If the game controller has been disconnected.
-	{
-		if (gameController.id != nullptr)																			// There was a controller that was open, attached and had an ID
-		{
-			SDL_GameControllerClose(gameController.id);
-			gameController.id = nullptr;
-		}
-	}
-
-	return UpdateStatus::CONTINUE;
+	return GatherPollEvents();															// Call GatherPollEvents() earlier so the all the other 3 gathers can be avoided in case of App Quit?
 }
 
 UpdateStatus M_Input::Update(float dt)
@@ -419,6 +158,7 @@ bool M_Input::SaveConfiguration(ParsonNode& root) const
 }
 
 // --------- INPUT METHODS ---------
+// -- KEYBOARD
 KeyState M_Input::GetKey(int id) const
 {
 	return keyboard[id];
@@ -429,14 +169,20 @@ bool M_Input::GetKey(int id, KeyState state) const
 	return (keyboard[id] == state);
 }
 
-KeyState M_Input::GetMouseButton(int id) const
-{
-	return mouseButtons[id];
-}
-
 uint M_Input::GetMaxNumScancodes() const
 {
 	return maxNumScancodes;
+}
+
+bool M_Input::KeyboardReceivedInputs() const
+{
+	return keyboardReceivedInput;
+}
+
+// --- MOUSE
+KeyState M_Input::GetMouseButton(int id) const
+{
+	return mouseButtons[id];
 }
 
 int M_Input::GetMouseX() const
@@ -484,6 +230,12 @@ int M_Input::GetMouseYWheel() const
 	return mouseWheelY;
 }
 
+bool M_Input::MouseReceivedInputs() const
+{
+	return mouseReceivedInput;
+}
+
+// -- GAME CONTROLLER
 ButtonState M_Input::GetGameControllerButton(int id) const
 {
 	if (gameController.id != nullptr)
@@ -518,16 +270,63 @@ int M_Input::GetGameControllerAxisValue(int id) const
 {
 	if (gameController.id != nullptr) 
 	{
-		if(SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id)) < -JOYSTICK_THRESHOLD)
+		if (id < 2)
+		{
+			if (gameController.axis[id] != AxisState::AXIS_IDLE)
+				return SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id));
+		}
+		else if (id > 1)
+		{
+			if (SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id)) > JOYSTICK_THRESHOLD ||
+				SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id)) < -JOYSTICK_THRESHOLD)
+				return SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id));
+		}
+			
+		/*if(SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id)) < -JOYSTICK_THRESHOLD)
 			return SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id));
 
 		if (SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id)) > JOYSTICK_THRESHOLD)
-			return SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id));
+			return SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id));*/
 	}
 
 	return 0;
 }
 
+int M_Input::GetGameControllerAxisRaw(int id) const
+{
+	if (gameController.id != nullptr)
+	{
+		if (id < 2)
+		{
+			if (gameController.axis[id] != AxisState::AXIS_IDLE)
+				return SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id));
+		}
+		else if (id > 1)
+		{
+			return SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id));
+		}
+
+		/*if(SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id)) < -JOYSTICK_THRESHOLD)
+			return SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id));
+
+		if (SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id)) > JOYSTICK_THRESHOLD)
+			return SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id));*/
+	}
+
+	return 0;
+}
+
+int M_Input::GetGameControllerAxisInput(int id) const
+{
+	return ((gameController.id != nullptr) ? SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(id)) : 0);
+}
+
+bool M_Input::GameControllerReceivedInputs() const
+{
+	return gameControllerReceivedInput;
+}
+
+// -- OTHERS
 bool M_Input::WindowSizeWasManipulated(Uint8 windowEvent) const
 {
 	return (windowEvent == SDL_WINDOWEVENT_RESIZED
@@ -540,4 +339,362 @@ bool M_Input::WindowSizeWasManipulated(Uint8 windowEvent) const
 void M_Input::AddModuleToProcessInput(Module* module)
 {
 	modulesProcessInput.push_back(module);
+}
+
+// --- GATHER INPUT METHODS
+void M_Input::GatherKeyboardInputs()
+{
+	OPTICK_CATEGORY("M_Input PreUpdate: Keyboard", Optick::Category::Input);
+	
+	keyboardReceivedInput = false;
+	
+	const Uint8* keys = SDL_GetKeyboardState(NULL);
+
+	for (uint i = 0; i < MAX_KEYS; ++i)
+	{
+		if (keys[i] == SDL_PRESSED)
+		{
+			if (keyboard[i] == KeyState::KEY_IDLE)
+			{
+				keyboard[i] = KeyState::KEY_DOWN;
+			}
+			else
+			{
+				keyboard[i] = KeyState::KEY_REPEAT;
+			}
+
+			keyboardReceivedInput = true;
+		}
+		else
+		{
+			if (keyboard[i] == KeyState::KEY_REPEAT || keyboard[i] == KeyState::KEY_DOWN)
+			{
+				keyboard[i] = KeyState::KEY_UP;
+
+				keyboardReceivedInput = true;
+			}
+			else
+			{
+				keyboard[i] = KeyState::KEY_IDLE;
+			}
+		}
+	}
+}
+
+void M_Input::GatherMouseInputs()
+{
+	OPTICK_CATEGORY("M_Input PreUpdate: Mouse", Optick::Category::Input);
+
+	mouseReceivedInput = false;
+
+	Uint32 buttons = SDL_GetMouseState(&mouseX, &mouseY);
+
+	mouseX /= SCREEN_SIZE;
+	mouseY /= SCREEN_SIZE;
+	mouseZ = 0;
+
+	for (uint i = 0; i < NUM_MOUSE_BUTTONS; ++i)
+	{
+		if (buttons & SDL_BUTTON(i))
+		{
+			if (mouseButtons[i] == KeyState::KEY_IDLE)
+			{
+				mouseButtons[i] = KeyState::KEY_DOWN;
+			}
+			else
+			{
+				mouseButtons[i] = KeyState::KEY_REPEAT;
+			}
+
+			mouseReceivedInput = true;
+		}
+		else
+		{
+			if (mouseButtons[i] == KeyState::KEY_REPEAT || mouseButtons[i] == KeyState::KEY_DOWN)
+			{
+				mouseButtons[i] = KeyState::KEY_UP;
+
+				mouseReceivedInput = true;
+			}
+			else
+			{
+				mouseButtons[i] = KeyState::KEY_IDLE;
+			}
+		}
+	}
+
+	mouseMotionX = mouseMotionY = 0;
+}
+
+void M_Input::GatherGameControllerInputs()
+{
+	OPTICK_CATEGORY("M_Input PreUpdate: Controller", Optick::Category::Input);
+
+	gameControllerReceivedInput = false;
+
+	if (!SDL_GameControllerGetAttached(gameController.id))													// Returns true if the given game controller is open and currently connected.
+	{
+		if (gameController.id != nullptr)																	// There was a controller that was open, attached and had an ID
+		{
+			SDL_GameControllerClose(gameController.id);
+			gameController.id = nullptr;
+		}
+
+		return;
+	}
+
+	// --- GAME CONTROLLER BUTTON STATES ---
+	for (int i = 0; i < SDL_CONTROLLER_BUTTON_MAX; ++i)														// Will iterate through all the buttons available. Same as the keyboard key loop.
+	{
+		if (SDL_GameControllerGetButton(gameController.id, SDL_GameControllerButton(i)) == SDL_PRESSED)		// Gets the current state of a button in a controller. 1 = PRESSED / 0 = RELEASED.
+		{
+			if (gameController.buttons[i] == ButtonState::BUTTON_IDLE)
+			{
+				gameController.buttons[i] = ButtonState::BUTTON_DOWN;
+			}
+			else
+			{
+				gameController.buttons[i] = ButtonState::BUTTON_REPEAT;
+			}
+
+			gameControllerReceivedInput = true;
+		}
+		else
+		{
+			if (gameController.buttons[i] == ButtonState::BUTTON_DOWN || gameController.buttons[i] == ButtonState::BUTTON_REPEAT)
+			{
+				gameController.buttons[i] = ButtonState::BUTTON_UP;
+
+				gameControllerReceivedInput = true;
+			}
+			else
+			{
+				gameController.buttons[i] = ButtonState::BUTTON_IDLE;
+			}
+		}
+	}
+
+	// --- GAME CONTROLLER TRIGGER STATES ---
+	for (int i = 0; i < NUM_CONTROLLER_TRIGGERS; ++i)
+	{
+		int trigger_value = SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(TRIGGER_INDEX + i));
+		//LOG("CURRENT AXIS VALUE IS: %d", trigger_value);
+
+		if (trigger_value > gameController.max_axis_input_threshold * MAX_AXIS)
+		{
+			if (gameController.triggers[i] == ButtonState::BUTTON_IDLE)
+			{
+				gameController.triggers[i] = ButtonState::BUTTON_DOWN;
+			}
+			else
+			{
+				gameController.triggers[i] = ButtonState::BUTTON_REPEAT;
+			}
+
+			gameControllerReceivedInput = true;
+		}
+		else
+		{
+			if (gameController.triggers[i] == ButtonState::BUTTON_DOWN || gameController.triggers[i] == ButtonState::BUTTON_REPEAT)
+			{
+				gameController.triggers[i] = ButtonState::BUTTON_UP;
+
+				gameControllerReceivedInput = true;
+			}
+			else
+			{
+				gameController.triggers[i] = ButtonState::BUTTON_IDLE;
+			}
+		}
+	}
+
+	// --- GAME CONTROLLER AXIS STATES ---
+	for (int i = 0; i < NUM_CONTROLLER_AXIS; ++i)
+	{
+		int axis_value = SDL_GameControllerGetAxis(gameController.id, SDL_GameControllerAxis(i));			//Getting the current axis value of the given joystick.
+
+		if (abs(axis_value) < (int)(gameController.min_axis_input_threshold * MAX_AXIS))
+		{
+			axis_value = 0;																					// Safety check to compensate for the controller's joystick dead value.
+		}
+		else
+		{
+			gameControllerReceivedInput = true;
+		}
+
+		//LOG("CURRENT AXIS VALUE IS: %d", axis_value);
+
+		if (axis_value > gameController.max_positive_threshold)												// The joystick is all the way into the positive (BOTTOM / RIGHT).
+		{
+			if (gameController.axis[i] == AxisState::AXIS_IDLE)
+			{
+				gameController.axis[i] = AxisState::POSITIVE_AXIS_DOWN;
+			}
+			else
+			{
+				gameController.axis[i] = AxisState::POSITIVE_AXIS_REPEAT;
+			}
+
+			gameControllerReceivedInput = true;
+		}
+		else
+		{
+			if (axis_value < gameController.min_positive_threshold && axis_value > gameController.min_negative_threshold)	// The joystick is within the min threshold. (No negative axis input)
+			{
+				if (gameController.axis[i] == AxisState::POSITIVE_AXIS_DOWN || gameController.axis[i] == AxisState::POSITIVE_AXIS_REPEAT)
+				{
+					gameController.axis[i] = AxisState::POSITIVE_AXIS_RELEASE;
+
+					gameControllerReceivedInput = true;
+				}
+				else
+				{
+					gameController.axis[i] = AxisState::AXIS_IDLE;
+				}
+			}
+		}
+
+		if (axis_value < gameController.max_negative_threshold)																// The joystick is all the way into the negative (TOP / LEFT).
+		{
+			if (gameController.axis[i] == AxisState::AXIS_IDLE)
+			{
+				gameController.axis[i] = AxisState::NEGATIVE_AXIS_DOWN;
+			}
+			else
+			{
+				gameController.axis[i] = AxisState::NEGATIVE_AXIS_REPEAT;
+			}
+
+			gameControllerReceivedInput = true;
+		}
+		else if (axis_value > gameController.min_negative_threshold && axis_value < gameController.min_positive_threshold)	// The joystick is not past the positive threshold. (No positive axis input)
+		{
+			if (gameController.axis[i] == AxisState::NEGATIVE_AXIS_DOWN || gameController.axis[i] == AxisState::NEGATIVE_AXIS_REPEAT)
+			{
+				gameController.axis[i] = AxisState::NEGATIVE_AXIS_RELEASE;
+
+				gameControllerReceivedInput = true;
+			}
+			else
+			{
+				gameController.axis[i] = AxisState::AXIS_IDLE;
+			}
+		}
+	}
+}
+
+UpdateStatus M_Input::GatherPollEvents()
+{
+	OPTICK_CATEGORY("M_Input PreUpdate: Events", Optick::Category::Input);
+
+	SDL_Event event;
+	while (SDL_PollEvent(&event))
+	{
+		//Process other modules input
+		for (std::vector<Module*>::const_iterator it = modulesProcessInput.cbegin(); it != modulesProcessInput.cend(); ++it)
+		{
+			if ((*it)->IsActive())
+				(*it)->ProcessInput(event);
+		}
+
+		switch (event.type)
+		{
+		case SDL_QUIT:					{ if (!QuitEvent())			return UpdateStatus::STOP; }	break;						// Will Quit the application.
+		case SDL_WINDOWEVENT:			{ if (!WindowEvent(&event)) return UpdateStatus::STOP; }	break;						// Will Quit the App in case such window event was received.
+
+		case SDL_MOUSEMOTION:			{ MouseMotionEvent(&event); }								break;
+		case SDL_MOUSEWHEEL:			{ MouseWheelEvent(&event); }								break;
+		case SDL_CONTROLLERDEVICEADDED: { ControllerDeviceAddedEvent(); }							break;
+		case SDL_DROPFILE:				{ DropFileEvent(&event); }									break;
+		}
+	}
+
+	return UpdateStatus::CONTINUE;
+}
+
+bool M_Input::QuitEvent()
+{	
+	App->quit = true;
+
+	return false;
+}
+
+bool M_Input::WindowEvent(SDL_Event* event)
+{
+	if (event == nullptr)
+		return true;
+	
+	if (event->window.windowID == SDL_GetWindowID(App->window->GetWindow()))
+	{
+		if (WindowSizeWasManipulated(event->window.event))
+		{
+			App->renderer->OnResize();
+		}
+
+		if (event->window.event == SDL_WINDOWEVENT_CLOSE)
+		{
+			App->quit = true;
+			return false;
+		}
+	}
+
+	return true;
+}
+
+void M_Input::MouseMotionEvent(SDL_Event* event)
+{
+	if (event == nullptr)
+		return;
+	
+	mouseX			= event->motion.x / SCREEN_SIZE;
+	mouseY			= event->motion.y / SCREEN_SIZE;
+
+	mouseMotionX	= event->motion.xrel / SCREEN_SIZE;
+	mouseMotionY	= event->motion.yrel / SCREEN_SIZE;
+}
+
+void M_Input::MouseWheelEvent(SDL_Event* event)
+{
+	if (event == nullptr)
+		return;
+	
+	mouseWheelX = event->wheel.x;
+	mouseWheelY = event->wheel.y;
+	mouseZ		= event->wheel.y;
+}
+
+void M_Input::ControllerDeviceAddedEvent()
+{
+	if (gameController.id == nullptr)
+	{
+		if (SDL_NumJoysticks() > 0)
+		{
+			if (SDL_IsGameController(CONTROLLER_INDEX))
+			{
+				gameController.id = SDL_GameControllerOpen(CONTROLLER_INDEX);
+				gameController.joystick = SDL_GameControllerGetJoystick(gameController.id);
+			}
+		}
+		else
+		{
+			LOG("No joysticks currently attached to the system. SDL_Error: %s\n", SDL_GetError());
+		}
+	}
+}
+
+void M_Input::DropFileEvent(SDL_Event* event)
+{
+	if (event == nullptr)
+		return;
+	
+	if (event->drop.file != nullptr)
+	{
+		App->resourceManager->DragAndDrop(event->drop.file);
+	}
+	else
+	{
+		LOG("[ERROR] Input: String from SDL_DROPFILE Event was nullptr!");
+	}
+
+	SDL_free(event->drop.file);
 }

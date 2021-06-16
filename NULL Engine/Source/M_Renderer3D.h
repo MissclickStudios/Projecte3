@@ -62,32 +62,34 @@ const float ParticlesCoords[] = {
 
 struct MeshRenderer
 {
-	MeshRenderer(C_Transform* transform, C_Mesh* cMesh, C_Material* cMaterial);								// Will render the given mesh at the given position with the given mat & tex.
+	MeshRenderer(C_Transform* cTransform, C_Mesh* cMesh, C_Material* cMaterial);								// Will render the given mesh at the given position with the given mat & tex.
 
-	void Render						(bool outline);
+	void Render();
 
-	void RenderVertexNormals		(const R_Mesh* rMesh);
-	void RenderFaceNormals			(const R_Mesh* rMesh);
+	void RenderVertexNormals(const R_Mesh* rMesh);
+	void RenderFaceNormals(const R_Mesh* rMesh);
 
-	void GetFaces					(const R_Mesh* rMesh, std::vector<Triangle>& vertexFaces, std::vector<Triangle>& normalFaces);
+	void GetFaces(const R_Mesh* rMesh, std::vector<Triangle>& vertexFaces, std::vector<Triangle>& normalFaces);
 
-	void ApplyDebugParameters		();
-	void ClearDebugParameters		();
+	void ApplyDebugParameters();
+	void ClearDebugParameters();
 	
-	void ApplyTextureAndMaterial	();
-	void ClearTextureAndMaterial	();
+	void ApplyTextureAndMaterial();
+	void ClearTextureAndMaterial();
 
-	void RenderOutline				(R_Mesh* rMesh);
+	void RenderOutline(R_Mesh* rMesh);
 
-	void ApplyShader				();
-	uint32 SetDefaultShader			(C_Material* cMaterial);
-	void ClearShader				();
+	void ApplyShader();
+	uint32 SetDefaultShader(C_Material* cMaterial);
+	void ClearShader();
 
-	std::vector<float4x4> boneTransforms;
+	std::vector<float4x4>*	boneTransforms;
 
-	C_Transform*	transform;
-	C_Mesh*			cMesh;
-	C_Material*		cMaterial;
+	C_Transform*			cTransform;
+	C_Mesh*					cMesh;
+	C_Material*				cMaterial;
+
+	bool					renderLast;
 };
 
 struct CuboidRenderer																							// Will render the wireframe of any given geometric form with 8 vertices.
@@ -137,12 +139,12 @@ struct ParticleRenderer
 	void Render();
 	void LoadBuffers();
 
-	uint VAO;
+	uint		VAO;
 
-	R_Texture* mat;
-	R_Shader* shader;
-	Color color;
-	float4x4 transform;
+	R_Texture*	mat;
+	R_Shader*	shader;
+	Color		color;
+	float4x4	transform;
 };
 
 #define MAX_LIGHTS 8
@@ -153,189 +155,192 @@ public:
 	M_Renderer3D(bool isActive = true);
 	~M_Renderer3D();
 
-	bool			Init				(ParsonNode& configuration) override;
-	bool			Start				() override;
-	UpdateStatus	PreUpdate			(float dt) override;
-	UpdateStatus	PostUpdate			(float dt) override;
-	bool			CleanUp				() override;
+	bool			Init(ParsonNode& configuration) override;
+	bool			Start() override;
+	UpdateStatus	PreUpdate(float dt) override;
+	UpdateStatus	PostUpdate(float dt) override;
+	bool			CleanUp() override;
 	
-	bool			LoadConfiguration	(ParsonNode& root) override;
-	bool			SaveConfiguration	(ParsonNode& root) const override;
+	bool			LoadConfiguration(ParsonNode& root) override;
+	bool			SaveConfiguration(ParsonNode& root) const override;
 
 public:
-	bool			InitDebugVariables			();
+	bool			InitDebugVariables();
 	
-	bool			InitOpenGL					();
-	bool			InitGlew					();
-	void			OnResize					();
-	void			RecalculateProjectionMatrix	();
+	bool			InitOpenGL();
+	bool			InitGlew();
+	void			OnResize();
+	void			RecalculateProjectionMatrix();
 
 	void			InitEngineIcons();
 
-	void			InitFramebuffers			();
-	void			LoadDebugTexture			();
-	void			FreeBuffers					();
+	void			InitFramebuffers();
+	void			LoadDebugTexture();
+	void			FreeBuffers();
 
-	void			RendererShortcuts			();
+	void			RendererShortcuts();
 
-	void			RenderScene					();
+	void			RenderScene();
 
 public:																											// --- RENDER GEOMETRY
-	//void			GenerateBuffers				(const R_Mesh* rMesh);
+	//void			GenerateBuffers(const R_Mesh* rMesh);
 		
-	void			DrawWorldGrid				(const int& size);
-	void			DrawWorldAxis				();
+	void			DrawWorldGrid(const int& size);
+	void			DrawWorldAxis();
 
-	void			AddRenderersBatch			(const std::vector<MeshRenderer>& meshRenderers, const std::vector<CuboidRenderer>& cuboidRenderers, 
-													const std::vector<SkeletonRenderer>& skeletonRenderers);
-	void			RenderMeshes				();
-	void			RenderCuboids				();
-	void			RenderRays					();
-	void			RenderSkeletons				();
-	void			RenderUI					();
-	void			RenderParticles				();
+	void			AddRenderersBatch(const std::vector<MeshRenderer>& meshRenderers, const std::vector<CuboidRenderer>& cuboidRenderers, 
+										const std::vector<SkeletonRenderer>& skeletonRenderers);
 
-	void			RenderFramebufferTexture	();
-	void			DeleteFromMeshRenderers		(C_Mesh* cMeshToDelete);
-	void			DeleteFromMeshRenderers		(R_Mesh* rMeshToDelete);
-	void			DeleteFromCuboids			(float3* cuboidToDelete);
-	void			ClearRenderers				();																// Loading scene measure.
+	void			AddRenderersBatch(const std::multimap<float, Renderer*>& renderers);
 
-	void			AddPrimitive				(Primitive* primitive);
-	void			CreatePrimitiveExamples		();
+	void			RenderMeshes(std::vector<MeshRenderer>& lastRenderers);
+	void			RenderCuboids();
+	void			RenderRays();
+	void			RenderSkeletons();
+	void			RenderUI();
+	void			RenderParticles();
+
+	void			RenderFramebufferTexture();
+	void			DeleteFromMeshRenderers(C_Mesh* cMeshToDelete);
+	void			DeleteFromMeshRenderers(R_Mesh* rMeshToDelete);
+	void			DeleteFromCuboids(float3* cuboidToDelete);
+	void			ClearRenderers();																			// Loading scene measure.
+
+	void			AddPrimitive(Primitive* primitive);
+	void			CreatePrimitiveExamples();
 
 
-	void			AddParticle					(const float4x4& transform, R_Texture* material, Color color, float distanceToCamera);
-	void			DrawParticle				(ParticleRenderer& renderParticle);
+	void			AddParticle(const float4x4& transform, R_Texture* material, Color color, float distanceToCamera);
+	void			DrawParticle(ParticleRenderer& renderParticle);
 
-	void			SetTo2DRenderSettings		(const bool& setTo);
+	void			SetTo2DRenderSettings(const bool& setTo);
 
 
 public:																											// --- GET/SET METHODS
-	Icons			GetEngineIcons				() const;
+	Icons			GetEngineIcons() const;
 	
-	uint			GetDebugTextureID			() const;
-	uint			GetSceneFramebuffer			() const;
-	uint			GetSceneRenderTexture		() const;
-	uint			GetGameFramebuffer			() const;
+	uint			GetDebugTextureID() const;
+	uint			GetSceneFramebuffer() const;
+	uint			GetSceneRenderTexture() const;
+	uint			GetGameFramebuffer() const;
 
-	uint			GetDepthBuffer				() const;
-	uint			GetDepthBufferTexture		() const;
+	uint			GetDepthBuffer() const;
+	uint			GetDepthBufferTexture() const;
 
-	const char*		GetDrivers					() const;														// 
-	bool			GetVsync					() const;														// 
-	void			SetVsync					(const bool& setTo);											// 
+	const char*		GetDrivers() const;																			// 
+	bool			GetVsync() const;																			// 
+	void			SetVsync(const bool& setTo);																// 
 
-	bool			GetGLFlag					(GLenum flag) const;											// 
-	bool			GetGLFlag					(RendererFlags flag) const;									// 
-	void			SetGLFlag					(GLenum flag, bool setTo);										// 
-	void			SetGLFlag					(RendererFlags flag, bool setTo);								// 
+	bool			GetGLFlag(GLenum flag) const;																// 
+	bool			GetGLFlag(RendererFlags flag) const;														// 
+	void			SetGLFlag(GLenum flag, bool setTo);															// 
+	void			SetGLFlag(RendererFlags flag, bool setTo);													// 
 
 public:																											// --- DEBUG GET/SET METHODS
-	uint			GetWorldGridSize			() const;
+	uint			GetWorldGridSize() const;
 
-	Color			GetWorldGridColor			() const;
-	Color			GetWireframeColor			() const;
-	Color			GetVertexNormalsColor		() const;
-	Color			GetFaceNormalsColor			() const;
+	Color			GetWorldGridColor() const;
+	Color			GetWireframeColor() const;
+	Color			GetVertexNormalsColor() const;
+	Color			GetFaceNormalsColor() const;
 	
-	Color			GetAABBColor				() const;
-	Color			GetOBBColor					() const;
-	Color			GetFrustumColor				() const;
-	Color			GetRayColor					() const;
-	Color			GetBoneColor				() const;
+	Color			GetAABBColor() const;
+	Color			GetOBBColor() const;
+	Color			GetFrustumColor() const;
+	Color			GetRayColor() const;
+	Color			GetBoneColor() const;
 
-	float			GetWorldGridLineWidth		() const;
-	float			GetWireframeLineWidth		() const;
-	float			GetVertexNormalsWidth		() const;
-	float			GetFaceNormalsWidth			() const;
+	float			GetWorldGridLineWidth() const;
+	float			GetWireframeLineWidth() const;
+	float			GetVertexNormalsWidth() const;
+	float			GetFaceNormalsWidth() const;
 
-	float			GetAABBEdgeWidth			() const;
-	float			GetOBBEdgeWidth				() const;
-	float			GetFrustumEdgeWidth			() const;
-	float			GetRayWidth					() const;
-	float			GetBoneWidth				() const;
+	float			GetAABBEdgeWidth() const;
+	float			GetOBBEdgeWidth() const;
+	float			GetFrustumEdgeWidth() const;
+	float			GetRayWidth() const;
+	float			GetBoneWidth() const;
 
-	bool			GetRenderWorldGrid			() const;														// 
-	bool			GetRenderWorldAxis			() const;														// 
-	bool			GetRenderWireframes			() const;														// 
-	bool			GetRenderVertexNormals		() const;														// 
-	bool			GetRenderFaceNormals		() const;														// 
-	bool			GetRenderBoundingBoxes		() const;														// 
-	bool			GetRenderSkeletons			() const;														// 
-	bool			GetRenderPrimitiveExamples	() const;														// 
-	bool			GetRenderColliders			() const;
-	bool			GetRenderCanvas				() const;
+	bool			GetRenderWorldGrid() const;																	// 
+	bool			GetRenderWorldAxis() const;																	// 
+	bool			GetRenderWireframes() const;																// 
+	bool			GetRenderVertexNormals() const;																// 
+	bool			GetRenderFaceNormals() const;																// 
+	bool			GetRenderBoundingBoxes() const;																// 
+	bool			GetRenderSkeletons() const;																	// 
+	bool			GetRenderPrimitiveExamples() const;															// 
+	bool			GetRenderColliders() const;
+	bool			GetRenderCanvas() const;
 
-	void			SetWorldGridSize			(const uint& worldGridSize);
+	void			SetWorldGridSize(const uint& worldGridSize);
 
-	void			SetWorldGridColor			(const Color& worldGridColor);
-	void			SetWireframeColor			(const Color& wireframeColor);
-	void			SetVertexNormalsColor		(const Color& vertexNormalsColor);
-	void			SetFaceNormalsColor			(const Color& faceNormalsColor);
+	void			SetWorldGridColor(const Color& worldGridColor);
+	void			SetWireframeColor(const Color& wireframeColor);
+	void			SetVertexNormalsColor(const Color& vertexNormalsColor);
+	void			SetFaceNormalsColor(const Color& faceNormalsColor);
 
-	void			SetAABBColor				(const Color& aabbColor);
-	void			SetOBBColor					(const Color& obbColor);
-	void			SetFrustumColor				(const Color& frustumColor);
-	void			SetRayColor					(const Color& rayColor);
-	void			SetBoneColor				(const Color& boneColor);
+	void			SetAABBColor(const Color& aabbColor);
+	void			SetOBBColor(const Color& obbColor);
+	void			SetFrustumColor(const Color& frustumColor);
+	void			SetRayColor(const Color& rayColor);
+	void			SetBoneColor(const Color& boneColor);
 
-	void			SetWorldGridLineWidth		(const float& worldGridLineWidth);
-	void			SetWireframeLineWidth		(const float& wireframeLineWidth);
-	void			SetVertexNormalsWidth		(const float& vertexNormalsWidth);
-	void			SetFaceNormalsWidth			(const float& faceNormalsWidth);
+	void			SetWorldGridLineWidth(const float& worldGridLineWidth);
+	void			SetWireframeLineWidth(const float& wireframeLineWidth);
+	void			SetVertexNormalsWidth(const float& vertexNormalsWidth);
+	void			SetFaceNormalsWidth(const float& faceNormalsWidth);
 
-	void			SetAABBEdgeWidth			(const float& aabbEdgeWidth);
-	void			SetOBBEdgeWidth				(const float& obbEdgeWidth);
-	void			SetFrustumEdgeWidth			(const float& frustumEdgeWidth);
-	void			SetRayWidth					(const float& rayWidth);
-	void			SetBoneWidth				(const float& boneWidth);
+	void			SetAABBEdgeWidth(const float& aabbEdgeWidth);
+	void			SetOBBEdgeWidth(const float& obbEdgeWidth);
+	void			SetFrustumEdgeWidth(const float& frustumEdgeWidth);
+	void			SetRayWidth(const float& rayWidth);
+	void			SetBoneWidth(const float& boneWidth);
 
-	void			SetRenderWorldGrid			(const bool& setTo);											// 
-	void			SetRenderWorldAxis			(const bool& setTo);											// 
-	void			SetRenderWireframes			(const bool& setTo);											// 
-	void			SetRenderVertexNormals		(const bool& setTo);											// 
-	void			SetRenderFaceNormals		(const bool& setTo);											// 
-	void			SetRenderBoundingBoxes		(const bool& setTo);											// 
-	void			SetRenderSkeletons			(const bool& setTo);
-	void			SetRenderPrimtiveExamples	(const bool& setTo);											// 
-	void			SetRenderColliders			(const bool& setTo);
-	void			SetRenderCanvas				(const bool& setTo);
+	void			SetRenderWorldGrid(const bool& setTo);														// 
+	void			SetRenderWorldAxis(const bool& setTo);														// 
+	void			SetRenderWireframes(const bool& setTo);														// 
+	void			SetRenderVertexNormals(const bool& setTo);													// 
+	void			SetRenderFaceNormals(const bool& setTo);													// 
+	void			SetRenderBoundingBoxes(const bool& setTo);													// 
+	void			SetRenderSkeletons(const bool& setTo);
+	void			SetRenderPrimtiveExamples(const bool& setTo);												// 
+	void			SetRenderColliders(const bool& setTo);
+	void			SetRenderCanvas(const bool& setTo);
 
 public:
-	void			AddPostSceneRenderModule	(Module* module);
-	GameObject*		GenerateSceneLight			(Color diffuse, Color ambient, Color specular, LightType lightType);
+	void			AddPostSceneRenderModule(Module* module);
+	GameObject*		GenerateSceneLight(Color diffuse, Color ambient, Color specular, LightType lightType);
+
 private:
-	void			GenScreenBuffer				();
+	void			GenScreenBuffer();
 
 public:
-	//Light					lights[MAX_LIGHTS];																	// 
-	
-	SDL_GLContext			context;																			// 
-	R_Shader*				defaultShader = nullptr;
-	R_Shader*				screenShader = nullptr;
-	Skybox					defaultSkyBox;
+	SDL_GLContext	context;																					// 
+	R_Shader*		defaultShader	= nullptr;
+	R_Shader*		screenShader	= nullptr;
+	R_Shader*		particleShader	= nullptr;
+	Skybox			defaultSkyBox;
 
-	std::vector<Primitive*>	primitives;
+
+	std::multimap<float, Renderer*>	renderers;																	// Multimap with distance to camera and Renderers.
+	std::vector<Primitive*>			primitives;
 
 private:
-	std::multimap<float, Renderer*>		renderers;																// Multimap with distance to camera and Renderers.
+	std::vector<MeshRenderer>		meshRenderers;
+	std::vector<CuboidRenderer>		cuboidRenderers;
+	std::vector<SkeletonRenderer>	skeletonRenderers;
 	
-	std::vector<MeshRenderer>			meshRenderers;
-	std::vector<CuboidRenderer>			cuboidRenderers;
-	std::vector<SkeletonRenderer>		skeletonRenderers;
-	
-	Icons					engineIcons;
+	Icons	engineIcons;
 
-	uint					sceneFramebuffer;
-	uint					depthBuffer;
-	uint					sceneRenderTexture;
-	uint					depthBufferTexture;
-	uint					gameFramebuffer;
-	uint					debugTextureId;
-	uint					quadScreenVAO;
+	uint	sceneFramebuffer;
+	uint	depthBuffer;
+	uint	sceneRenderTexture;
+	uint	depthBufferTexture;
+	uint	gameFramebuffer;
+	uint	debugTextureId;
+	uint	quadScreenVAO;
 
-	bool					vsync;																				// Will keep track of whether or not the vsync is currently active.
+	bool	vsync;																								// Will keep track of whether or not the vsync is currently active.
 
 private:																										// --- DEBUG VARIABLES ---		// TODO: CREATE A "DEBUGSETTINGS" STRUCTURE
 	uint	worldGridSize;		
@@ -369,15 +374,14 @@ private:																										// --- DEBUG VARIABLES ---		// TODO: CREATE A 
 	bool	renderFaceNormals;	
 	bool	renderBoundingBoxes;
 	bool	renderSkeletons;	
-	bool	renderColliders = false;
-	bool	renderCanvas = false;
+	bool	renderColliders	= false;
+	bool	renderCanvas	= false;
 
-	bool					renderPrimitiveExamples;					//
+	bool	renderPrimitiveExamples;																			//
 
-	std::vector<Module*>	PostSceneRenderModules;
+	std::vector<Module*> PostSceneRenderModules;
 
 	std::map<float, ParticleRenderer> particles;						//map of the particles to render. It is ordered depending on the (float)distance to camera. Allows propper rendering
-	R_Shader* particleShader = nullptr;
 };
 
 #endif // !__M_RENDERER_3D_H__

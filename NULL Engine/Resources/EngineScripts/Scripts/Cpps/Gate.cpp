@@ -21,8 +21,8 @@ void Gate::Start()
 	gameManager = App->scene->GetGameObjectByName(gameManagerName.c_str());
 
 	quote = new C_AudioSource(gameObject);
-	quote->SetEvent("fckSebas");
-	quote->SetVolume(1.f);
+	if(quote != nullptr)
+		quote->SetEvent("door_closed");
 }
 
 void Gate::Update()
@@ -55,7 +55,8 @@ void Gate::OnCollisionEnter(GameObject* object)
 		{
 			if (quoteTimer >= quoteDelay)
 			{
-				quote->PlayFx(quote->GetEventId());
+				if (quote != nullptr)
+					quote->PlayFx(quote->GetEventId());
 				quoteTimer = 0.f;
 			}
 		}

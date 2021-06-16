@@ -14,6 +14,8 @@
 
 class C_AudioSource;
 class C_2DAnimator;
+class C_UI_Image;
+class R_Texture;
 
 struct ItemData;
 
@@ -88,6 +90,7 @@ public:
 	// Interactions
 	void TakeDamage(float damage) override;
 	void SetPlayerInteraction(InteractionType type, float duration = 0.0f);		// If duration is 0.0f, then the duration will be set with the duration of the clip.
+	void ForceManageInvincibility();
 
 	// Movement
 	float walkSpeed			= DEFAULT_MODIFIER;									// Speed at which the player will move the moment they enter the WALK State.
@@ -96,7 +99,7 @@ public:
 	// Dash
 	float DashSpeed()		{ return dashSpeed * speedModifier; }
 	float DashDuration()	{ return dashDuration / speedModifier; }
-	float DashCooldown()	{ return dashCooldown / cooldownModifier; }
+	float DashCooldown()	{ return dashCooldown * cooldownModifier; }
 	
 	float dashSpeed			= 0.0f;
 	float dashDuration		= 0.0f;
@@ -110,6 +113,7 @@ public:
 	void AnimatePlayer();
 	AnimationInfo* GetMoveStateAnimation();
 	AnimationInfo* GetLegsAnimation();
+	AnimationInfo* GetWeaponRunAnimation(bool forceRunForward = false);
 	AnimationInfo* GetAimStateAnimation();
 	AnimationInfo* GetAimAnimation();
 	AnimationInfo* GetShootAnimation();
@@ -122,26 +126,41 @@ public:
 
 	AnimationInfo mainMenuAnimation			= { "MainMenu" };
 
+	bool overrideShootAnimation				= false;
+	bool dying								= false;
+
+	// -- Status Effects
+	AnimationInfo stunnedAnimation			= { "Stun" };
+	AnimationInfo knockedbackAnimation		= { "Knockback"};
+
+	// -- Interactions
+	AnimationInfo talkAnimation				= { "Talk" };
+	AnimationInfo useAnimation				= { "Use" };
+	AnimationInfo openChestAnimation		= { "OpenChest" };
+	AnimationInfo signalGroguAnimation		= { "SignalGrogu" };
+
+	// -- Movement
 	AnimationInfo walkAnimation				= { "Walk" };
 
-	AnimationInfo runForwardsAnimation		= { "RunForwardsLight" };
-	AnimationInfo runForwardsLightAnimation	= { "RunForwardsLight" };
-	AnimationInfo runForwardsHeavyAnimation	= { "RunForwardsHeavy" };
+	AnimationInfo runForwardsAnimation		= { "RunMinigun" };
+	AnimationInfo runBlasterAnimation		= { "RunBlaster" };
+	AnimationInfo runSniperAnimation		= { "RunSniper" };
+	AnimationInfo runShotgunAnimation		= { "RunShotgun" };
+	AnimationInfo runMinigunAnimation		= { "RunMinigun" };
 	AnimationInfo runBackwardsAnimation		= { "RunBackwards" };
 	AnimationInfo runLeftAnimation			= { "RunLeft" };
 	AnimationInfo runRightAnimation			= { "RunRight" };
 
 	AnimationInfo dashAnimation				= { "Dash" };
 
+	// -- Weapons (Aim/Shoot/Reload/Change)
 	AnimationInfo aimBlasterAnimation		= { "AimBlaster" };
-	//AnimationInfo aimBlasterAnimation		= { "AimBlasterAlt" };
-	AnimationInfo aimSniperAnimation		= { "AimSniper" };
+	AnimationInfo aimSniperAnimation		= { "AimSniper"	};
 	AnimationInfo aimMinigunAnimation		= { "AimMinigun" };
 	AnimationInfo aimShotgunAnimation		= { "AimShotgun" };
 
 	AnimationInfo shootBlasterAnimation		= { "ShootBlaster" };
-	//AnimationInfo shootBlasterAnimation		= { "ShootBlasterAlt" };
-	AnimationInfo shootSniperAnimation		= { "ShootSniper"};
+	AnimationInfo shootSniperAnimation		= { "ShootSniper" };
 	AnimationInfo shootMinigunAnimation		= { "ShootMinigun" };
 	AnimationInfo shootShotgunAnimation		= { "ShootShotgun" };
 
@@ -150,39 +169,33 @@ public:
 	AnimationInfo reloadMinigunAnimation	= { "ReloadMinigun" }; 
 	AnimationInfo reloadShotgunAnimation	= { "ReloadShotgun" };
 
-	AnimationInfo stunnedAnimation			= { "Stun" };
-	AnimationInfo knockedbackAnimation		= { "Knockback"};
-	
-	AnimationInfo talkAnimation				= { "Talk" };
-	AnimationInfo useAnimation				= { "Use" };
-	AnimationInfo openChestAnimation		= { "OpenChest" };
-	AnimationInfo signalGroguAnimation		= { "SignalGrogu" };
-
 	AnimationInfo changeWeaponAnimation		= { "ChangeWeapon" };
+
 	AnimationInfo onGuardAnimation			= { "OnGuard" };
 
 	// Weapons
 	float ChangeTime()						{ return changeTime / attackSpeedModifier; }
 	void EquipWeapon(Prefab weapon);
 	Weapon* const GetCurrentWeapon() const	{ return currentWeapon; }
+	Weapon* GetPrimaryWeapon()				{ return blasterWeapon; }
+	Weapon* GetSecondaryWeapon()			{ return secondaryWeapon; }
+	bool GetUsingSecondaryGun()				{ return usingSecondaryGun; }
 
 	float changeTime = 0.0f;
 	Prefab blaster;
 	Prefab equipedGun;
 
-	// Currency
-	int currency				= 0;
-	int hubCurrency				= 0;
+	// Currency	
+	void GiveCredits(int _credits);
+	void GiveBeskar(int _beskar);
+
+	void SubtractCredits(int _credits);
+	void SubtractBeskar(int _beskar);
+
+	int credits				= 0;
+	int beskar				= 0;
 
 	std::string gameManager		= "Game Manager";
-
-	// AIM HUD
-	GameObject* idleAimPlane	= nullptr;
-	GameObject* aimingAimPlane	= nullptr;
-
-	// Debug
-	void SetGodMode(bool enable);
-	bool GetGodMode()const;
 
 	// Particles and SFX
 	C_ParticleSystem* runParticles			= nullptr;
@@ -198,6 +211,7 @@ public:
 	std::string primaryWeaponImageName		= "PrimaryWeapon";
 	std::string dashImageName				= "Dash";
 	std::string creditsImageName			= "Credits";
+	std::string beskarImageName				= "Beskar";
 
 	//HUD Animations
 	C_2DAnimator* mandoImage;
@@ -205,14 +219,47 @@ public:
 	C_2DAnimator* secondaryWeaponImage;
 	C_2DAnimator* dashImage;
 	C_2DAnimator* creditsImage;
+	C_2DAnimator* beskarImage;
+	C_UI_Image* weaponImage = nullptr;
+	C_UI_Image* weaponNameImage = nullptr;
+	R_Texture* blasterUse = nullptr;
+	R_Texture* blasterChangeBlaster = nullptr;
+	R_Texture* blasterChangeSniper = nullptr;
+	R_Texture* blasterChangeMiniGun = nullptr;
+	R_Texture* blasterChangeShootGun = nullptr;
+	R_Texture* blasterCharge = nullptr;
+	R_Texture* sniperUse = nullptr;
+	R_Texture* sniperChange = nullptr;
+	R_Texture* sniperCharge = nullptr;
+	R_Texture* shotgunUse = nullptr;
+	R_Texture* shotgunChange = nullptr;
+	R_Texture* shotgunCharge = nullptr;
+	R_Texture* minigunUse = nullptr;
+	R_Texture* minigunChange = nullptr;
+	R_Texture* minigunCharge = nullptr;
 
 	// Controller
 	float joystickThreshold					= 25.0f;
 	float joystickFactor					= 327.67;
 
+	// Aim HUD
+	std::string idleAimPlaneName			= "";
+	std::string aimingAimPlaneName			= "";
+
 	// Hands
 	GameObject* rightHand					= nullptr;
 	GameObject* leftHand					= nullptr;
+
+	std::string rightHandName				= "";
+	std::string LeftHandName				= "";
+	
+	// Animations
+	std::string hipName						= "";
+	std::string torsoName					= "";
+	std::string legsName					= "";
+
+	// Jet-Pack
+	std::string jetpackName					= "";
 
 	// Items
 	void AddItem(ItemData* item);
@@ -221,9 +268,19 @@ public:
 	//Die cutscene
 	bool doDieCutscene = false;
 
+	// Utils
+	bool inHub = false;
+
+	// Debug
+	void SetGodMode(bool enable);
+	bool GetGodMode()const;
+
 private:
 	// Inputs
-	bool allowInput = true;
+	bool allowInput				= true;
+
+	bool usingKeyboard			= false;
+	bool usingGameController	= false;
 
 	// Set Up
 	void SetUpLegsMatrix();
@@ -245,8 +302,7 @@ private:
 	float interactionDuration = 0.0f;
 
 	// Movement Methods
-	void MoveIdle();
-	void Interact();
+	void MovementIdle();
 	void Walk();
 	void Run();
 	void DashIn();
@@ -280,6 +336,8 @@ private:
 	float2 moveInput					= float2::zero;
 	float2 aimInput						= float2::zero;
 
+	float2 aimInputThreshold			= float2::zero;
+
 	// Movement
 	void Movement();
 
@@ -304,11 +362,6 @@ private:
 	bool usingSecondaryGun				= false;
 	Timer changeTimer;
 
-	GameObject* blasterBarrelTip		= nullptr;
-	GameObject* sniperBarrelTip			= nullptr;
-	GameObject* shotgunBarrelTip		= nullptr;
-	GameObject* minigunBarrelTip		= nullptr;
-
 	GameObject* blasterGameObject		= nullptr;
 	GameObject* secondaryGunGameObject	= nullptr;
 
@@ -321,12 +374,19 @@ private:
 
 	std::vector<std::pair<bool, ItemData*>> items;
 	std::vector<std::pair<bool, ItemData*>> savedItems;
+	
+	// Aim HUD
+	GameObject* idleAimPlane			= nullptr;
+	GameObject* aimingAimPlane			= nullptr;
 
 	// Animations
-	GameObject* hip		= nullptr;
-	GameObject* torso	= nullptr;
-	GameObject* legs	= nullptr;
-	
+	GameObject* hip						= nullptr;
+	GameObject* torso					= nullptr;
+	GameObject* legs					= nullptr;
+
+	// Jet-Pack
+	C_Mesh* jetpack						= nullptr;
+
 	// Utilities
 	float GetAnimatorClipDuration(const char* clipName);
 

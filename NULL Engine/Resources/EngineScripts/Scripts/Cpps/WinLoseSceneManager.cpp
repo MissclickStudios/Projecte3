@@ -17,12 +17,13 @@ WinLoseSceneManager::~WinLoseSceneManager()
 
 void WinLoseSceneManager::Start()
 {
-	if (canvasObject)
-	{
-		C_Canvas* canvas = canvasObject->GetComponent<C_Canvas>();
-		if (canvas)
-			App->uiSystem->PushCanvas(canvas);
-	}
+	GameObject* tmp = App->scene->GetGameObjectByName("StatsCanvas");
+	C_Canvas* canvas = tmp->GetComponent<C_Canvas>();
+	if (canvas)
+		App->uiSystem->PushCanvas(canvas);
+	
+
+
 
 }
 
@@ -31,6 +32,11 @@ void WinLoseSceneManager::Update()
 	if (gameManagerObject && App->input->GetKey(SDL_SCANCODE_RETURN) == KeyState::KEY_UP || App->input->GetGameControllerButton(0) == ButtonState::BUTTON_UP)
 	{
 		GameManager* gameManagerScript = (GameManager*)gameManagerObject->GetScript("GameManager");
-		gameManagerScript->ReturnHub();
+
+		if (strcmp(App->scene->GetCurrentScene(), "WinScene") == 0)
+			gameManagerScript->GoNextRoom();
+		else
+			gameManagerScript->ReturnHub();
+		
 	}
 }

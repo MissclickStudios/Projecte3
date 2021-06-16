@@ -47,7 +47,7 @@ SCRIPTS_FUNCTION Turret* CreateTurret()
 
 	//Hand Name
 
-	INSPECTOR_STRING(script->handName);
+	INSPECTOR_STRING(script->rightHandName);
 
 	INSPECTOR_SLIDER_INT(script->minCredits, 0, 1000);
 	INSPECTOR_SLIDER_INT(script->maxCredits, 0, 1000);
@@ -66,9 +66,6 @@ Turret::~Turret()
 
 void Turret::SetUp()
 {
-	if (rigidBody != nullptr)
-		rigidBody->SetKinematic(false);
-
 	player = App->scene->GetGameObjectByName(playerName.c_str());
 
 	GameObject* hand = nullptr;
@@ -91,10 +88,26 @@ void Turret::SetUp()
 		blasterWeapon = (Weapon*)GetObjectScript(blasterGameObject, ObjectType::WEAPON);
 	if (blasterWeapon)
 		blasterWeapon->SetOwnership(type, hand);
+
+
+	//Audios
+	damageAudio = new C_AudioSource(gameObject);
+	deathAudio = new C_AudioSource(gameObject);
+	walkAudio = new C_AudioSource(gameObject);
+	if (deathAudio != nullptr)
+		deathAudio->SetEvent("turret_death");
+	if (damageAudio != nullptr)
+		damageAudio->SetEvent("turret_damaged");
 }
 
 void Turret::Behavior()
 {
+	if (dieAfterStun == 2)
+	{
+		dieAfterStun = 3;
+		moveState = TurretState::DEAD_IN;
+		deathTimer.Resume();
+	}
 	if (moveState != TurretState::DEAD)
 	{
 		if (health <= 0.0f)
@@ -134,7 +147,7 @@ void Turret::Behavior()
 		if (player)
 		{
 			Player* playerScript = (Player*)player->GetScript("Player");
-			playerScript->currency += Random::LCG::GetBoundedRandomUint(minCredits, maxCredits);
+			playerScript->GiveCredits( Random::LCG::GetBoundedRandomUint(minCredits, maxCredits));
 		}
 		deathTimer.Start();
 		moveState = TurretState::DEAD;
@@ -154,6 +167,13 @@ void Turret::CleanUp()
 		blasterGameObject->toDelete = true;
 	blasterGameObject = nullptr;
 	blasterWeapon = nullptr;
+
+	if (damageAudio != nullptr)
+		delete damageAudio;
+	if (deathAudio != nullptr)
+		delete deathAudio;
+	if (walkAudio != nullptr)
+		delete walkAudio;
 }
 
 void Turret::OnCollisionEnter(GameObject* object)

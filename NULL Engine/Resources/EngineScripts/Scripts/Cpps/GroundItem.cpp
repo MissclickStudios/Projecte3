@@ -7,12 +7,14 @@
 #include "M_ResourceManager.h"
 #include "R_Texture.h"
 
+#include "GameManager.h"
 #include "GameObject.h"
 #include "C_Transform.h"
 #include "C_Material.h"
 #include "C_Canvas.h"
 #include "C_ParticleSystem.h"
 #include "Emitter.h"
+#include "C_AudioSource.h"
 
 #include "Player.h"
 #include "ItemMenuManager.h"
@@ -34,6 +36,12 @@ void GroundItem::Awake()
 	if (menuGameObject != nullptr)
 		itemMenu = (ItemMenuManager*)menuGameObject->GetScript("ItemMenuManager");
 
+	menuGameObject = App->scene->GetGameObjectByName("Game Manager");
+	if (menuGameObject != nullptr)
+		gameManager = (GameManager*)menuGameObject->GetScript("GameManager");
+
+	player = App->scene->GetGameObjectByName(playerName.c_str());
+
 	for (uint i = 0; i < gameObject->components.size(); ++i) // CANT GETCOMPONENT() OF PARTICLE SYSTEM
 	{
 		if (gameObject->components[i]->GetType() == ComponentType::PARTICLE_SYSTEM)
@@ -52,10 +60,21 @@ void GroundItem::Awake()
 			break;
 		}
 	}
+
+	itemAudio = new C_AudioSource(gameObject);
 }
 
 void GroundItem::Update()
 {
+	if (player != nullptr && item != nullptr)
+	{
+		float playerY = player->transform->GetWorldPosition().y;
+		float thisY = gameObject->transform->GetWorldPosition().y;
+
+		if (abs(playerY - thisY) > 10)
+			PickUp((Player*)player->GetScript("Player"));
+	}
+
 	float3 N, U, _U, R;
 	float4x4 cameraTransform = App->camera->GetCurrentCamera()->GetOwner()->transform->GetWorldTransform();
 	float3 direction = float3(cameraTransform.TranslatePart() - gameObject->transform->GetWorldPosition()).Normalized(); //normalized vector between the camera and gameobject position
@@ -79,6 +98,9 @@ void GroundItem::CleanUp()
 {
 	if (item != nullptr)
 		delete item;
+
+	if (itemAudio != nullptr)
+		delete itemAudio;
 }
 
 void GroundItem::OnPause()
@@ -99,11 +121,29 @@ void GroundItem::OnTriggerRepeat(GameObject* object)
 
 void GroundItem::PickUp(Player* player)
 {
-	player->currency -= item->price;
+	player->SubtractCredits((int)((float)item->price * player->priceModifier));
 	item->PickUp(player);
 	if (item->toSave)
 		player->AddItem(item->data);
 	Deactivate();
+
+	if (itemAudio != nullptr)
+	{
+		if (item->price == 0)
+		{
+			itemAudio->SetEvent("item_pickup");
+			itemAudio->PlayFx(itemAudio->GetEventId());
+		}
+		else
+		{
+			itemAudio->SetEvent("item_buy");
+			itemAudio->PlayFx(itemAudio->GetEventId());
+		}
+	}
+
+	//pick item game manager
+	if(gameManager != nullptr)
+		gameManager->PickedItemUp();
 }
 
 bool GroundItem::AddItem(const std::vector<ItemData*> items, int num, bool toBuy)

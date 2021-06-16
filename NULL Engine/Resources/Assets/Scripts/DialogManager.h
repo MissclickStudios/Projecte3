@@ -13,6 +13,7 @@ class C_UI_Image;
 class C_UI_Text;
 class C_UI_Button;
 class Player;
+class HUBArmorer;
 
 enum class DialogState
 {
@@ -93,6 +94,8 @@ public:
 
 	Player* mando = nullptr;
 
+	HUBArmorer* armorer = nullptr;
+
 	std::string dialogCanvasName = "DialogCanvas";
 	std::string speakerImageName = "SpeakerImage";
 	std::string textBackgroundName = "DialogBackground";
@@ -114,6 +117,7 @@ private:
 	std::vector<DialogLine*>::iterator currentLineIterator;
 
 	uint currentLineLetter = 0; //Holds the current letter position in string that has to be added in the line
+	uint wordIt = 0;
 
 	float textSpeed = 0.1f;
 	float nextLetterTimer = 0.f;

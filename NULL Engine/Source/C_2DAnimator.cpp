@@ -25,7 +25,7 @@ C_2DAnimator::C_2DAnimator(GameObject* owner) : Component(owner, ComponentType::
 
 	playFromTheStartOnLoop = false;
 
-	name = "";
+	//name = "";
 
 	spritesheet = nullptr;
 	spritesheet2 = nullptr;
@@ -52,6 +52,9 @@ C_2DAnimator::C_2DAnimator(GameObject* owner) : Component(owner, ComponentType::
 
 C_2DAnimator::~C_2DAnimator()
 {
+	RELEASE(spritesheet);
+	RELEASE(spritesheet2);
+	RELEASE(spritesheet3);
 }
 
 bool C_2DAnimator::Update()
@@ -111,13 +114,13 @@ bool C_2DAnimator::LoadState(ParsonNode& root)
 	animationLoop = root.GetBool("Animation Loop");
 	playFromTheStartOnLoop = root.GetBool("Animation Set On Loop From Start");
 
-	name = root.GetString("Name");
-	name1 = root.GetString("Name1");
-	name2 = root.GetString("Name2");
+	//name =  root.GetString("Name") ;
+	//name1 = root.GetString("Name1");
+	//name2 = root.GetString("Name2");
 
-	GetAnimationSprites(name.c_str(),1);
-	GetAnimationSprites(name1.c_str(), 2);
-	GetAnimationSprites(name2.c_str(), 3);
+	GetAnimationSprites(root.GetString("Name"), 1);
+	GetAnimationSprites(root.GetString("Name1"), 2);
+	GetAnimationSprites(root.GetString("Name2"), 3);
 
 	
 	spritesheet->rows = (uint)root.GetNumber("Spritesheet Rows");
@@ -150,23 +153,29 @@ bool C_2DAnimator::IsAnimationPlaying()
 	return animationPlaying;
 }
 
-void C_2DAnimator::SetSpritesheetTexture(R_Texture* spritesheet, int animationNumber)
+/*void C_2DAnimator::SetSpritesheetTexture(R_Texture* spritesheet, int animationNumber)
 {
 	switch (animationNumber) 
 	{
 	case 1:
+		if (this->spritesheet)
+			delete this->spritesheet;
 		this->spritesheet = new Spritesheet(spritesheet);
 		break;
 	case 2:
+		if (this->spritesheet2)
+			delete this->spritesheet2;
 		this->spritesheet2 = new Spritesheet(spritesheet);
 		break;
 	case 3:
+		if (this->spritesheet3)
+			delete this->spritesheet3;
 		this->spritesheet3 = new Spritesheet(spritesheet);
 		break;
 	case 0:
 		break;
 	}
-}
+}*/
 
 void C_2DAnimator::SetAnimationPlayFromStart(bool x)
 {
@@ -214,35 +223,69 @@ void C_2DAnimator::ChangeName(const char* name, int animationNum)
 	}
 }
 
-void C_2DAnimator::GetAnimationSprites(const char* name, int animationDestination)
+void C_2DAnimator::GetAnimationSprites(const char* inputName, int animationDestination)
 {
-	switch (animationDestination) 
+	R_Texture* texture = nullptr;
+	switch (animationDestination)
 	{
-	case 1:	
-		animation.clear();
-		ChangeName(name,1);
-		App->resourceManager->GetAllTextures(animation, name);
-		if (!animation.empty() && spritesheet != nullptr)
-		spritesheet->spriteSheet = animation[0];
+	case 1:
+		texture = (R_Texture*)App->resourceManager->GetResourceFromLibrary((std::string("Assets/Textures/2DAnimations/") + inputName + ".png").c_str());
+		if (texture)
+		{
+			this->name = inputName;
+			App->resourceManager->FreeResource(spritesheet->spriteSheet->GetUID());
+			spritesheet->spriteSheet = texture;
+		}
 		break;
 	case 2:
-		animation1.clear();
-		ChangeName(name,2);
-		App->resourceManager->GetAllTextures(animation1, name);
-		if (!animation1.empty() && spritesheet2 != nullptr)
-		spritesheet2->spriteSheet = animation1[0];
+		texture = (R_Texture*)App->resourceManager->GetResourceFromLibrary((std::string("Assets/Textures/2DAnimations/") + inputName + ".png").c_str());
+		if (texture)
+		{
+			this->name1 = inputName;
+			App->resourceManager->FreeResource(spritesheet2->spriteSheet->GetUID());
+			spritesheet2->spriteSheet = texture;
+		}
 		break;
 	case 3:
-		animation2.clear();
-		ChangeName(name, 3);
-		App->resourceManager->GetAllTextures(animation2, name);
-		if (!animation2.empty() && spritesheet3 != nullptr)
-		spritesheet3->spriteSheet = animation2[0];
+		texture = (R_Texture*)App->resourceManager->GetResourceFromLibrary((std::string("Assets/Textures/2DAnimations/") + inputName + ".png").c_str());
+		if (texture)
+		{
+			//ChangeName(name, 3);
+			this->name2 = inputName;
+			App->resourceManager->FreeResource(spritesheet3->spriteSheet->GetUID());
+			spritesheet3->spriteSheet = texture;
+		}
 		break;
 	case 0:
 		break;
 	}
+}
 
+void C_2DAnimator::GetAnimationSprites(const char* inputName, int animationDestination, R_Texture* texture)
+{
+	if (texture == nullptr)
+		return;
+
+	switch (animationDestination)
+	{
+	case 1:
+		this->name = inputName;
+		//App->resourceManager->FreeResource(spritesheet->spriteSheet->GetUID());
+		spritesheet->spriteSheet = texture;
+		break;
+	case 2:
+		this->name = inputName;
+		//App->resourceManager->FreeResource(spritesheet->spriteSheet->GetUID());
+		spritesheet2->spriteSheet = texture;
+		break;
+	case 3:
+		this->name = inputName;
+		//App->resourceManager->FreeResource(spritesheet->spriteSheet->GetUID());
+		spritesheet3->spriteSheet = texture;
+		break;
+	case 0:
+		break;
+	}
 }
 
 void C_2DAnimator::PlayAnimation(bool loop, int animationNumber)

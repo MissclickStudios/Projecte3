@@ -11,7 +11,6 @@
 #include "MathGeoLib/include/Math/float2.h"
 
 class C_AudioSource;
-class C_NavMeshAgent;
 
 enum class DarkTrooperState
 {
@@ -35,6 +34,9 @@ public:
 	void CleanUp() override;
 
 	void OnCollisionEnter(GameObject* object) override;
+
+	void EntityPause() override;
+	void EntityResume() override;
 
 	// Movement
 	std::string playerName = "Mandalorian";
@@ -64,9 +66,6 @@ public:
 	// Weapons
 	Prefab blaster;
 	Prefab shotgun;
-
-	// Agent
-	C_NavMeshAgent* agent = nullptr;
 
 	// Audio
 	C_AudioSource* deathAudio = nullptr;
@@ -105,8 +104,6 @@ private:
 	Weapon* shotgunWeapon = nullptr;
 
 	Weapon* currentWeapon = nullptr;
-
-
 };
 
 SCRIPTS_FUNCTION DarkTrooper* CreateDarkTrooper();

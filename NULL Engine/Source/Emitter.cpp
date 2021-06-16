@@ -6,6 +6,7 @@
 
 #include "ParticleModule.h"
 
+#include "Resource.h"
 #include "R_Texture.h"
 
 #include "Emitter.h"
@@ -17,6 +18,8 @@ Emitter::Emitter()
 	std::vector<ResourceBase> textures;
 	App->resourceManager->GetResourceBases<R_Texture>(textures);
 	emitterTexture = (R_Texture*)App->resourceManager->GetResourceFromLibrary(textures.begin()->assetsPath.c_str());
+
+	textures.clear();
 }
 
 Emitter::Emitter(const char* name)
@@ -35,15 +38,20 @@ void Emitter::Update(float dt)
 
 void Emitter::CleanUp()
 {
+	LOG("EMITTER CLEANUP");
+
 	for (auto mod = modules.begin(); mod != modules.end(); ++mod)
 	{
-		delete (*mod);
+		RELEASE((*mod));
 	}
 
 	modules.clear();
 	
-	if (emitterTexture != nullptr)
+	if (emitterTexture != nullptr) 
+	{
 		App->resourceManager->FreeResource(emitterTexture->GetUID());
+		emitterTexture = nullptr;
+	}
 }
 
 void Emitter::Save(ParsonNode& node)
@@ -53,7 +61,11 @@ void Emitter::Save(ParsonNode& node)
 	uint32 textureUID = (emitterTexture != nullptr) ? emitterTexture->GetUID() : 0;
 	node.SetInteger("textureUID", textureUID);
 	
-	emitterTexture != nullptr ? node.SetString("texturePath", emitterTexture->GetAssetsPath()) : node.SetString("texturePath", "None");
+	if(emitterTexture != nullptr)
+		node.SetString("texturePath", emitterTexture->GetAssetsPath());
+	else
+		node.SetString("texturePath", path.c_str());
+	
 
 	node.SetInteger("maxParticleCount", maxParticleCount);
 
@@ -69,7 +81,7 @@ void Emitter::Load(ParsonNode& node)
 {
 	name = node.GetString("name");
 	
-	std::string path = node.GetString("texturePath");
+	path = node.GetString("texturePath");
 	emitterTexture = (R_Texture*)App->resourceManager->GetResourceFromLibrary(path.c_str());
 
 	maxParticleCount = node.GetInteger("maxParticleCount");

@@ -17,6 +17,8 @@ enum class ENGINE_ENUM EffectType
 	KNOCKBACK,
 	ELECTROCUTE,
 	BOSS_PIERCING,
+	PRICE_MODIFY,
+	COOLDOWN_MODIFY,
 	EFFECTS_NUM
 };
 // This has to be the last entry
@@ -55,6 +57,16 @@ public:
 	{
 		permanent = false; // Remove a possible permanent status and stop the timer
 		timer.Stop();	   // so that the next .IsActive() returns a guaranteed false
+	}
+
+	void Pause()
+	{
+		timer.Pause();
+	}
+
+	void Resume()
+	{
+		timer.Resume();
 	}
 
 	const EffectType Type() const { return type; }

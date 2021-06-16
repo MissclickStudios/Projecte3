@@ -18,7 +18,7 @@
 
 C_ParticleSystem::C_ParticleSystem(GameObject* owner) : Component(owner, ComponentType::PARTICLE_SYSTEM)
 {
-	OPTICK_CATEGORY("C_Particle COnstructor", Optick::Category::Debug)
+	OPTICK_CATEGORY("C_Particle Constructor", Optick::Category::Debug)
 	SetAsDefaultComponent();
 }
 
@@ -51,10 +51,10 @@ bool C_ParticleSystem::LoadState(ParsonNode& root)
 	std::string path = root.GetString("particleSystemAssetsPath");
 	resource = (R_ParticleSystem*)App->resourceManager->GetResourceFromLibrary(path.c_str());
 
-	stopSpawn = root.GetBool("stopSpawn");
-	tempDelete = root.GetBool("tempDelete");
-	previewEnabled = root.GetBool("previewEnabled");
-	stopAndDeleteCheck = root.GetBool("stopAndDeleteCheck");
+	stopSpawn			= root.GetBool("stopSpawn");
+	tempDelete			= root.GetBool("tempDelete");
+	previewEnabled		= root.GetBool("previewEnabled");
+	stopAndDeleteCheck	= root.GetBool("stopAndDeleteCheck");
 
 	RefreshEmitterInstances();
 
@@ -107,12 +107,12 @@ bool C_ParticleSystem::CleanUp()
 	//Clean Emitter Instances
 	for (auto emitter = emitterInstances.begin(); emitter != emitterInstances.end(); ++emitter)
 	{
-		delete (*emitter);
+		RELEASE((*emitter));
 	}
 
-	emitterInstances.end();
+	emitterInstances.clear();
 
-	return false;
+	return true;
 }
 
 void C_ParticleSystem::SetParticleSystem(R_ParticleSystem* newParticleSystem)

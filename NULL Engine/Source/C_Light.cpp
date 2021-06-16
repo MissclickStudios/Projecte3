@@ -11,9 +11,9 @@
 #include "VariableDefinitions.h"
 
 C_Light::C_Light(GameObject* owner, LightType lightType) : Component(owner, ComponentType::LIGHT),
-lightType(lightType),
-directional(nullptr),
-pointLight(nullptr)
+lightType	(lightType),
+directional	(nullptr),
+pointLight	(nullptr)
 {
 	switch (lightType)
 	{
@@ -33,38 +33,39 @@ pointLight(nullptr)
 
 C_Light::~C_Light()
 {
-	directional = nullptr;
-	pointLight = nullptr;
+	if (directional != nullptr)
+		RELEASE(directional);
+
+	if (pointLight != nullptr)
+		RELEASE(pointLight);
 }
 
 bool C_Light::Update()
 {
-	bool ret = true;
+	if (directional != nullptr) 
+		directional->SetDirection(this->GetOwner()->transform->GetLocalEulerRotation()* RADTODEG);
 
-	if(directional) directional->SetDirection(this->GetOwner()->transform->GetLocalEulerRotation()* RADTODEG);
-
-	return ret;
+	return true;
 }
 
 bool C_Light::CleanUp()
 {
-	bool ret = true;
+	if (directional != nullptr)
+		RELEASE(directional);
 
-	directional = nullptr;
-	pointLight = nullptr;
+	if (pointLight != nullptr)
+		RELEASE(pointLight);
 	
-	return ret;
+	return true;
 }
 
 bool C_Light::SaveState(ParsonNode& root) const
 {
-	bool ret = true;
-
 	root.SetNumber("Type", (double)GetType());
 	
 	root.SetNumber("LightType", (uint)lightType);
 
-	if (directional)
+	if (directional != nullptr)
 	{
 		root.SetColor("Diffuse", directional->diffuse);
 		root.SetColor("Ambient", directional->ambient);
@@ -72,7 +73,7 @@ bool C_Light::SaveState(ParsonNode& root) const
 
 		root.SetFloat3("Direction", directional->GetDirection());
 	}
-	if (pointLight)
+	if (pointLight != nullptr)
 	{
 		root.SetColor("Diffuse", pointLight->diffuse);
 		root.SetColor("Ambient", pointLight->ambient);
@@ -84,24 +85,22 @@ bool C_Light::SaveState(ParsonNode& root) const
 		root.SetFloat3("Position", pointLight->GetPosition());
 	}
 
-	return ret;
+	return true;
 }
 
 bool C_Light::LoadState(ParsonNode& root)
 {
-	bool ret = true;
-
 	lightType = (LightType)(uint)root.GetNumber("LightType");
 
 	switch (lightType)
 	{
-	case LightType::DIRECTIONAL:	directional = new DirectionalLight();	break;
-	case LightType::POINTLIGHT:		pointLight = new PointLight();			break;
-	case LightType::SPOTLIGHT:												break;
-	case LightType::NONE:													break;
+	case LightType::DIRECTIONAL:	{ directional = new DirectionalLight(); }	break;
+	case LightType::POINTLIGHT:		{ pointLight = new PointLight(); }			break;
+	case LightType::SPOTLIGHT:		{ /* WORK IN PROGRESS*/ }					break;
+	case LightType::NONE:			{ /* DO NOTHING*/ }							break;
 	}
 
-	if (directional)
+	if (directional != nullptr)
 	{
 		directional->Active(true);
 		
@@ -113,7 +112,7 @@ bool C_Light::LoadState(ParsonNode& root)
 		this->GetOwner()->transform->SetLocalEulerRotation(directional->GetDirection());
 		directional->Init();
 	}
-	if (pointLight)
+	if (pointLight != nullptr)
 	{
 		pointLight->Active(true);
 		
@@ -128,7 +127,5 @@ bool C_Light::LoadState(ParsonNode& root)
 		pointLight->Init();
 	}
 
-	
-
-	return ret;
+	return true;
 }

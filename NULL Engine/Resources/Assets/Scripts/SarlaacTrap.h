@@ -1,4 +1,4 @@
-#include "Script.h"
+#include "Object.h"
 #include "ScriptMacros.h"
 #include "MathGeoLib/include/Math/float3.h"
 
@@ -6,6 +6,7 @@ class GameObject;
 class C_BoxCollider;
 class C_Animator;
 class C_ParticleSystem;
+class C_AudioSource;
 
 enum class SarlaacState
 {
@@ -15,7 +16,7 @@ enum class SarlaacState
 	SLEEPING  //Waits for a brief time until going back to IDLE
 };
 
-class SCRIPTS_API SarlaacTrap : public Script {
+class SCRIPTS_API SarlaacTrap : public Object ALLOWED_INHERITANCE{
 public:
 	SarlaacTrap();
 	~SarlaacTrap();
@@ -30,15 +31,20 @@ public:
 
 	std::string animationName = "Eat";
 
-	int damage = 0;
+	int mandoDamage = 0.5;
+	int enemyDamage = 20;
 
 	float activationTime = 1.f;
 	float sleepingTime = 2.f;
+
+	bool initialized = false;
 
 private:
 
 	float animationTimer = 0.0f;
 
+	C_AudioSource* sarlaacAudio = nullptr;
+	C_AudioSource* sarlaccAttackAudio = nullptr;
 	C_Animator* sarlaacAnimator = nullptr;
 
 	C_ParticleSystem* idleParticles		= nullptr;
@@ -47,11 +53,4 @@ private:
 	SarlaacState state = SarlaacState::IDLE;
 };
 
-SCRIPTS_FUNCTION SarlaacTrap* CreateSarlaacTrap() {
-	SarlaacTrap* script = new SarlaacTrap();
-	INSPECTOR_INPUT_INT(script->damage);
-	INSPECTOR_STRING(script->animationName);
-	INSPECTOR_DRAGABLE_FLOAT(script->activationTime);
-	INSPECTOR_DRAGABLE_FLOAT(script->sleepingTime);
-	return script;
-}
+SCRIPTS_FUNCTION SarlaacTrap* CreateSarlaacTrap();

@@ -8,6 +8,13 @@ class GameObject;
 class C_BoxCollider;
 class C_AudioSource;
 
+enum class VaporatorState
+{
+	IDLE,		// Waiting to be activated
+	STUNNING,	// Stunn activation
+	REFRESHING	// On cooldown
+};
+
 class SCRIPTS_API MoistureVaporator : public Object ALLOWED_INHERITANCE {
 public:
 	MoistureVaporator();
@@ -30,24 +37,28 @@ public:
 	int damage = 0;
 
 	float power = 2000000.0f;
-	float particleEmitttingTime = 1.f;
 
 	float stunDuration = 1.f;
 
 	// Audio
 
-	C_AudioSource* explosion = nullptr;
+	C_AudioSource* moistureAudio = nullptr;
+
+	float cooldown = 1.0f;
+	float particleEmitttingTime = 1.0f;
 
 private:
 	GameObject* gameManager = nullptr;
 	GameObject* vaporatorObject = nullptr;
 	C_BoxCollider* vaporatorCollider = nullptr;
 	C_ParticleSystem* explosionParticles = nullptr;
+	C_ParticleSystem* idleParticles = nullptr;
 
-	float particleTimer = 0.f;
+	VaporatorState state;
 
-	bool toExplode = false;
-	bool exploded = false;
+	Timer cooldownTimer;
+	Timer explosionParticlesTimer;
+
 };
 
 SCRIPTS_FUNCTION MoistureVaporator* CreateMoistureVaporator() {
@@ -58,6 +69,7 @@ SCRIPTS_FUNCTION MoistureVaporator* CreateMoistureVaporator() {
 	INSPECTOR_INPUT_FLOAT3(script->vaporatorColliderSize);
 	INSPECTOR_INPUT_FLOAT3(script->stunTriggerSize);
 	INSPECTOR_INPUT_INT(script->damage);
+	INSPECTOR_DRAGABLE_FLOAT(script->cooldown);
 	INSPECTOR_DRAGABLE_FLOAT(script->particleEmitttingTime);
 	return script;
 }

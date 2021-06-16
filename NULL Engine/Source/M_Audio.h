@@ -14,6 +14,7 @@ class C_AudioSource;
 class WwiseObject
 {
 public:
+
 	WwiseObject(unsigned int id, const char* name);
 	~WwiseObject();
 
@@ -42,7 +43,7 @@ private:
 
 	std::string name;
 	unsigned int objectId;
-	float volume = 1.0f;
+	float volume = 100.0f;
 	AkVector position;
 	AkVector orientationFront;
 	AkVector orientationUp;
@@ -64,6 +65,7 @@ public:
 	bool		InitSoundEngine();
 	void		TermSoundEngine();
 
+	void		SetRtcp(const char* rtpc, int value);
 	void		SetWwiseState(const char* stateGroup, const char* state);
 
 	void		PauseAll();
@@ -82,9 +84,13 @@ public:
 	std::vector<WwiseObject*> audioListenerList;
 	std::vector<WwiseObject*> audioSourceList;
 
-private:
+	float maxSfxVolume = 50.0f;
+	float maxMusicVolume = 50.0f;
 
 	C_AudioSource* aSourceBackgroundMusic = nullptr;
+
+	C_AudioSource* aSourceUi = nullptr;
+	
 };
 
 #endif //__AUDIO_H__

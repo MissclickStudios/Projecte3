@@ -59,9 +59,16 @@ public:
 	void SetHSpaceBetween(const uint hSpaceBetween);
 	void SetVSpaceBetween(const float vSpaceBetween);
 	
+	int nextWordLetters;
+	
+	bool nextWord;
 private:
 
-	std::string text; 
+	float rectWidth;
+	float currentWidth;
+
+	std::string text;
+
 
 	unsigned char image[640][480];
 
@@ -72,6 +79,8 @@ private:
 	FT_Library ft;
 
 	std::map<char, Character> Characters;
+	std::string::const_iterator findLastCharacterRow(std::string::const_iterator begin, float x);
+	void DrawRow(std::string::const_iterator begin, std::string::const_iterator end, float x, float y, int currentRow);
 
 	R_Shader* rShader;
 
@@ -80,7 +89,7 @@ private:
 
 	float fontSize = 0.001;
 	uint hSpaceBetween = 0; // extra space between letters
-	float vSpaceBetween = 15; // space between rows
+	float vSpaceBetween = 75; // space between rows
 
 };
 

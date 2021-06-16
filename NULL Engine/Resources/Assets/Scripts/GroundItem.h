@@ -10,6 +10,8 @@
 class C_Material;
 class C_ParticleSystem;
 class ItemMenuManager;
+class GameManager;
+class C_AudioSource;
 
 class Item;
 struct ItemData;
@@ -40,13 +42,18 @@ public:
 	Item* item = nullptr;
 
 	std::string itemMenuName = "Item Menu";
+	std::string playerName = "Mandalorian";
 
 protected:
 
 	C_Material* material = nullptr;
 	C_ParticleSystem* particle = nullptr;
+	C_AudioSource* itemAudio = nullptr;
 
 	ItemMenuManager* itemMenu = nullptr;
+
+	GameManager* gameManager = nullptr;
+	GameObject* player = nullptr;
 };
 
 SCRIPTS_FUNCTION GroundItem* CreateGroundItem();

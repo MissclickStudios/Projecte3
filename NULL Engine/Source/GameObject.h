@@ -17,6 +17,8 @@ class ParsonNode;
 class C_Transform;
 class C_UI;
 
+class Renderer;
+
 struct MeshRenderer;
 struct CuboidRenderer;
 struct SkeletonRenderer;
@@ -32,71 +34,70 @@ public:
 	GameObject(std::string name , bool isActive = true, bool isStatic = false);
 	~GameObject();
 
-	bool			Start				();
-	bool			Update				();
-	bool			CleanUp				();
+	bool			Start();
+	bool			Update();
+	bool			CleanUp();
 
-	bool			SaveState			(ParsonNode& root) const;
-	bool			LoadState			(ParsonNode& root);
+	bool			SaveState(ParsonNode& root) const;
+	bool			LoadState(ParsonNode& root);
 
 public:
-	void			FreeComponents						();												// 
-	void			FreeChilds							();												// 
+	void			FreeComponents();																	// 
+	void			FreeChilds();																		// 
 	
-	void			UpdateBoundingBoxes					();												// 
-	AABB			GetAABB								() const;										// 
-	float3*			GetAABBVertices						() const;										// 
-	void			GetRenderers						(std::vector<MeshRenderer>& meshRenderers, std::vector<CuboidRenderer>& cuboidRenderers, 
-															std::vector<SkeletonRenderer>& skeletonRenderers); // TODO: Get them elsewhere. Scene maybe?
+	void			UpdateBoundingBoxes();																// 
+	AABB			GetAABB() const;																	// 
+	float3*			GetAABBVertices() const;															// 
+	void			GetRenderers(std::vector<MeshRenderer>& meshRenderers, std::vector<CuboidRenderer>& cuboidRenderers, 
+									std::vector<SkeletonRenderer>& skeletonRenderers);
+
+	void			GetRenderers(std::multimap<float, Renderer*>& renderers);
 
 public:																									// --- PARENT/CHILDS METHODS
-	bool			SetParent							(GameObject* newParent);						// 
+	bool			SetParent(GameObject* newParent);													// 
 
-	bool			AddChild							(GameObject* child);							// Adds the given child to this GO's childs. Also dels. it from prev. parent's childs.
-	bool			NewChildIsOwnParent					(GameObject* child);							// Rets. true if passed child is being added to one of it's children or ch. of chs.
-	bool			DeleteChild							(GameObject* child);							// Deletes the given child from childs. Returns false upon not finding the child.
-	bool			HasChilds							() const;
+	bool			AddChild(GameObject* child);														// Adds the given child to this GO's childs. Also dels. it from prev. parent's childs.
+	bool			NewChildIsOwnParent(GameObject* child);												// Rets. true if passed child is being added to one of it's children or ch. of chs.
+	bool			DeleteChild(GameObject* child);														// Deletes the given child from childs. Returns false upon not finding the child.
+	bool			HasChilds() const;
 
-	void			GetAllChilds						(std::vector<GameObject*>& children);						// 
-	void			GetAllChilds						(std::map<std::string, GameObject*>& children);				// 
-	void			GetAllChilds						(std::unordered_map<std::string, GameObject*>& children);	// 
-	GameObject*		FindChild							(const char* childName);									// 
+	void			GetAllChilds(std::vector<GameObject*>& children);									// 
+	void			GetAllChilds(std::map<std::string, GameObject*>& children);							// 
+	void			GetAllChilds(std::unordered_map<std::string, GameObject*>& children);				// 
+	GameObject*		FindChild(const char* childName);													// 
 
-	void			GetAllParents						(std::vector<GameObject*>& parents);					// Will return all the GO's parents until parent->isSceneRoot = true;
+	void			GetAllParents(std::vector<GameObject*>& parents);									// Will return all the GO's parents until parent->isSceneRoot = true;
 
-	void			SetAsPrefab							(uint _prefabID);								//Prefabs
+	void			SetAsPrefab(uint _prefabID);														//Prefabs
 
 public:																									// --- GAME OBJECT GETTERS AND SETTERS
-	uint32			GetUID								() const;										//
-	const char*		GetName								() const;										// 
-	bool			IsActive							() const;										// 
-	bool			IsStatic							() const;										// 
+	uint32			GetUID() const;																		//
+	const char*		GetName() const;																	// 
+	bool			IsActive() const;																	// 
+	bool			IsStatic() const;																	// 
 
-	void			ForceUID							(const uint32& UID);							// 
-	void			SetName								(const char* newName);							// 
-	void			SetIsActive							(const bool setTo);								// 
-	void			SetIsStatic							(const bool setTo);								// 
-	void			SetChildsIsActive					(const bool setTo, GameObject* parent);			// 
-	void			SetChildsIsStatic					(const bool setTo, GameObject* parent);			// 
+	void			ForceUID(const uint32& UID);														// 
+	void			SetName(const char* newName);														// 
+	void			SetIsActive(const bool setTo);														// 
+	void			SetIsStatic(const bool setTo);														// 
+	void			SetChildsIsActive(const bool setTo, GameObject* parent);							// 
+	void			SetChildsIsStatic(const bool setTo, GameObject* parent);							// 
 
-	bool			GetMaintainThroughScenes			() const;										// 
-	void			SetMaintainThroughScenes			(const bool setTo);								// 
-
-	uint32			GetParentUID						() const;										// 
-	void			SetParentUID						(const uint32& parentUID);						// 
+	uint32			GetParentUID() const;																// 
+	void			SetParentUID(const uint32& parentUID);												// 
 
 public:																									// --- COMPONENT GETTERS AND SETTERS
-	Component*		CreateComponent						(ComponentType type, bool addComponent = true);	// Creates a component of the given type and adds it to the components vector.
-	bool			DeleteComponent						(Component* componentToDelete);					// Deletes the given component from the Components vector. Returs False on ERROR.
-	void			ReplaceComponent					(Component* newComponent);						// 
+	Component*		CreateComponent(ComponentType type, bool addComponent = true);						// Creates a component of the given type and adds it to the components vector.
+	bool			DeleteComponent(Component* componentToDelete);										// Deletes the given component from the Components vector. Returs False on ERROR.
+	void			ReplaceComponent(Component* newComponent);											// 
 
-	const std::vector<Component*>&	GetAllComponents	() const;										// 
-	bool							GetAllComponents	(std::vector<Component*>& components) const;	// 
+	const std::vector<Component*>&	GetAllComponents() const;											// 
+	bool							GetAllComponents(std::vector<Component*>& components) const;		// 
 
-	void*			GetScript							(const char* scriptName);						//
-	void GetUiComponents(std::vector<C_UI*>& uiComponents);
-	C_UI* GetUiComponent();
-	void SetUiChildOrder(int index);
+	void*			GetScript(const char* scriptName);													//
+	void			GetUiComponents(std::vector<C_UI*>& uiComponents);									// 
+	C_UI*			GetUiComponent();																	// 
+	void			SetUiChildOrder(int index);															// 
 
 	template<typename T>																				// --- GET COMPONENT TEMPLATED METHOD
 	T* GetComponent() const																				// 
@@ -177,7 +178,6 @@ public:
 	GameObject*		parent;																				// GameObject to which this GameObject is parented to.
 	C_Transform*	transform;																			// Transform of this GO. Maybe like Unity? Or have it like the rest of components?
 
-
 	bool			isMasterRoot;																		// Will be set to true if this GameObject is M_Scenes's master root object.
 	bool			isSceneRoot;																		// Will be set to true if this GameObject is M_Scene's scene root object.
 	bool			isBone;																				// Will be set to true if this GameObject is an 3D Animation bone.
@@ -194,7 +194,7 @@ public:
 	bool			isPrefab = false;																	// Defines if the object is part of a prefav
 	uint			prefabID = 0;																		// Id of the prefab the game object is part of
 
-	//Navigation
+	// Navigation
 	uint			navigationArea = 0;																	// Describes the navigation of the current game object
 	bool			isNavigable = false;																// Defines is the object is navigable.
 
@@ -205,11 +205,6 @@ private:
 	bool			isStatic;																			// Will determine whether or not this GameObject will be subject of transformations.
 
 	uint32			parent_uid;																			// Only for Serialization purposes. Maybe will be repurposed later.
-
-	bool			maintainThroughScenes;																// Will determine whether or not the GO will be deleted when changing scenes.
-
-
-
 };
 
 #endif // !__GAME_OBJECT_H__

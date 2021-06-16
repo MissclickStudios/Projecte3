@@ -17,9 +17,9 @@
 
 #include "MemoryManager.h"
 
-#define MOVEMENT_SPEED 24.0f
-#define ROTATION_SPEED 0.05f
-#define ZOOM_SPEED 300.0f
+#define MOVEMENT_SPEED	24.0f
+#define ROTATION_SPEED	0.05f
+#define ZOOM_SPEED		300.0f
 
 M_Camera3D::M_Camera3D(bool isActive) : Module("Camera3D", isActive),
 masterCamera	(nullptr),
@@ -28,9 +28,9 @@ drawLastRaycast	(false)
 {
 	CreateMasterCamera();
 
-	positionOrigin		= float3(60.0f, 40.0f, 60.0f);								//
-	referenceOrigin		= float3(0.0f, 0.0f, 0.0f);									//
-	reference			= referenceOrigin;											// 
+	positionOrigin		= float3(60.0f, 40.0f, 60.0f);
+	referenceOrigin		= float3(0.0f, 0.0f, 0.0f);
+	reference			= referenceOrigin; 
 
 	movementSpeed		= MOVEMENT_SPEED;
 	rotationSpeed		= ROTATION_SPEED;
@@ -60,25 +60,14 @@ bool M_Camera3D::Init(ParsonNode& root)
 bool M_Camera3D::Start()
 {
 	LOG("Setting up the camera");
-	bool ret = true;
 
-	return ret;
+	return true;
 }
 
 // -----------------------------------------------------------------
 UpdateStatus M_Camera3D::Update(float dt)
 {
-	masterCamera->GetComponent<C_Transform>()->GetWorldTransform();
-
-	/*if (masterCamera->GetComponent<C_Transform>()->updateWorld)											// Right now UpdateFrustumTransform() is done at C_Transform().
-	{
-		masterCamera->GetComponent<C_Camera>()->UpdateFrustumTransform();
-	}
-
-	if (currentCamera->GetOwner()->GetComponent<C_Transform>()->updateWorld)
-	{
-		currentCamera->UpdateFrustumTransform();
-	}*/
+	masterCamera->GetComponent<C_Transform>()->GetWorldTransform();													// Dirty way to ensure the world transform is up to date.
 
 	return UpdateStatus::CONTINUE;
 }
@@ -94,13 +83,7 @@ bool M_Camera3D::CleanUp()
 // -----------------------------------------------------------------
 bool M_Camera3D::LoadConfiguration(ParsonNode& configuration)
 {
-	bool ret = true;
-
-	//Position.x = root.GetNumber("X");
-	//Position.y = root.GetNumber("Y");
-	//Position.z = root.GetNumber("Z");
-
-	return ret;
+	return true;
 }
 
 // -----------------------------------------------------------------
@@ -122,7 +105,7 @@ void M_Camera3D::CreateMasterCamera()
 	masterCamera->CreateComponent(ComponentType::CAMERA);
 	
 	C_Camera* cCamera = masterCamera->GetComponent<C_Camera>();
-	cCamera->SetFarPlaneDistance(1000.0f);
+	cCamera->SetFarPlaneDistance(5000.0f);
 	SetCurrentCamera(cCamera);
 	
 	if (App != nullptr)

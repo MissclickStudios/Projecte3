@@ -4,11 +4,16 @@
 #include "M_Scene.h"
 #include "M_UISystem.h"
 
+#include "M_ResourceManager.h"
+#include "R_Texture.h"
+
 #include "GameObject.h"
 #include "C_Transform.h"
 #include "C_Canvas.h"
 #include "C_UI_Button.h"
 #include "C_UI_Text.h"
+#include "C_UI_Image.h"
+#include "C_Material.h"
 
 #include "GroundItem.h"
 #include "Items.h"
@@ -47,9 +52,18 @@ void ItemMenuManager::Start()
 	if (gameObject != nullptr)
 		rarityText = gameObject->GetComponent<C_UI_Text>();
 
+	gameObject = App->scene->GetGameObjectByName(itemImageName.c_str());
+	if (gameObject != nullptr)
+	{
+		itemImage = gameObject->GetComponent<C_UI_Image>();
+		itemMaterial = gameObject->GetComponent<C_Material>();
+	}
+
 	gameObject = App->scene->GetGameObjectByName(playerName.c_str());
 	if (gameObject != nullptr)
 		player = (Player*)gameObject->GetScript("Player");
+
+	atlasTexture = (R_Texture*)App->resourceManager->GetResource<R_Texture>("Assets/Textures/Ui/Atlas.png");
 }
 
 void ItemMenuManager::Update()
@@ -58,7 +72,7 @@ void ItemMenuManager::Update()
 	{
 		if (buyButton != nullptr && buyButton->GetState() == UIButtonState::PRESSEDIN)
 		{
-			if (player->currency >= item->item->price)
+			if (player->credits >= (int)((float)item->item->price * player->priceModifier))
 			{
 				item->PickUp(player);
 				item = nullptr;
@@ -106,6 +120,14 @@ void ItemMenuManager::Update()
 		App->uiSystem->RemoveActiveCanvas(canvas);
 }
 
+void ItemMenuManager::CleanUp()
+{
+	if (currentItemTexture)
+		App->resourceManager->FreeResource(currentItemTexture->GetUID());
+	if(atlasTexture)
+		App->resourceManager->FreeResource(atlasTexture->GetUID());
+}
+
 void ItemMenuManager::SetItem(GroundItem* item)
 {
 	if (weapon.uid == NULL && this->item == nullptr)
@@ -117,13 +139,14 @@ void ItemMenuManager::SetItem(GroundItem* item)
 
 		if (this->item->item->price > 0)
 		{
-			std::string text = "Price: ";
-			text += std::to_string(this->item->item->price);
-			text += "      Press Enter/A to pick up";
+			std::string text;
+			if (player != nullptr)
+			 text += std::to_string((int)((float)this->item->item->price * player->priceModifier));
+			//text += "      Enter/A";
 			priceText->SetText(text.c_str());
 		}
-		else
-			priceText->SetText("Press Enter/A to pick up");
+		//else
+		//	priceText->SetText("      Enter/A");
 
 		switch (this->item->item->rarity)
 		{
@@ -145,6 +168,21 @@ void ItemMenuManager::SetItem(GroundItem* item)
 			break;
 		}
 
+		if (itemMaterial != nullptr)
+			if (item->item->texturePath != "")
+			{
+				//if (currentItemTexture)
+				//	App->resourceManager->FreeResource(currentItemTexture->GetUID());
+				currentItemTexture = (R_Texture*)App->resourceManager->GetResource<R_Texture>(item->item->texturePath.c_str());
+				if (currentItemTexture != nullptr) 
+				{
+					itemMaterial->SetTexture(currentItemTexture);
+					C_UI_Image* currImage = itemMaterial->GetOwner()->GetComponent<C_UI_Image>();
+					currImage->SetTextureCoordinates(0, 0, 512, 512);
+					currImage->SetRect({ -0.9, -0.585, 0.18, 0.23 });
+				}
+			}
+
 		App->uiSystem->PushCanvas(canvas);
 	}
 }
@@ -158,11 +196,16 @@ void ItemMenuManager::SetWeapon(Prefab weapon, float3 position, std::string name
 	{
 		nameText->SetText(name.c_str());
 		descriptionText->SetText(description.c_str());
-		priceText->SetText("Press Enter/A to pick up");
+		priceText->SetText("");
 		rarityText-> SetText("");
 
 		weaponPosition = position;
 		this->weapon = weapon;
+
+		itemMaterial->SetTexture(atlasTexture);
+		C_UI_Image* currImage = itemMaterial->GetOwner()->GetComponent<C_UI_Image>();
+		currImage->SetTextureCoordinates(-340, -225, 121, 84);
+		currImage->SetRect({ -0.875f, -0.545f, 0.135f, 0.155f });
 		App->uiSystem->PushCanvas(canvas);
 	}
 }

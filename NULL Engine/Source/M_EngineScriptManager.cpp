@@ -360,7 +360,7 @@ void M_EngineScriptManager::DeSerializeAllScripts(const ParsonArray& scriptsArra
 									(*(float3*)(*item).ptr).z = variable.GetNumber("float3z");
 									break;
 								case InspectorScriptData::STRING:
-									*(std::string*)(*item).ptr = variable.GetString("string"); break;
+									EngineApp->scriptManager->SetString((*item).ptr, variable.GetString("string")); break;	
 								case InspectorScriptData::DataType::PREFAB:
 									*(Prefab*)(*item).ptr = EngineApp->resourceManager->prefabs[(unsigned int)variable.GetNumber("prefab")]; break;
 								case InspectorScriptData::DataType::GAMEOBJECT: 

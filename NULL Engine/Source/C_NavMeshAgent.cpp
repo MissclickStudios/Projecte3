@@ -39,6 +39,8 @@ bool C_NavMeshAgent::Update()
 	{
 		if (hasDestination)
 		{
+			destinationPoint = path.back();
+
 			nextPoint = path[indexPath];
 
 			direction = nextPoint - currentPos;
@@ -53,7 +55,7 @@ bool C_NavMeshAgent::Update()
 			if (GetOwner()->transform->GetDistanceTo(nextPoint) <= 1.0f)
 			{
 				currentPos = nextPoint;
-				nextPoint = path[++indexPath];
+				nextPoint = path[indexPath++];
 			}
 			
 			if (indexPath > (path.size()-1))
@@ -69,7 +71,8 @@ bool C_NavMeshAgent::Update()
 		}
 		else
 		{
-			rigidBody->Set2DVelocity(float2(0.0f,0.0f));
+			if (!dontStopInertiaInTheUpdateFunction)
+				rigidBody->Set2DVelocity(float2(0.0f,0.0f));
 		}
 	}
 
@@ -95,19 +98,15 @@ bool C_NavMeshAgent::LoadState(ParsonNode& root)
 
 bool C_NavMeshAgent::SetDestination(float3 destination)
 {
-	float2 pos = { destination.x, destination.z };
-
-	destinationPoint = { pos.x, 0.0f, pos.y };
-
 	indexPath = 1;
 
 	origin = GetOwner()->transform->GetWorldPosition();
 
-	origin.y = 0.0f;
-
 	currentPos = origin;
 
 	AgentPath(origin, destination);
+
+	dontStopInertiaInTheUpdateFunction = false;
 
 	return true;
 }
@@ -117,8 +116,9 @@ bool C_NavMeshAgent::HasDestination()
 	return hasDestination;
 }
 
-void C_NavMeshAgent::CancelDestination()
+void C_NavMeshAgent::CancelDestination(bool dontStopInertiaInTheUpdateFunction)
 {
+	this->dontStopInertiaInTheUpdateFunction = dontStopInertiaInTheUpdateFunction;
 	hasDestination = false;
 	path.clear();
 	indexPath = 1;
@@ -131,6 +131,8 @@ void C_NavMeshAgent::StopAndCancelDestination()
 	hasDestination = false;
 	if(rigidBody != nullptr)
 		rigidBody->Set2DVelocity({ 0.0f,0.0f });
+
+	dontStopInertiaInTheUpdateFunction = false;
 }
 
 const float3 C_NavMeshAgent::GetNextPathPoint() const
@@ -143,7 +145,7 @@ bool C_NavMeshAgent::AgentPath(float3 origin, float3 destination)
 
 	App->detour->CalculatePath(origin, destination, path);
 
-	if (path.empty())
+	if (path.size() == 1 || path.empty())
 		hasDestination = false;
 	else
 		hasDestination = true;

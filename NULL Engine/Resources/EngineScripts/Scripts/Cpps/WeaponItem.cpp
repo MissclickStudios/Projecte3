@@ -1,4 +1,6 @@
-#include "WeaponItem.h"
+#include "MC_Time.h"
+#include "Log.h"
+#include "EasingFunctions.h"
 
 #include "Application.h"
 #include "M_Scene.h"
@@ -12,6 +14,8 @@
 
 #include "Player.h"
 
+#include "WeaponItem.h"
+
 WeaponItem::WeaponItem() : Object()
 {
 	baseType = ObjectType::WEAPON_ITEM;
@@ -23,13 +27,26 @@ WeaponItem::~WeaponItem()
 
 void WeaponItem::Awake()
 {
-	GameObject* gameObject = App->scene->GetGameObjectByName(itemMenuName.c_str());
 	if (gameObject != nullptr)
-		itemMenu = (ItemMenuManager*)gameObject->GetScript("ItemMenuManager");
+		gameObject->transform->SetLocalPosition(gameObject->transform->GetLocalPosition() - hoverRange);
+	
+	GameObject* menuManagerGO = App->scene->GetGameObjectByName(itemMenuName.c_str());
+	if (menuManagerGO != nullptr)
+		itemMenu = (ItemMenuManager*)menuManagerGO->GetScript("ItemMenuManager");
 }
 
 void WeaponItem::Update()
 {
+	if (offsetCount < timeOffset)
+	{
+		offsetCount += MC_Time::Game::GetDT();
+		return;
+	}
+
+	CalculateNewHoverPosition();
+
+	gameObject->transform->Translate(newPosition);
+	gameObject->transform->Rotate(rotationSpeed * MC_Time::Game::GetDT());
 }
 
 void WeaponItem::CleanUp()
@@ -58,9 +75,37 @@ void WeaponItem::PickUp(Player* player)
 	Deactivate();
 }
 
+void WeaponItem::CalculateNewHoverPosition()											// --- All this mess just to avoid using sin() 3 times per frame.
+{																						// It works tho :).
+	newPosition = float3::zero;															// And it hovers cool enough :). 
+	
+	if (hoverRate.x >= 1.0f)	{ addX = false; hoverRate.x = 1.0f; }					// -------------------------------------------------
+	if (hoverRate.y >= 1.0f)	{ addY = false; hoverRate.y = 1.0f; }					// Detecting that the rate is above the upper bound. 
+	if (hoverRate.z >= 1.0f)	{ addZ = false; hoverRate.z = 1.0f; }					// -------------------------------------------------
+
+	if (hoverRate.x <= -1.0f)	{ addX = true; hoverRate.x = -1.0f; }					// -------------------------------------------------
+	if (hoverRate.y <= -1.0f)	{ addY = true; hoverRate.y = -1.0f; }					// Detecting that the rate is below the lower bound.
+	if (hoverRate.z <= -1.0f)	{ addZ = true; hoverRate.z = -1.0f; }					// -------------------------------------------------
+
+	float dt = MC_Time::Game::GetDT();													// -------------------------------------------------
+	hoverRate.x += (((addX) ? dt : -dt)) * hoverSpeed.x;								// 
+	hoverRate.y += (((addY) ? dt : -dt)) * hoverSpeed.y;								// 
+	hoverRate.z += (((addZ) ? dt : -dt)) * hoverSpeed.z;								// -------------------------------------------------
+	
+	newPosition.x = (hoverRange.x * hoverRate.x) * 0.1f;								// -------------------------------------------------
+	newPosition.y = (hoverRange.y * hoverRate.y) * 0.1f;								// 
+	newPosition.z = (hoverRange.z * hoverRate.z) * 0.1f;								// --------------------------------------------------------------
+}
+
 SCRIPTS_FUNCTION WeaponItem* CreateWeaponItem()
 {
 	WeaponItem* script = new WeaponItem();
+	
+	INSPECTOR_INPUT_FLOAT3(script->rotationSpeed);
+	INSPECTOR_INPUT_FLOAT3(script->hoverSpeed);
+	INSPECTOR_INPUT_FLOAT3(script->hoverRange);
+	
+	INSPECTOR_INPUT_FLOAT(script->timeOffset);
 
 	INSPECTOR_STRING(script->gunName);
 	INSPECTOR_STRING(script->gunDescription);

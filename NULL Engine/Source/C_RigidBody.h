@@ -4,7 +4,7 @@
 #include "Component.h"
 
 #include "MathGeoLib/include/Math/float3.h"
-#include "PhysX_3.4/Include/PxPhysicsAPI.h"
+#include "PhysX_4.1/Include/PxPhysicsAPI.h"
 
 class MISSCLICK_API C_RigidBody : public Component
 {
@@ -47,7 +47,7 @@ public:
 	inline physx::PxReal	GetAngularDamping() { return angularDamping; }
 	inline physx::PxReal	GetLinearDamping() { return linearDamping; }
 
-	inline void				AddForce(float3 force) { if (dynamicBody) dynamicBody->addForce(physx::PxVec3(force.x, force.y, force.z), physx::PxForceMode::Enum::eFORCE); }
+	void					AddForce(float3 force);
 	inline void				AddTorque(physx::PxVec3 force, physx::PxForceMode::Enum mode) { if (dynamicBody)dynamicBody->addTorque(force, mode); }
 
 	inline void				FrozenPositions(bool& x, bool& y, bool& z) { x = freezePositionX; y = freezePositionY; z = freezePositionZ; }
@@ -94,6 +94,9 @@ private:
 
 	float3 linearVel = float3::zero;
 	float3 angularVel = float3::zero;
+
+	bool toAddForce = false;
+	float3 force = float3::zero;
 
 	bool useGravity = true;
 	bool isKinematic = true;

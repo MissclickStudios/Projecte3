@@ -25,6 +25,8 @@ public:
 
 	void OnCollisionEnter(GameObject* object) override;
 
+	void Hit() { hit = true; }
+
 	void SetShooter(Weapon* shooter, int index);
 	void SetOnHitData(float damage, std::vector<Effect> effects, float lifeTime);
 
@@ -41,6 +43,8 @@ private:
 	Timer lifeTimeTimer;
 
 	bool hit = false;
+
+	std::string savedFilter;
 };
 
 SCRIPTS_FUNCTION Bullet* CreateBullet();

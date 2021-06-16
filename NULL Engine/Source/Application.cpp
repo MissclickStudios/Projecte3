@@ -47,28 +47,6 @@ logger			(nullptr),
 gameState		(GameState::STOP)
 {
 	App = this;
-	//PERF_TIMER_START(perf_timer);
-
-	// The order of calls is very important!
-	// Modules will Init() Start() and Update in this order
-	// They will CleanUp() in reverse order
-
-	/*// Main Modules
-	AddModule(window);
-	AddModule(camera);
-	AddModule(input);
-	AddModule(fileSystem);
-	AddModule(resourceManager);
-	AddModule(audio);
-	AddModule(physics);
-	AddModule(uiSystem);
-
-	// Scenes
-	AddModule(scene);
-
-	// Renderer last!
-	AddModule(renderer);
-	// -------------------------------------------*/
 
 	// Save/Load variables
 	wantToLoad				= false;
@@ -98,14 +76,7 @@ Application::~Application()
 }
 
 bool Application::Init()
-{
-	//PERF_TIMER_START(perf_timer);
-
-	//for (int i = 0; i < 1000000; i++)
-	//{
-	//	LOG("Pre init");
-	//}
-	
+{	
 	LOG("Application Init --------------");
 
 	bool ret = true;
@@ -158,7 +129,7 @@ bool Application::Init()
 	return ret;
 }
 
-bool Application::Start()												// IS IT NEEDED?
+bool Application::Start()													// IS IT NEEDED?
 {
 	// After all Init calls we call Start() in all modules
 	LOG("Application Start --------------");
@@ -478,17 +449,17 @@ void Application::LogHardwareInfo() const
 	LOG("CPU Cache Size: %d ",					hardwareInfo.CPU.cacheSize);
 	LOG("CPU RAM Size: %.1f GB",				hardwareInfo.CPU.ramGb);
 	LOG(" --- DRIVERS --- ");
-	LOG("CPU RDTSC: %s",						hardwareInfo.CPU.hasRDTSC		?	"True" : "False");
+	LOG("CPU RDTSC: %s",						hardwareInfo.CPU.hasRDTSC	?	"True" : "False");
 	LOG("CPU AltiVec: %s",						hardwareInfo.CPU.hasAltiVec	?	"True" : "False");
-	LOG("CPU Now3D: %s",						hardwareInfo.CPU.has3DNow		?	"True" : "False");
+	LOG("CPU Now3D: %s",						hardwareInfo.CPU.has3DNow	?	"True" : "False");
 	LOG("CPU MMX: %s",							hardwareInfo.CPU.hasMMX		?	"True" : "False");
 	LOG("CPU SSE: %s",							hardwareInfo.CPU.hasSSE		?	"True" : "False");
-	LOG("CPU SSE2: %s",							hardwareInfo.CPU.hasSSE2		?	"True" : "False");
-	LOG("CPU SSE3: %s",							hardwareInfo.CPU.hasSSE3		?	"True" : "False");
-	LOG("CPU SSE4.1: %s",						hardwareInfo.CPU.hasSSE41		?	"True" : "False");
-	LOG("CPU SSE4.2: %s",						hardwareInfo.CPU.hasSSE42		?	"True" : "False");
+	LOG("CPU SSE2: %s",							hardwareInfo.CPU.hasSSE2	?	"True" : "False");
+	LOG("CPU SSE3: %s",							hardwareInfo.CPU.hasSSE3	?	"True" : "False");
+	LOG("CPU SSE4.1: %s",						hardwareInfo.CPU.hasSSE41	?	"True" : "False");
+	LOG("CPU SSE4.2: %s",						hardwareInfo.CPU.hasSSE42	?	"True" : "False");
 	LOG("CPU AVX: %s",							hardwareInfo.CPU.hasAVX		?	"True" : "False");
-	LOG("CPU AVX2: %s",							hardwareInfo.CPU.hasAVX2		?	"True" : "False");
+	LOG("CPU AVX2: %s",							hardwareInfo.CPU.hasAVX2	?	"True" : "False");
 
 	LOG(" ------------- GPU INFO ------------- ");
 	LOG("GPU Vendor %d Device %d",				hardwareInfo.GPU.vendor, hardwareInfo.GPU.deviceId);
@@ -507,27 +478,9 @@ void Application::LogHardwareInfo() const
 	LOG("OpenGL Renderer: %s",					hardwareInfo.OpenGL.rendererName);
 	LOG("OpenGL Version: %s",					hardwareInfo.OpenGL.version);
 	LOG("OpenGL Shading Language Version: %s",	hardwareInfo.OpenGL.shadingLanguageVersion);
-	//LOG("OpenGL Extensions: %s",				hardware_info.OpenGL.extensions);
-
-	/*for (int i = 0; i < hardware_info.OpenGL.extensions.size(); ++i)
-	{
-		LOG("OpenGL Extensions: %s",			hardware_info.OpenGL.extensions[i]);
-	}*/
 }
 
 HardwareInfo Application::GetHardwareInfo() const
 {
 	return hardwareInfo;
 }
-
-// --- GAME STATE METHODS
-
-/*if (display_framerate_data)
-{
-	static char framerate_data[256];
-
-	sprintf_s(framerate_data, 256, "Av.FPS: %.2f / Last Frame Ms: %02u / Last sec frames: %i / Last dt: %.3f / Time since startup: %dh %dm %.3fs / Frame Count: %llu",
-		frame_data.avg_fps, frame_data.ms_last_frame, frame_data.frames_last_second, frame_data.dt, clock.hours, clock.minutes, clock.seconds, frame_data.frame_count);
-
-	App->window->SetTitle(framerate_data);
-}*/

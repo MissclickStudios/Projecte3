@@ -35,12 +35,7 @@
 #include "C_BoxCollider.h"
 #include "C_SphereCollider.h"
 #include "C_CapsuleCollider.h"
-//#include "C_PlayerController.h"
-//#include "C_BulletBehavior.h"
 #include "C_ParticleSystem.h"
-//#include "C_PropBehavior.h"
-//#include "C_CameraBehavior.h"
-//#include "C_GateBehavior.h"
 #include "C_Canvas.h"
 #include "C_UI.h"
 #include "C_UI_Image.h"
@@ -225,11 +220,6 @@ void E_Inspector::DrawGameObjectInfo(GameObject* selectedGameObject)
 			App->resourceManager->UpdatePrefab(selectedGameObject);
 	}
 
-	ImGui::SameLine(ImGui::GetWindowWidth() * 0.51f);
-
-	bool maintain = selectedGameObject->GetMaintainThroughScenes();
-	if (ImGui::Checkbox("Maintain Through Scenes", &maintain)) { selectedGameObject->SetMaintainThroughScenes(maintain); }
-
 	ImGui::Separator();
 }
 
@@ -392,6 +382,8 @@ void E_Inspector::DrawMeshComponent(C_Mesh* cMesh)
 		bool outlineMesh			= cMesh->GetOutlineMesh();
 		float outlineThickness		= cMesh->GetOutlineThickness();
 		Color outlineColor			= cMesh->GetOutlineColor();
+
+		bool renderLast				= cMesh->GetRenderLast();
 		
 		static std::map<std::string, ResourceBase> meshBases;
 
@@ -431,12 +423,19 @@ void E_Inspector::DrawMeshComponent(C_Mesh* cMesh)
 
 		ImGui::Separator();
 
-		// --- OUTLINE MODE ---
+		// --- OUTLINE MESH ---
 		ImGui::TextColored(Green.C_Array(), "Outline Mesh:");
 
 		if (ImGui::Checkbox("Outline Mesh", &outlineMesh))								{ cMesh->SetOutlineMesh(outlineMesh); }
 		if (ImGui::SliderFloat("Outline Thickness", &outlineThickness, 0.0f , 4.0f))	{ cMesh->SetOutlineThickness(outlineThickness); }
 		if (ImGui::ColorEdit4("Outline Color", outlineColor.C_Array()))					{ cMesh->SetOutlineColor(outlineColor); }
+
+		ImGui::Separator();
+
+		// --- RENDER MODE ---
+		ImGui::TextColored(Green.C_Array(), "Render Mode:");
+
+		if (ImGui::Checkbox("Render Last", &renderLast))								{ cMesh->SetRenderLast(renderLast); }
 
 		ImGui::Separator();
 	}
@@ -1220,11 +1219,14 @@ void E_Inspector::DrawUITextComponent(C_UI_Text* text)
 
 		ImGui::Separator();
 
-		static char buffer[64];
-		strcpy_s(buffer, text->GetText());
-		if (ImGui::InputText("TextInput", buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
+		static char buffer[128];
+		if (strlen(text->GetText()) < 128) 
 		{
-			text->SetText(buffer);
+			strcpy_s(buffer, text->GetText());
+			if (ImGui::InputText("TextInput", buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
+			{
+				text->SetText(buffer);
+			}
 		}
 
 		ImGui::SameLine(); HelpMarker("Press ENTER to Rename");
@@ -1418,7 +1420,7 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 					char buffer[128];
 					strcpy_s(buffer, ((std::string*)(*variable).ptr)->c_str());
 					if (ImGui::InputText((*variable).variableName.data(), buffer, IM_ARRAYSIZE(buffer)))
-						*(std::string*)(*variable).ptr = buffer;
+						EngineApp->scriptManager->SetString((*variable).ptr, buffer);
 					break;
 				}
 				case InspectorScriptData::ShowMode::TEXT:
@@ -1827,7 +1829,7 @@ void E_Inspector::DrawAnimator2DComponent(C_2DAnimator* cAnimator)
 		strcpy_s(buffer, cAnimator->GetName(1));
 		if (ImGui::InputText("Animation Name", buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
 		{
-			cAnimator->ChangeName(buffer,1);
+			//cAnimator->ChangeName(buffer,1);
 			cAnimator->GetAnimationSprites(buffer,1);
 		}
 
@@ -1835,7 +1837,7 @@ void E_Inspector::DrawAnimator2DComponent(C_2DAnimator* cAnimator)
 		strcpy_s(buffer1, cAnimator->GetName(2));
 		if (ImGui::InputText("Aditional Animation Name", buffer1, IM_ARRAYSIZE(buffer1), ImGuiInputTextFlags_EnterReturnsTrue))
 		{
-			cAnimator->ChangeName(buffer1, 2);
+			//cAnimator->ChangeName(buffer1, 2);
 			cAnimator->GetAnimationSprites(buffer1, 2);
 		}
 
@@ -1843,7 +1845,7 @@ void E_Inspector::DrawAnimator2DComponent(C_2DAnimator* cAnimator)
 		strcpy_s(buffer2, cAnimator->GetName(3));
 		if (ImGui::InputText("Aditional Animation Name 1", buffer2, IM_ARRAYSIZE(buffer2), ImGuiInputTextFlags_EnterReturnsTrue))
 		{
-			cAnimator->ChangeName(buffer2, 3);
+			//cAnimator->ChangeName(buffer2, 3);
 			cAnimator->GetAnimationSprites(buffer2, 3);
 		}
 
@@ -1896,10 +1898,6 @@ void E_Inspector::DrawAnimator2DComponent(C_2DAnimator* cAnimator)
 			cAnimator->spritesheet3->animationNumber = aaa;
 		}
 
-
-
-
-
 		ImGui::Separator();
 
 		if (!show)
@@ -1907,10 +1905,6 @@ void E_Inspector::DrawAnimator2DComponent(C_2DAnimator* cAnimator)
 			componentToDelete = cAnimator;
 			showDeleteComponentPopup = true;
 		}
-
-
-
-
 	}
 	return;
 }
@@ -2102,7 +2096,16 @@ void E_Inspector::DrawUISliderComponent(C_UI_Slider* slider)
 
 		ImGui::DragFloat("Max Value", &slider->maxValue);
 		ImGui::DragInt("Num Rects", &slider->numRects);
-		ImGui::DragFloat("Offset", &slider->offset);
+		ImGui::DragFloat("Offset", &slider->offset, 1.0f, 0.0f, 1.0f);
+
+		//if (ImGui::DragFloat("Value", &slider->value, 1.0f, 0.0f, slider->maxValue)) 
+		//	slider->InputValue(slider->value, slider->maxValue);
+		if (ImGui::Button("Increase one rect"))
+			slider->IncrementOneSquare();
+		if (ImGui::Button("Decrease one rect"))
+			slider->DecrementOneSquare();
+
+		ImGui::Checkbox("Hovered", &slider->hovered);
 
 		ImGui::Text("Unhovered Unchecked TexCoord (x,y,w,h)");
 		if (ImGui::DragInt4("Unhovered Unchecked", slider->pixelCoord))
@@ -2269,7 +2272,11 @@ void E_Inspector::DrawBasicSettings(Component* component, const char* state)
 }
 
 void E_Inspector::DisplayMeshSelector(C_Mesh* cMesh, std::map<std::string, ResourceBase>& meshBases)
-{
+{	
+	static std::string copiedMeshPath	= "[NONE]";
+	static std::string copiedMeshFile	= "[NONE]";
+	static uint32 copiedMeshUID			= 0;
+	
 	if (ImGui::BeginCombo("Select Mesh", cMesh->GetMeshFile(), ImGuiComboFlags_None))
 	{
 		if (meshBases.empty())																									// Convoluted and overengineered, but it works :).
@@ -2278,15 +2285,15 @@ void E_Inspector::DisplayMeshSelector(C_Mesh* cMesh, std::map<std::string, Resou
 			App->resourceManager->GetResourceBases<R_Mesh>(rBases);
 
 			for (auto base = rBases.cbegin(); base != rBases.cend(); ++base)
-			{
+			{	
 				meshBases.emplace((*base).assetsFile, *base);																	// std::map will sort the bases by Alphabetical Order.
 			}
 
 			rBases.clear();
 		}
-			
+		
 		for (auto mesh = meshBases.cbegin(); mesh != meshBases.cend(); ++mesh)
-		{
+		{	
 			if (ImGui::Selectable(mesh->first.c_str(), (mesh->first == cMesh->GetMeshFile())))
 			{	
 				bool success = App->resourceManager->AllocateResource(mesh->second.UID, mesh->second.assetsPath.c_str());
@@ -2300,6 +2307,51 @@ void E_Inspector::DisplayMeshSelector(C_Mesh* cMesh, std::map<std::string, Resou
 		
 		ImGui::EndCombo();
 	}
+
+	if (ImGui::Button("Copy Mesh"))
+	{
+		std::vector<ResourceBase> rBases;
+		App->resourceManager->GetResourceBases<R_Mesh>(rBases);
+
+		for (auto base = rBases.cbegin(); base != rBases.cend(); ++base)
+		{
+			if ((*base).assetsFile == cMesh->GetMeshFile())
+			{
+				copiedMeshPath	= (*base).assetsPath;
+				copiedMeshFile	= (*base).assetsFile;
+				copiedMeshUID	= (*base).UID;
+			}
+		}
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Paste Mesh"))
+	{
+		if (copiedMeshUID != 0 && copiedMeshPath != "[NONE]")
+		{
+			bool success = App->resourceManager->AllocateResource(copiedMeshUID, copiedMeshPath.c_str());
+			if (success) 
+			{ 
+				cMesh->SetMesh((R_Mesh*)App->resourceManager->RequestResource(copiedMeshUID)); 
+			}
+
+			copiedMeshPath	= "[NONE]";
+			copiedMeshFile	= "[NONE]";
+			copiedMeshUID	= 0;
+		}
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Clear"))
+	{
+		copiedMeshPath = "[NONE]";
+		copiedMeshFile = "[NONE]";
+		copiedMeshUID = 0;
+	}
+
+	ImGui::TextColored(Yellow.C_Array(), "Copied { %s }", copiedMeshFile.c_str());
 }
 
 void E_Inspector::DisplayMaterial(C_Material* cMaterial)
@@ -3606,9 +3658,13 @@ void E_Inspector::DisplayEmitterInstances(C_ParticleSystem* cParticleSystem)
 
 				for (auto it = textures.begin(); it != textures.end(); ++it)
 				{
+					
+					if (strstr((*it).assetsPath.c_str(), "Particles") == nullptr)
+						continue;
+
 					bool isSelected = true;
 
-					if(emitter->emitterTexture != nullptr)
+					if (emitter->emitterTexture != nullptr)
 						isSelected = (strcmp(emitter->emitterTexture->GetAssetsPath(), (*it).assetsPath.c_str()) == 0);
 
 					if (ImGui::Selectable(App->fileSystem->GetLastDirectoryAndFile((*it).assetsPath.c_str()).c_str(), isSelected))
@@ -3617,6 +3673,7 @@ void E_Inspector::DisplayEmitterInstances(C_ParticleSystem* cParticleSystem)
 					}
 					if (isSelected)
 						ImGui::SetItemDefaultFocus();
+					
 				}
 				ImGui::EndCombo();
 			}

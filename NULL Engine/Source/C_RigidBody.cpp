@@ -63,6 +63,12 @@ bool C_RigidBody::Update()
 			linearVel = { lVel.x, lVel.y, lVel.z };
 			physx::PxVec3 aVel = dynamicBody->getAngularVelocity();
 			angularVel = { aVel.x, aVel.y, aVel.z };
+
+			if (toAddForce)
+			{
+				toAddForce = false;
+				dynamicBody->addForce(physx::PxVec3(force.x, force.y, force.z), physx::PxForceMode::Enum::eFORCE);
+			}
 		}
 	}
 	else
@@ -189,6 +195,12 @@ void C_RigidBody::StopInertia()
 	angularVel = { aVel.x, aVel.y, aVel.z };
 }
 
+void C_RigidBody::AddForce(float3 force)
+{
+	toAddForce = true;
+	this->force = force * 100000;
+}
+
 void C_RigidBody::ChangeFilter(const std::string& const filter)
 {
 	this->filter = filter;
@@ -295,7 +307,7 @@ void C_RigidBody::ApplyPhysicsChanges()
 		dynamicBody->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, !useGravity);
 		dynamicBody->setRigidBodyFlag(physx::PxRigidBodyFlag::eKINEMATIC, !isKinematic);
 
-		float vely = 0.0f;
+		float vely = linearVel.y;
 		if (disableY)
 			vely = dynamicBody->getLinearVelocity().y;
 		dynamicBody->setLinearVelocity(physx::PxVec3(linearVel.x, vely, linearVel.z));

@@ -14,6 +14,7 @@
 class GameManager;
 class C_Canvas;
 class C_UI_Image;
+class C_AudioSource;
 
 enum class IG11State
 {
@@ -65,7 +66,7 @@ public:
 	// Flee
 	float fleeDistance = 0.0f;
 
-
+	AnimationInfo talkAnimation = { "Talk" };
 	AnimationInfo walkAnimation = { "Run" };
 	AnimationInfo runAnimation = { "Run" };
 	AnimationInfo fleeAnimation = { "Run" };
@@ -74,6 +75,7 @@ public:
 	AnimationInfo changeAnimation = { "Change" };
 	AnimationInfo onGuardAnimation = { "OnGuard" };
 	AnimationInfo specialAnimation = { "SpecialAttack" };
+	AnimationInfo doubleSpecialAnimation = { "DoubleSpecial" };
 
 	// Attack
 	float attackDistance = 0.0f;
@@ -97,10 +99,11 @@ public:
 	float minCredits = 0.f;
 	float maxCredits = 0.f;
 
-	int beskarValue = 10;
+	int beskarValue = 2;
 
 	GameObject* healthBarCanvasObject = nullptr;
 	std::string lifeBarImageStr = "BossLife";
+	std::string bossIconStr = "BossIcon";
 
 private:
 
@@ -164,6 +167,8 @@ private:
 	C_UI_Image* healthBarImage = nullptr;
 	float healthMaxW = 0.0f;
 
+	//Auido
+	C_AudioSource* deathAudio = nullptr;
 };
 
 SCRIPTS_FUNCTION IG11* CreateIG11();

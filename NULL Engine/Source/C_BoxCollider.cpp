@@ -10,7 +10,7 @@
 #include "C_Transform.h"
 #include "C_BoxCollider.h"
 
-#include "PhysX_3.4/Include/PxPhysicsAPI.h"
+#include "PhysX_4.1/Include/PxPhysicsAPI.h"
 
 #include "MathGeoLib/include/Math/float3x3.h"
 #include "MathGeoBoundingBox.h"

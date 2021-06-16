@@ -10,14 +10,28 @@
 
 #define BACKTRACK 5
 
+class ParsoNode;
 class GameObject;
 class Gate;
 class CameraMovement;
 class DialogManager;
+class C_AudioSource;
 
 class PerfectTimer;
 
 struct ItemData;
+
+struct FixedLevelNames
+{
+    std::string hub = "HUB";
+    std::string l1Initial = "InitialL1";
+    std::string l1Shop = "ShopL1";
+    std::string ruinsShop = "Shop_Ruins";
+    std::string l1Boss = "BossL1";
+    std::string ruinsBoss = "Boss_Ruins";
+    std::string winScene = "WinScene";
+    std::string loseScene = "LoseScene";
+};
 
 class StoryDialogData
 {
@@ -31,7 +45,21 @@ public:
 
     void Save(ParsonNode *node);
     void Load(ParsonNode *node);
-    
+};
+
+class RunStats
+{
+public:
+
+    uint attempt = 0;
+    uint runKills = 0;
+    float runPrecision = 0.f;
+    float runTime = 0;                  //In seconds (uses dt)
+    std::string weaponUsed = "Rifle";
+
+    void Save(ParsonNode* node);
+    void Load(ParsonNode* node);
+    void ResetRun();
 };
 
 
@@ -44,6 +72,7 @@ public:
     void Awake() override;
     void Start()override;
     void Update()override; 
+    void CleanUp() override;
 
     void OnCollisionEnter(GameObject* object) override;
 
@@ -54,14 +83,27 @@ public:
     void ReturnHub();
     void ReturnToMainMenu();
 
+    void Pause();
+    void Resume();
+
     std::vector<ItemData*> GetChestItemPool() const { return chestItemPool; };
+    std::vector<ItemData*> GetShopItemPool() const { return shopItemPool; };
+    std::vector<ItemData*> GetHubItemPool() const { return hubItemPool; };
 
     //Dialog & Story funtions
-    void KilledIG11();
+    void KilledIG11(int bossNum);
     void TalkedToArmorer();
     void BoughtFromArmorer();
 
+    void SetUpWinScreen();
+
+    //Called from main menu newgame button
+    void ResetArmorerItemsLvl();
+
 private:
+    //ArmorerItems
+    void SaveArmorerItemLvl(ParsonNode& node);
+    void LoadArmorerItemLvl(ParsonNode& node);
     //Level Generator
     void GenerateLevel();
     void GoPreviousRoom();
@@ -72,6 +114,10 @@ private:
 
     void BackTrackUpdate();
     void GateUpdate();
+
+    void DropChest();
+
+    void HandleBackgroundMusic();
 
 public:
     std::vector<std::string> level1;
@@ -93,6 +139,8 @@ public:
     Prefab groguPrefab;
     Grogu* groguScript = nullptr;
 
+    //Room Name Vars
+    FixedLevelNames levelNames;
     
     
     Prefab mistPlane1;
@@ -102,7 +150,6 @@ public:
 
     DialogManager* dialogManager = nullptr;
 
-
     Prefab chestPrefab;
     int chestSpawnChance = 60;
 
@@ -110,8 +157,30 @@ public:
 
     bool doCameraCutscene = false;
 
+    //Leave boss rooms timer
+    void PickedItemUp();
+
+    void UpdateLeaveBoss();
+
+    //I'm trash
+    bool tooBad = false;
+    bool awaitingChestDrop = true;
+    bool killedBoss = false;
+    bool pickedItemUp = false; //If it has picked the item up
+    bool wantToLeaveBoss = false; //When it starts timer to leave
+    bool droppedChest = false; //If boss has dropped chest or not
+    float leaveBossTimer = 0.f;
+    float leaveBossDelay = 5.f;
+
     //Story & dialog vars
     StoryDialogData storyDialogState;
+
+    bool paused = false;
+
+    //Win screen stats
+    RunStats runStats;
+
+    bool cameraShake = true;
 
 private:
 
@@ -121,6 +190,8 @@ private:
 
     GameObject* playerGameObject = nullptr;
     Gate* gate = nullptr;
+
+    C_AudioSource* clearedRoomAudio = nullptr;
 
     GameObject* groguGameObject = nullptr;
     const char* saveFileName = "GameState.json";
@@ -139,10 +210,20 @@ private:
    
 
     // Items
+    void LoadItemPool(std::vector<ItemData*>& pool, std::string path);
     std::vector<ItemData*> chestItemPool;
+    std::vector<ItemData*> shopItemPool;
+    std::vector<ItemData*> hubItemPool;
 
     // Chest
     Entity* lastEnemyDead = nullptr;
+
+public:
+    //Armorer Item Lvls
+    unsigned int armorLvl = 0;
+    unsigned int bootsLvl = 0;
+    unsigned int ticketLvl = 0;
+    unsigned int bottleLvl = 0;
 
 };
 

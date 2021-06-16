@@ -1,14 +1,20 @@
-
-#include "Script.h"
+#include "Object.h"
 #include "ScriptMacros.h"
 #include "MathGeoLib/include/Math/float3.h"
+
+#include "Timer.h"
+
+#include <string>
 
 class GameObject;
 class C_BoxCollider;
 class C_AudioSource;
+class C_ParticleSystem;
 
-class SCRIPTS_API ExplosiveBarrel : public Object ALLOWED_INHERITANCE {
+class SCRIPTS_API ExplosiveBarrel : public Object ALLOWED_INHERITANCE 
+{
 public:
+
 	ExplosiveBarrel();
 	~ExplosiveBarrel();
 
@@ -18,42 +24,34 @@ public:
 
 	void OnCollisionEnter(GameObject* object) override;
 
-	void OnTriggerRepeat(GameObject* object) override;
+	void OnPause() override;
+	void OnResume() override;
 
-	std::string gameManagerName;
-	std::string barrelObjectName;
+	float particleEmitttingTime = 1.0f;
 
-	float3 barrelColliderSize = float3::zero;
-	float3 explosionTriggerSize = float3::zero;
+	std::string explosionName;
+	std::string markerName;
+	std::string particleName;
 
-	int damage = 0;
-
-	float power = 2000000.0f;
-	float particleEmitttingTime = 1.f;
+	bool reload = false;
+	float cooldown = 5.0f;
 
 	// Audio
+	C_AudioSource* explosionAudio = nullptr;
 
-	C_AudioSource* explosion = nullptr;
-
-private:
-	GameObject* gameManager = nullptr;
-	GameObject* barrelObject = nullptr;
-	C_BoxCollider* barrelCollider = nullptr;
-	C_ParticleSystem* explosionParticles = nullptr;
-	
-	float particleTimer = 0.f;
-	
 	bool toExplode = false;
 	bool exploded = false;
+	bool shit = false;
+
+private:
+
+	Timer particleTimer;
+	Timer cooldownTimer;
+
+	C_BoxCollider* explosionCollider = nullptr;
+	C_ParticleSystem* explosionParticles = nullptr;
+	GameObject* explosionMarker = nullptr;
+	C_ParticleSystem* activeParticles = nullptr;
 };
 
-SCRIPTS_FUNCTION ExplosiveBarrel* CreateExplosiveBarrel() {
-	ExplosiveBarrel* script = new ExplosiveBarrel();
-	INSPECTOR_STRING(script->gameManagerName);
-	INSPECTOR_STRING(script->barrelObjectName);
-	INSPECTOR_INPUT_FLOAT3(script->barrelColliderSize);
-	INSPECTOR_INPUT_FLOAT3(script->explosionTriggerSize);
-	INSPECTOR_INPUT_INT(script->damage);
-	INSPECTOR_DRAGABLE_FLOAT(script->particleEmitttingTime);
-	return script;
-}
+SCRIPTS_FUNCTION ExplosiveBarrel* CreateExplosiveBarrel();

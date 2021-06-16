@@ -67,16 +67,12 @@ bool M_ResourceManager::Init(ParsonNode& configuration)
 
 bool M_ResourceManager::Start()
 {
-	LOG("Starting Resource Manager");
 	RefreshDirectoryFiles(ASSETS_DIRECTORY);
-	LOG("1");
 	RefreshDirectoryFiles(ENGINE_DIRECTORY);
-	LOG("2");
-	//TrimLibrary();
+
+	TrimLibrary();
 
 	FindPrefabs();
-
-	LOG("End Start resource manager");
 
 	return true;
 }
@@ -242,7 +238,7 @@ uint M_ResourceManager::SaveResourceToLibrary(Resource* resource)
 	case ResourceType::SHADER:			{ written = Importer::Shaders::Save((R_Shader*)resource, &buffer); }			break;
 	case ResourceType::PARTICLE_SYSTEM:	{ written = Importer::Particles::Save((R_ParticleSystem*)resource, &buffer); }	break;
 	case ResourceType::SCRIPT:			{ written = Importer::Scripts::Save((R_Script*)resource, &buffer); }			break;
-	case ResourceType::NAVMESH:	{ written = Importer::Navigation::Save((R_NavMesh*)resource, &buffer); }		break;
+	case ResourceType::NAVMESH:			{ written = Importer::Navigation::Save((R_NavMesh*)resource, &buffer); }		break;
 	}
 
 	RELEASE_ARRAY(buffer);
@@ -1054,26 +1050,28 @@ void M_ResourceManager::RefreshDirectoryFiles(const char* directory)
 	std::vector<std::string> filesToUpdate;															// Also update the .meta and reimport all those files that have been modified.
 	std::vector<std::string> filesToDelete;
 
-	LOG("RefreshDirectoryFiles 0");
 	RefreshDirectory(directory, filesToImport, filesToUpdate, filesToDelete);
-	LOG("RefreshDirectoryFiles 1");
+
 	for (uint i = 0; i < filesToDelete.size(); ++i)
 	{
 		//DeleteFromAssets(files_to_delete[i].c_str());
 		DeleteFromLibrary(filesToDelete[i].c_str());
 	}
-	LOG("RefreshDirectoryFiles 2");
 	for (uint i = 0; i < filesToUpdate.size(); ++i)
 	{
-		DeleteFromLibrary(filesToUpdate[i].c_str());
-		ImportFile(filesToUpdate[i].c_str());
+		std::string extension = App->fileSystem->GetFileExtension(filesToUpdate[i].c_str());
+		
+		if (extension == "h" || extension == "particles" || extension == "navmesh" || extension == "shader" || extension == "png")
+		{
+			DeleteFromLibrary(filesToUpdate[i].c_str());
+			ImportFile(filesToUpdate[i].c_str());
+		}
 	}
-	LOG("RefreshDirectoryFiles 3");
 	for (uint i = 0; i < filesToImport.size(); ++i)
 	{
 		ImportFile(filesToImport[i].c_str());
 	}
-	LOG("RefreshDirectoryFiles 4");
+
 	filesToDelete.clear();
 	filesToUpdate.clear();
 	filesToImport.clear();
@@ -1092,18 +1090,14 @@ void M_ResourceManager::RefreshDirectory(const char* directory, std::vector<std:
 	std::vector<std::string> metaFiles;
 	std::map<std::string, std::string> filePairs;
 
-	LOG("RefreshDirectory 0");
 	App->fileSystem->DiscoverAllFilesFiltered(directory, assetFiles, metaFiles, DOTLESS_META_EXTENSION);
 
-	LOG("RefreshDirectory 1");
 	FindFilesToImport(assetFiles, metaFiles, filePairs, filesToImport);											// Always call in this order!
-	LOG("RefreshDirectory 2");
 	FindFilesToUpdate(filePairs, filesToUpdate);																// At the very least FindFilesToImport() has to be the first to be called
-	LOG("RefreshDirectory 3");
 	FindFilesToDelete(metaFiles, filePairs, filesToDelete);														// as it is the one to fill file_pairs with asset and meta files!
-	LOG("RefreshDirectory 4");
+
 	LoadValidFilesIntoLibrary(filePairs);																		// Will emplace all valid files' UID & library path into the library map.
-	LOG("RefreshDirectory 5");
+
 	filePairs.clear();
 	metaFiles.clear();
 	assetFiles.clear();
@@ -1695,42 +1689,40 @@ uint32 M_ResourceManager::ImportFromAssets(const char* assetsPath)
 
 	char* buffer = nullptr;
 	uint read = App->fileSystem->Load(assetsPath, &buffer);
-	if (read > 0)
-	{
-		ResourceType type	= GetTypeFromAssetsExtension(assetsPath);
-		Resource* resource	= CreateResource(type, assetsPath);
-
-		bool success = false;
-		switch (type)
-		{
-		case ResourceType::MODEL:			{ success = Importer::ImportScene(buffer, read, (R_Model*)resource); }						break;
-		case ResourceType::MESH:			{ success = Importer::ImportMesh(buffer, (R_Mesh*)resource); }								break;
-		case ResourceType::TEXTURE:			{ success = Importer::ImportTexture(buffer, read, (R_Texture*)resource); }					break;
-		case ResourceType::SCENE:			{ /*success = HAVE A FUNCTIONAL R_SCENE AND LOAD/SAVE METHODS*/ }							break;
-		case ResourceType::SHADER:			{ success = Importer::Shaders::Import(resource->GetAssetsPath(), (R_Shader*)resource); }	break;
-		case ResourceType::PARTICLE_SYSTEM:	{ success = Importer::ImportParticles(buffer, (R_ParticleSystem*)resource); }				break;
-		case ResourceType::SCRIPT:			{ success = Importer::Scripts::Import(assetsPath, buffer, read, (R_Script*)resource); }		break;
-		case ResourceType::NAVMESH:			{ success = Importer::ImportNavMesh(buffer, (R_NavMesh*)resource); }						break;
-		}
-
-		RELEASE_ARRAY(buffer);
-
-		if (!success)
-		{
-			LOG("[ERROR] Resource Manager: Could not Import File %s! Error: Check for [IMPORTER] errors in the Console Panel.", assetsPath);
-			DeallocateResource(resource);
-			return 0;
-		}
-
-		resourceUid = resource->GetUID();
-		SaveResourceToLibrary(resource);
-		DeallocateResource(resource);
-	}
-	else
+	if (read == 0)
 	{
 		LOG("[ERROR] Resource Manager: Could not Import File %s! Error: File System could not Read the File.", assetsPath);
 		return 0;
 	}
+
+	ResourceType type	= GetTypeFromAssetsExtension(assetsPath);
+	Resource* resource	= CreateResource(type, assetsPath);
+
+	bool success = false;
+	switch (type)
+	{
+	case ResourceType::MODEL:			{ success = Importer::ImportScene(buffer, read, (R_Model*)resource); }						break;
+	case ResourceType::MESH:			{ success = Importer::ImportMesh(buffer, (R_Mesh*)resource); }								break;
+	case ResourceType::TEXTURE:			{ success = Importer::ImportTexture(buffer, read, (R_Texture*)resource); }					break;
+	case ResourceType::SCENE:			{ /*success = HAVE A FUNCTIONAL R_SCENE AND LOAD/SAVE METHODS*/ }							break;
+	case ResourceType::SHADER:			{ success = Importer::Shaders::Import(resource->GetAssetsPath(), (R_Shader*)resource); }	break;
+	case ResourceType::PARTICLE_SYSTEM:	{ success = Importer::ImportParticles(buffer, (R_ParticleSystem*)resource); }				break;
+	case ResourceType::SCRIPT:			{ success = Importer::Scripts::Import(assetsPath, buffer, read, (R_Script*)resource); }		break;
+	case ResourceType::NAVMESH:			{ success = Importer::ImportNavMesh(buffer, (R_NavMesh*)resource); }						break;
+	}
+
+	RELEASE_ARRAY(buffer);
+
+	if (!success)
+	{
+		LOG("[ERROR] Resource Manager: Could not Import File %s! Error: Check for [IMPORTER] errors in the Console Panel.", assetsPath);
+		DeallocateResource(resource);
+		return 0;
+	}
+
+	resourceUid = resource->GetUID();
+	SaveResourceToLibrary(resource);
+	DeallocateResource(resource);
 
 	return resourceUid;
 }

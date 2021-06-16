@@ -6,6 +6,7 @@
 #include "C_UI_Text.h"
 #include "C_UI_Button.h"
 #include "Player.h"
+#include "HUBArmorer.h"
 
 #include "DialogManager.h"
 
@@ -64,6 +65,10 @@ void DialogManager::Start()
 	tmp = App->scene->GetGameObjectByName(mandoName.c_str());
 	if (tmp != nullptr)
 		mando = (Player*)tmp->GetScript("Player");
+
+	tmp = App->scene->GetGameObjectByName("HUBArmorer");
+	if (tmp != nullptr)
+		armorer = (HUBArmorer*)tmp->GetScript("HUBArmorer");
 }
 
 void DialogManager::Update()
@@ -99,15 +104,28 @@ void DialogManager::Update()
 				dialogText->SetText(tmp.c_str());
 				currentLineLetter++;
 				nextLetterTimer = 0;
-
-				if (currentLineLetter == currentLine->lineText.size() + 1)
+				
+				if (currentLineLetter >= currentLine->lineText.size())
 				{
 					state = DialogState::TALKED;
 					currentLineLetter = 0;
 				}
+				/*else if (currentLine->lineText.at(currentLineLetter) == *" ")
+				{
+					dialogText->nextWordLetters = 0;
+					wordIt = 1;
+					while (currentLine->lineText.at(currentLineLetter + wordIt) != *" ")
+					{
+						if (currentLineLetter + wordIt >= currentLine->lineText.size() - 2)
+							break;						
+						wordIt++;
+						dialogText->nextWordLetters++;
+					}
+				}*/
+					
 			}
 
-			if (App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN)
+			if (App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN || App->input->GetKey(SDL_SCANCODE_BACKSPACE) == KeyState::KEY_DOWN)
 			{
 				EndDialog();
 			}
@@ -115,6 +133,11 @@ void DialogManager::Update()
 				break;
 		case DialogState::TALKED:
 			//Wait for input, then go to next phrase if there is any. Close dialog if not
+
+			if (App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN || App->input->GetKey(SDL_SCANCODE_BACKSPACE) == KeyState::KEY_DOWN)
+			{
+				EndDialog();
+			}
 
 			if (dialogButton->GetState() == UIButtonState::PRESSEDIN)
 			{
@@ -155,6 +178,37 @@ void DialogManager::StartNewLine()
 	speakerText->SetText(currentLine->speakerName.c_str());
 
 	//set speaker image
+	
+	if (strcmp(currentLine->speakerName.c_str(), "Mando") == 0)
+	{
+		//Set image to mando's portrait
+		speakerImage->SetTextureCoordinates(-405, -1821, 320, 320);
+	}
+	if (strcmp(currentLine->speakerName.c_str(), "IG-11") == 0)
+	{
+		//Set image to mando's portrait
+		speakerImage->SetTextureCoordinates(-1685, -1821, 320, 320);
+	}
+	if (strcmp(currentLine->speakerName.c_str(), "IG-12") == 0)
+	{
+		//Set image to mando's portrait
+		speakerImage->SetTextureCoordinates(-1365, -1821, 320, 320);
+	}
+	if (strcmp(currentLine->speakerName.c_str(), "Grogu") == 0)
+	{
+		//Set image to mando's portrait
+		speakerImage->SetTextureCoordinates(-725, -1821, 320, 320);
+	}
+	if (strcmp(currentLine->speakerName.c_str(), "Greef Karga") == 0)
+	{
+		//Set image to mando's portrait
+		speakerImage->SetTextureCoordinates(-1045, -1821, 320, 320);
+	}
+	if (strcmp(currentLine->speakerName.c_str(), "Armorer") == 0)
+	{
+		//Set image to mando's portrait
+		speakerImage->SetTextureCoordinates(-2005, -1821, 320, 320);
+	}
 
 	dialogText->SetText("");
 	currentLineLetter = 0;
@@ -226,7 +280,17 @@ void DialogManager::EndDialog()
 	App->uiSystem->RemoveActiveCanvas(dialogCanvas);
 	state = DialogState::NO_DIALOG;
 
-	mando->SetPlayerInteraction(InteractionType::NONE);
+	if (armorer != nullptr)
+	{
+		if (!armorer->menuOpen)
+		{
+			mando->SetPlayerInteraction(InteractionType::NONE);
+		}
+	}
+	else
+	{
+		mando->SetPlayerInteraction(InteractionType::NONE);
+	}
 }
 
 bool DialogManager::StartDialog(const char* dialogName)
@@ -274,6 +338,7 @@ void DialogManager::StartDialog(DialogSystem* dialogSystem)
 
 DialogManager* CreateDialogManager()
 {
+	
 	DialogManager* script = new DialogManager();
 	INSPECTOR_STRING(script->dialogCanvasName);
 	INSPECTOR_STRING(script->dialogTextName);
@@ -282,4 +347,5 @@ DialogManager* CreateDialogManager()
 	INSPECTOR_STRING(script->speakerTextName);
 	INSPECTOR_STRING(script->textBackgroundName);
 	return script;
+	
 }

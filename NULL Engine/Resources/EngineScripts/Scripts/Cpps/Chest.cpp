@@ -11,6 +11,7 @@
 #include "Player.h"
 #include "GroundItem.h"
 #include "Items.h"
+#include "C_AudioSource.h"
 
 #include "Random.h"
 
@@ -28,21 +29,29 @@ void Chest::Awake()
 
 void Chest::Update()
 {
+	if (gameObject->transform->GetLocalPosition().y < -1000)
+		OnCollisionEnter(nullptr);
+	if (open)
+	{
+		Deactivate();
+	}
 }
 
 void Chest::CleanUp()
 {
+	if (chestAudio != nullptr)
+		delete chestAudio;
 }
 
 void Chest::OnPause()
 {
 }
-
+ 
 void Chest::OnResume()
 {
 }
 
-void Chest::OnTriggerRepeat(GameObject* object)
+void Chest::OnCollisionEnter(GameObject* object)
 {
 	GameObject* managerObject = App->scene->GetGameObjectByName(gameManagerName.c_str());
 	if (managerObject == nullptr)
@@ -66,6 +75,7 @@ void Chest::OnTriggerRepeat(GameObject* object)
 	if (groundItem == nullptr)
 		return;
 	float3 position = gameObject->transform->GetWorldPosition();
+	position.y += 4.0f;
 	groundItem->transform->SetWorldPosition(position);
 
 	GroundItem* item = (GroundItem*)groundItem->GetScript("GroundItem");
@@ -73,12 +83,14 @@ void Chest::OnTriggerRepeat(GameObject* object)
 		return;
 	item->Awake();
 
-	if (player->health <= stimPackThreshold)
+	float healthDiff = player->MaxHealth() - player->health;
+	if (healthDiff != 0.0f)
 	{
+		int chance = stimPackChance * (healthDiff / player->MaxHealth());
 		uint num = Random::LCG::GetBoundedRandomUint(0, 100);
-		if (num <= stimPackChance && item->AddItemByName(gameManager->GetChestItemPool(), "Stim Pack", ItemRarity::COMMON, false))
+		if (num <= chance && item->AddItemByName(gameManager->GetChestItemPool(), "Stim Pack", ItemRarity::COMMON, false))
 		{
-			Deactivate();
+			open = true;
 			return;
 		}
 	}
@@ -110,7 +122,14 @@ void Chest::OnTriggerRepeat(GameObject* object)
 	if (searches >= rollAttempts)
 		item->Deactivate();
 
-	Deactivate();
+	if (chestAudio == nullptr)
+		chestAudio = new C_AudioSource(gameObject);
+
+	if (chestAudio != nullptr)
+		chestAudio->SetEvent("chest_open");
+		chestAudio->PlayFx(chestAudio->GetEventId());
+
+	open = true;
 }
 
 SCRIPTS_FUNCTION Chest* CreateChest()

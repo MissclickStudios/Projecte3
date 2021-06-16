@@ -7,11 +7,10 @@
 
 #define NULL 0																								// Required by mmgr new.
 
+using namespace EasingFunctions;																			// Not the cleanest but it will only be employed in this file.
+
 float EasingFunctions::Lineal(float start, float end, float rate)
 {
-	/*float increment = (end - start) * rate;
-	return start + increment;*/
-
 	return start + ((end - start) * rate);
 }
 
@@ -19,14 +18,10 @@ float* EasingFunctions::Lineal(float* start, float* end, float rate, const uint 
 {	
 	float* tmp = new float[size];
 
-	//float tmp[size];
-
 	for (uint i = 0; i < size; ++i)
 	{
 		tmp[i] = start[i] + ((end[i] - start[i]) * rate);
 	}
-
-	//RELEASE_ARRAY(tmp);
 	
 	return tmp;
 }
@@ -61,17 +56,32 @@ Quat EasingFunctions::Lineal(const Quat& start, const Quat& end, float rate)
 
 float EasingFunctions::SmoothStart(float start, float end, float rate)
 {
-	/*float increment = (end - start) * rate * rate;
-	return start + increment;*/
-
 	return start + ((end - start) * rate * rate);
 }
 
 float EasingFunctions::SmoothStop(float start, float end, float rate)
 {
-	/*float r = 1 - ((1 - rate) * (1 - rate));
-	float increment = (end - start) * r;
-	return start + increment;*/
+	return start + ((end - start) * (1 - ((1 - rate) * (1 - rate))));
+}
 
-	return start + ((end * start) * (1 - ((1 - rate) * (1 - rate))));
+float3 EasingFunctions::SmoothStart(const float3& start, const float3& end, float rate)
+{
+	float3 tmp = float3::zero;
+
+	tmp.x = start.x + ((end.x - start.x) * rate * rate);
+	tmp.y = start.y + ((end.y - start.y) * rate * rate);
+	tmp.z = start.z + ((end.z - start.z) * rate * rate);
+	
+	return tmp;
+}
+
+float3 EasingFunctions::SmoothStop(const float3& start, const float3& end, float rate)
+{
+	float3 tmp = float3::zero;
+
+	tmp.x = start.x + ((end.x - start.x) * (1 - ((1 - rate) * (1 - rate))));
+	tmp.y = start.y + ((end.y - start.y) * (1 - ((1 - rate) * (1 - rate))));
+	tmp.z = start.z + ((end.z - start.z) * (1 - ((1 - rate) * (1 - rate))));
+
+	return tmp;
 }

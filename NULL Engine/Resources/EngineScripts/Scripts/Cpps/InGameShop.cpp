@@ -30,6 +30,11 @@ void InGameShop::Start()
 
 void InGameShop::Update()
 {
+	if (counter < 5)
+	{
+		counter++;
+		return;
+	}
 	if (gameManager != nullptr)
 		return;
 
@@ -56,43 +61,51 @@ void InGameShop::Update()
 		if (item == nullptr)
 			continue;
 
+		std::string name = (*gameObjects)[i]->GetName();
+		if (name == stimPackName)
+		{
+			LOG("health: %f < maxHealth: %f", player->health, player->MaxHealth());
+			if (player->health < player->MaxHealth())
+				item->AddItemByName(gameManager->GetShopItemPool(), "Stim Pack", ItemRarity::COMMON);
+			else
+				item->Deactivate();
+			continue;
+		}
+
 		uint searches = 0;
 		while (searches < rollAttempts) // RIP while(true) loop, you'll be missed. 16/5/21 (13:00) - 16/5/21 (13:05)
 		{
 			uint num = Random::LCG::GetBoundedRandomUint(0, 100);
-			if (item->AddItem(gameManager->GetChestItemPool(), num))
+			if (item->AddItem(gameManager->GetShopItemPool(), num))
 			{
-				if (item->item != nullptr && item->item->name != "Galactic Credit")
-				{
-					std::string name = item->item->name;
+				std::string name = item->item->name;
 
-					bool found = false;
-					for (uint n = 0; n < itemNames.size(); ++n)
+				bool found = false;
+				for (uint n = 0; n < itemNames.size(); ++n)
+				{
+					if (itemNames[n] == name)
 					{
-						if (itemNames[n] == name)
+						found = true;
+						break;
+					}
+				}
+				if (!found)
+				{
+					for (uint i = 0; i < playerItems->size(); ++i)
+					{
+						ItemData* playerItem = (*playerItems)[i].second;
+						if (name == playerItem->name && item->item->rarity <= playerItem->rarity)
 						{
 							found = true;
 							break;
 						}
 					}
-					if (!found)
-					{
-						for (uint i = 0; i < playerItems->size(); ++i)
-						{
-							ItemData* playerItem = (*playerItems)[i].second;
-							if (name == playerItem->name && item->item->rarity <= playerItem->rarity)
-							{
-								found = true;
-								break;
-							}
-						}
-					}
+				}
 
-					if (!found)
-					{
-						itemNames.push_back(name);
-						break;
-					}
+				if (!found)
+				{
+					itemNames.push_back(name);
+					break;
 				}
 			}
 			searches++;
@@ -115,6 +128,7 @@ SCRIPTS_FUNCTION InGameShop* CreateInGameShop()
 
 	INSPECTOR_STRING(script->playerName);
 	INSPECTOR_STRING(script->gameManagerName);
+	INSPECTOR_STRING(script->stimPackName);
 	INSPECTOR_VECTOR_STRING(script->itemNames);
 	INSPECTOR_DRAGABLE_INT(script->rollAttempts);
 

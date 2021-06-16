@@ -39,6 +39,7 @@ public:
 	void (*StringVecEmplaceBackString)(void*,const std::string&) = nullptr;
 	void (*StringVecReserve)(void*, int) = nullptr;
 	void (*StringVecErase)(void*, int) = nullptr;
+	void (*SetString)(void*, const char*) = nullptr;
 
 protected:
 	HINSTANCE dllHandle;

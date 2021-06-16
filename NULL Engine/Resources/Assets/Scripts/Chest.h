@@ -8,6 +8,7 @@
 #include <string>
 
 class GameManager;
+class C_AudioSource;
 
 class SCRIPTS_API Chest : public Object ALLOWED_INHERITANCE
 {
@@ -23,7 +24,7 @@ public:
 	void OnPause() override;
 	void OnResume() override;
 
-	void OnTriggerRepeat(GameObject* object) override;
+	void OnCollisionEnter(GameObject* object) override;
 	
 	std::string gameManagerName = "Game Manager";
 	std::string playerName = "Mandalorian";
@@ -37,7 +38,8 @@ public:
 
 protected:
 
-	bool used = false;
+	bool open = false;
+	C_AudioSource* chestAudio = nullptr;
 
 	GameManager* gameManager = nullptr;
 };

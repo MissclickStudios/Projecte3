@@ -19,6 +19,7 @@
     <ClInclude Include="Source\M_GameManager.h">
       <Filter>Source\1_Modules</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\GameApplication.cpp">
@@ -27,5 +28,11 @@
     <ClCompile Include="Source\M_GameManager.cpp">
       <Filter>Source\1_Modules</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="MissclickGame.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\Assets\Icons\PlayerIcon1.ico" />
   </ItemGroup>
 </Project>

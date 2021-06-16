@@ -15,6 +15,9 @@
 class GameManager;
 class C_Canvas;
 class C_UI_Image;
+class CameraMovement;
+class C_AudioSource;
+class C_BoxCollider;
 
 enum class IG12State
 {
@@ -48,6 +51,9 @@ public:
 	void OnCollisionEnter(GameObject* object) override;
 	void TakeDamage(float damage)override;
 
+	void EntityPause() override;
+	void EntityResume() override;
+
 	// Movement
 	std::string playerName = "Mando testbuild";
 
@@ -68,6 +74,7 @@ public:
 	AnimationInfo changeAnimation = { "Change" };
 	AnimationInfo onGuardAnimation = { "OnGuard" };
 	AnimationInfo specialAnimation = { "SpecialAttack" };
+	AnimationInfo bombingAnimation = { "BombingAttack" };
 
 	// Attack
 	float attackDistance = 0.0f;
@@ -95,10 +102,13 @@ public:
 	float bombingAttackBigAreaSide = 0.0f;
 	float bombingAttackSmallAreaSide = 0.0f;
 	float bombFallingTime = 0.0f;
+	float prepareBombingTime = 0.0f;
 
 	// Weapons
 	Prefab blaster;
 	Prefab sniper;
+	Prefab bomb;
+	Prefab bombProjectile;
 
 	std::string rightHandName;
 	std::string leftHandName;
@@ -108,6 +118,15 @@ public:
 
 	GameObject* healthBarCanvasObject = nullptr;
 	std::string lifeBarImageStr = "BossLife";
+	std::string bossIconStr = "BossIcon";
+	
+	//partiles and SFX
+	C_ParticleSystem* bombingParticles;
+	C_ParticleSystem* hitParticles;
+	bool bombExploding = false;
+
+
+	int beskarValue = 4;
 
 private:
 
@@ -142,7 +161,7 @@ private:
 	void pickFirstStageAttack();		//Randomly picks an attack from the first stage
 	void pickSecondStageAttack();		//Randomly picks an attack from the second stage
 
-	float2 CalculateNextBomb(float x, float y);
+	float3 CalculateNextBomb(float x, float y);
 
 	Timer firstStageTimer;
 	Timer secondStageTimer;
@@ -151,6 +170,7 @@ private:
 	Timer bombingAttackTimer;
 	Timer bombTimer;
 	Timer bombingAndSpiralAttackTimer;
+	Timer prepareBombing;
 	
 	float2 bombPosition = float2::zero;
 	float2 playerPosition = float2::zero;
@@ -159,7 +179,12 @@ private:
 
 	float2 specialAttackStartAim = float2::zero;
 	float specialAttackRot = 0.0f;
+	//Bomb
 
+	GameObject* bombGameObject = nullptr;
+	C_BoxCollider* bombCollider = nullptr;
+
+	GameObject* projectileGameObject = nullptr;
 	// Weapons
 	GameObject* blasterGameObject = nullptr;
 	Weapon* blasterWeapon = nullptr;
@@ -170,10 +195,16 @@ private:
 	LCG randomGenerator;
 
 	GameManager* gameManager = nullptr;
+	CameraMovement* cameraMovement = nullptr;
 
 	C_Canvas* healthBarCanvas = nullptr;
 	C_UI_Image* healthBarImage = nullptr;
+	C_UI_Image* bossIcon = nullptr;
 	float healthMaxW = 0.0f;
+
+	//Audio
+	C_AudioSource* deathAudio = nullptr;
+	C_AudioSource* bombAudio = nullptr;
 };
 
 SCRIPTS_FUNCTION IG12* CreateIG12();

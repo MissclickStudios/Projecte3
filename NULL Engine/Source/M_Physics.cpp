@@ -19,23 +19,25 @@
 #define THREADS 4
 
 #ifndef _DEBUG
-#pragma comment(lib, "Source/Dependencies/PhysX_3.4/libx86_/Release_/PhysX3_x86.lib")
-#pragma comment(lib, "Source/Dependencies/PhysX_3.4/libx86_/Release_/PhysX3Common_x86.lib")
-#pragma comment(lib, "Source/Dependencies/PhysX_3.4/libx86_/Release_/PhysX3Extensions.lib")
-#pragma comment(lib, "Source/Dependencies/PhysX_3.4/libx86_/Release_/PxFoundation_x86.lib")
-#pragma comment(lib, "Source/Dependencies/PhysX_3.4/libx86_/Release_/PxPvdSDK_x86.lib")
-#pragma comment(lib, "Source/Dependencies/PhysX_3.4/libx86_/Release_/PhysX3CharacterKinematic_x86.lib")
-#pragma comment(lib, "Source/Dependencies/PhysX_3.4/libx86_/Release_/SceneQuery.lib")
-#pragma comment(lib, "Source/Dependencies/PhysX_3.4/libx86_/Release_/PhysX3Cooking_x86.lib")
+#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/PhysRelease/PhysX_32.lib")
+#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/PhysRelease/PhysXCommon_32.lib")
+#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/PhysRelease/PhysXExtensions_static_32.lib")
+#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/PhysRelease/PhysXFoundation_32.lib")
+#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/PhysRelease/PhysXPvdSDK_static_32.lib")
+#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/PhysRelease/PhysXCharacterKinematic_static_32.lib")
+//#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/PhysRelease/PhysXVehicle_static_32.lib")
+#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/PhysRelease/PhysXCooking_32.lib")
+//#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/PhysRelease/PhysXTask_static_32.lib")
 #else
-#pragma comment(lib, "Source/Dependencies/PhysX_3.4/libx86_/Debug_/PhysX3CommonDEBUG_x86.lib")
-#pragma comment(lib, "Source/Dependencies/PhysX_3.4/libx86_/Debug_/PhysX3DEBUG_x86.lib")
-#pragma comment(lib, "Source/Dependencies/PhysX_3.4/libx86_/Debug_/PhysX3ExtensionsDEBUG.lib")
-#pragma comment(lib, "Source/Dependencies/PhysX_3.4/libx86_/Debug_/PxFoundationDEBUG_x86.lib")
-#pragma comment(lib, "Source/Dependencies/PhysX_3.4/libx86_/Debug_/PxPvdSDKDEBUG_x86.lib")
-#pragma comment(lib, "Source/Dependencies/PhysX_3.4/libx86_/Debug_/PhysX3CharacterKinematicDEBUG_x86.lib")
-#pragma comment(lib, "Source/Dependencies/PhysX_3.4/libx86_/Debug_/SceneQueryDEBUG.lib")
-#pragma comment(lib, "Source/Dependencies/PhysX_3.4/libx86_/Debug_/PhysX3CookingDEBUG_x86.lib")
+#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/PhysDebug/PhysX_32.lib")
+#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/PhysDebug/PhysXCharacterKinematic_static_32.lib")
+#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/PhysDebug/PhysXCommon_32.lib")
+#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/PhysDebug/PhysXCooking_32.lib")
+#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/PhysDebug/PhysXExtensions_static_32.lib")
+#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/PhysDebug/PhysXFoundation_32.lib")
+//#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/PhysDebug/PhysXVehicle_static_32.lib")
+#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/PhysDebug/PhysXPvdSDK_static_32.lib")
+#pragma comment(lib, "Source/Dependencies/PhysX_4.1/libx86/PhysDebug/PhysXTask_static_32.lib")
 #endif // _DEBUG
 
 M_Physics::M_Physics(bool isActive) : Module("physics", isActive)
@@ -111,7 +113,7 @@ bool M_Physics::Start()
 	static physx::PxDefaultErrorCallback gDefaultErrorCallback;
 	static physx::PxDefaultAllocator gDefaultAllocatorCallback;
 
-	foundation = PxCreateFoundation(PX_FOUNDATION_VERSION, gDefaultAllocatorCallback, gDefaultErrorCallback);
+	foundation = PxCreateFoundation(PX_PHYSICS_VERSION, gDefaultAllocatorCallback, gDefaultErrorCallback);
 	if (!foundation)
 	{
 		LOG("[ERROR] Physics Module: PxCreateFoundation failed!");
@@ -143,7 +145,7 @@ bool M_Physics::Start()
 	sceneDesc.gravity = physx::PxVec3(0.0f, -gravity, 0.0f);
 	sceneDesc.bounceThresholdVelocity = gravity* BOUNCE_THRESHOLD;
 	sceneDesc.cpuDispatcher = physx::PxDefaultCpuDispatcherCreate(THREADS);
-	sceneDesc.flags |= physx::PxSceneFlag::eENABLE_KINEMATIC_PAIRS | physx::PxSceneFlag::eENABLE_KINEMATIC_STATIC_PAIRS;
+	//sceneDesc.flags |= physx::PxSceneFlag::eENABLE_KINEMATIC_PAIRS | physx::PxSceneFlag::eENABLE_KINEMATIC_STATIC_PAIRS;
 	sceneDesc.filterShader = customFilterShader;
 	sceneDesc.simulationEventCallback = simulationCallback;
 
@@ -183,7 +185,7 @@ UpdateStatus M_Physics::Update(float dt)
 	if (dt < 0.5f && MC_Time::Game::GetDT() < 0.5f)
 		if (scene && simulating)
 		{
-			scene->simulate(dt);
+			scene->simulate(MC_Time::Game::GetDT());
 			scene->fetchResults(true);
 		}
 
@@ -191,24 +193,31 @@ UpdateStatus M_Physics::Update(float dt)
 }
 
 bool M_Physics::CleanUp()
-{
-	if (controllerManager)
+{	
+	RELEASE(simulationCallback);
+	
+	if (controllerManager != nullptr)
 		controllerManager->release();
-	if (material)
+
+	if (material != nullptr)
 		material->release();
-	if (cooking)
+
+	if (cooking != nullptr)
 		cooking->release();
-	if (scene)
+
+	if (scene != nullptr)
 		scene->release();
-	if (physics)
+
+	if (physics != nullptr)
 		physics->release();
-	if (foundation)
+
+	if (foundation != nullptr)
 		foundation->release();
 
-	controllerManager = nullptr;
-	physics = nullptr;
-	foundation = nullptr;
-	scene = nullptr;
+	controllerManager	= nullptr;
+	physics				= nullptr;
+	foundation			= nullptr;
+	scene				= nullptr;
 
 	return true;
 }

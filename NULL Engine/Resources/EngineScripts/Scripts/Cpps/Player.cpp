@@ -1,6 +1,7 @@
+#include "MathGeoLib/include/Math/float3.h"
 #include "JSONParser.h"
 
-#include "Player.h"
+#include "Log.h"
 
 #include "Application.h"
 #include "M_Input.h"
@@ -9,27 +10,26 @@
 
 #include "GameObject.h"
 #include "C_Transform.h"
-#include "C_RigidBody.h"
+#include "C_Mesh.h"
 #include "C_Material.h"
+#include "C_RigidBody.h"
 #include "C_ParticleSystem.h"
 #include "C_AudioSource.h"
-#include "C_Mesh.h"
-
 #include "C_2DAnimator.h"
-
 #include "C_Animator.h"
+#include "C_UI_Image.h"
+#include "R_Texture.h"
 
 #include "GameManager.h"
 
 #include "Items.h"
 
-#include "Log.h"
+#include "Player.h"
 
-#define MAX_INPUT		32767
-#define WALK_THRESHOLD	16384
-#define WALKING_FACTOR	0.5f
-#include "MathGeoLib/include/Math/float3.h"
-
+#define MAX_INPUT				32767.0f
+#define WALK_THRESHOLD			16384.0f
+#define AIM_THRESHOLD			8192.0f
+#define P_JOYSTICK_THRESHOLD	8192.0f
 
 Player* CreatePlayer()
 {
@@ -63,8 +63,8 @@ Player* CreatePlayer()
 	INSPECTOR_DRAGABLE_FLOAT(script->aimingSpeed);
 
 	// Currency
-	INSPECTOR_DRAGABLE_INT(script->currency);
-	INSPECTOR_DRAGABLE_INT(script->hubCurrency);
+	INSPECTOR_DRAGABLE_INT(script->credits);
+	INSPECTOR_DRAGABLE_INT(script->beskar);
 
 	// Dash
 	INSPECTOR_DRAGABLE_FLOAT(script->dashSpeed);
@@ -84,35 +84,23 @@ Player* CreatePlayer()
 	INSPECTOR_STRING(script->gameManager);
 
 	// Hand Name
-	INSPECTOR_STRING(script->handName);
+	INSPECTOR_STRING(script->rightHandName);
+	INSPECTOR_STRING(script->leftHandName);
 
-	INSPECTOR_GAMEOBJECT(script->rightHand);
-	INSPECTOR_GAMEOBJECT(script->leftHand);
+	// Aim
+	INSPECTOR_STRING(script->idleAimPlaneName);
+	INSPECTOR_STRING(script->aimingAimPlaneName);
 
+	// Animations
+	INSPECTOR_STRING(script->hipName);
+	INSPECTOR_STRING(script->torsoName);
+	INSPECTOR_STRING(script->legsName);
+
+	// Jet-Pack
+	INSPECTOR_STRING(script->jetpackName);
 
 	// Particles & SFX
 	INSPECTOR_VECTOR_STRING(script->particleNames);
-
-	//// Animations ---
-	//// Movement
-	//INSPECTOR_STRING(script->idleAnimation.name);
-	//INSPECTOR_DRAGABLE_FLOAT(script->idleAnimation.blendTime);
-	//INSPECTOR_STRING(script->runAnimation.name);
-	//INSPECTOR_DRAGABLE_FLOAT(script->runAnimation.blendTime);
-	//INSPECTOR_STRING(script->dashAnimation.name);
-	//INSPECTOR_DRAGABLE_FLOAT(script->dashAnimation.blendTime);
-	//INSPECTOR_STRING(script->deathAnimation.name);
-	//INSPECTOR_DRAGABLE_FLOAT(script->deathAnimation.blendTime);
-	//
-	//// Aim
-	//INSPECTOR_STRING(script->shootAnimation.name);
-	//INSPECTOR_DRAGABLE_FLOAT(script->shootAnimation.blendTime);
-	//INSPECTOR_STRING(script->reloadAnimation.name);
-	//INSPECTOR_DRAGABLE_FLOAT(script->reloadAnimation.blendTime);
-	//INSPECTOR_STRING(script->changeAnimation.name);
-	//INSPECTOR_DRAGABLE_FLOAT(script->changeAnimation.blendTime);
-	//INSPECTOR_STRING(script->onGuardAnimation.name);
-	//INSPECTOR_DRAGABLE_FLOAT(script->onGuardAnimation.blendTime);
 
 	return script;
 }
@@ -128,12 +116,7 @@ Player::~Player()
 
 void Player::SetUp()
 {
-	if (rightHand == nullptr)
-		LOG("RIOT");
-
-	if (leftHand == nullptr)
-		LOG("RIOT II");
-	
+	// --- TIMERS
 	dashTimer.Stop();
 	dashCooldownTimer.Stop();
 	invincibilityTimer.Stop();
@@ -141,35 +124,38 @@ void Player::SetUp()
 	changeTimer.Stop();
 	interactionTimer.Stop();
 
+	// --- SCENES
+	inHub = !strcmp(App->scene->GetCurrentScene(), "HUB");
+
+	// --- GAME OBJECTS
+	rightHand		= gameObject->FindChild(rightHandName.c_str());
+	leftHand		= gameObject->FindChild(leftHandName.c_str());
+	idleAimPlane	= gameObject->FindChild(idleAimPlaneName.c_str());
+	aimingAimPlane	= gameObject->FindChild(aimingAimPlaneName.c_str());
+	hip				= gameObject->FindChild(hipName.c_str());
+	torso			= gameObject->FindChild(torsoName.c_str());
+	legs			= gameObject->FindChild(legsName.c_str());
+
+	if (rightHand == nullptr)		{ LOG("[ERROR] Player Script: Could not retrieve { %s }! Error: GameObject* FindChild() failed.", rightHandName.c_str()); }
+	if (leftHand == nullptr)		{ LOG("[ERROR] Player Script: Could not retrieve { %s }! Error: GameObject* FindChild() failed.", leftHandName.c_str()); }
+	if (idleAimPlane == nullptr)	{ LOG("[ERROR] Player Script: Could not retrieve { %s }! Error: GameObject* FindChild() failed.", idleAimPlaneName.c_str()); }
+	if (aimingAimPlane == nullptr)	{ LOG("[ERROR] Player Script: Could not retrieve { %s }! Error: GameObject* FindChild() failed.", aimingAimPlaneName.c_str()); }
+	if (hip == nullptr)				{ LOG("[ERROR] Player Script: Could not retrieve { %s }! Error: GameObject* FindChild() failed.", hipName.c_str()); }
+	if (torso == nullptr)			{ LOG("[ERROR] Player Script: Could not retrieve { %s }! Error: GameObject* FindChild() failed.", torsoName.c_str()); }
+	if (legs == nullptr)			{ LOG("[ERROR] Player Script: Could not retrieve { %s }! Error: GameObject* FindChild() failed.", legsName.c_str()); }
+	
+	// --- MESHES
+	GameObject* jetpackGO = gameObject->FindChild(jetpackName.c_str());
+	if (jetpackGO != nullptr)
+		jetpack = jetpackGO->GetComponent<C_Mesh>();
+
+	if (jetpack == nullptr)			{ LOG("[ERROR] Player Script: Could not retrieve { %s }! Error: GameObject* GetComponent() failed.", jetpackName.c_str()); }
+
 	// --- ANIMATIONS
 	if (animator != nullptr)
 	{
 		torsoTrack	= animator->GetTrackAsPtr("Torso");
 		legsTrack	= animator->GetTrackAsPtr("Legs");
-
-		if (torsoTrack == nullptr)
-			LOG("[ERROR] Player Script: Could not retrieve { TORSO } Animator Track! Error: C_Animator's GetTrackAsPtr() failed.");
-
-		if (legsTrack == nullptr)
-			LOG("[ERROR] Player Script: Could not retrieve { LEGS } Animator Track! Error: C_Animator's GetTrackAsPtr() failed.");
-
-		
-		/*torso	= torsoTrack->GetRootBone();								// At this point in execution both the tracks and the animator do not have the Root Bone set.
-		legs	= legsTrack->GetRootBone();
-		hip		= animator->GetRootBone();*/
-
-		torso	= App->scene->GetGameObjectByName("Torso");					// Hence, a more hamfisted approach is needed to be able to Set Up the Player properly.
-		legs	= App->scene->GetGameObjectByName("Legs");
-		hip		= App->scene->GetGameObjectByName("mixamorig:Hips");
-
-		if (torso == nullptr)
-			LOG("[ERROR] Player Script: Could not retrieve { TORSO } Root Bone! Error: C_AnimatorTrack's GetRootBone() failed.");
-
-		if (legs == nullptr)
-			LOG("[ERROR] Player Script: Could not retrieve { LEGS } Root Bone! Error: C_AnimatorTrack's GetRootBone() failed.");
-
-		if (hip == nullptr)
-			LOG("[ERROR] Player Script: Could not retrieve { HIP } Root Bone! Error: C_Animator's GetRootBone() failed.");
 	}
 
 	SetUpLegsMatrix();
@@ -196,19 +182,23 @@ void Player::SetUp()
 			C_AudioSource* source = (C_AudioSource*)gameObject->components[i];
 			std::string name = source->GetEventName();
 
-			if (name == "mando_walking")		{ walkAudio = source; }
-			else if (name == "mando_dash")		{ dashAudio = source; }
-			else if (name == "weapon_change")	{ changeWeaponAudio = source; }
-			else if (name == "mando_damaged")	{ damageAudio = source; }
-			else if (name == "mando_death")		{ deathAudio = source; }
+			if (name == "mando_walking")			{ walkAudio = source; }
+			else if (name == "mando_dash")			{ dashAudio = source; }
+			else if (name == "mando_swap_weapon")	{ changeWeaponAudio = source; }
+			else if (name == "mando_damaged")		{ damageAudio = source; }
+			else if (name == "mando_death")			{ deathAudio = source; }
 		}
 	}
 
 	// UI ELEMENTS
-	idleAimPlane	= App->scene->GetGameObjectByName("IdlePlane");
-	aimingAimPlane	= App->scene->GetGameObjectByName("AimingPlane");
+	if (idleAimPlane != nullptr)
+	{
+		if (inHub) 
+			idleAimPlane->SetIsActive(true);
+	}
+	else
+		LOG("COULD NOT RETRIEVE IDLE PLANE");
 
-	(idleAimPlane != nullptr)	? idleAimPlane->SetIsActive(true)		: LOG("COULD NOT RETRIEVE IDLE PLANE");
 	(aimingAimPlane != nullptr) ? aimingAimPlane->SetIsActive(false)	: LOG("COULD NOT RETRIEVE AIMING PLANE");
 
 	GameObject* uiImageGO	= App->scene->GetGameObjectByName(mandoImageName.c_str());
@@ -216,15 +206,94 @@ void Player::SetUp()
 
 	uiImageGO				= App->scene->GetGameObjectByName(primaryWeaponImageName.c_str());
 	primaryWeaponImage		= (uiImageGO != nullptr) ? (C_2DAnimator*)uiImageGO->GetComponent<C_2DAnimator>() : nullptr;
+	weaponImage				= (uiImageGO != nullptr) ? (C_UI_Image*)uiImageGO->GetComponent<C_UI_Image>() : nullptr;
 
 	uiImageGO				= App->scene->GetGameObjectByName(secondaryWeaponImageName.c_str());
 	secondaryWeaponImage	= (uiImageGO != nullptr) ? (C_2DAnimator*)uiImageGO->GetComponent<C_2DAnimator>() : nullptr;
+	weaponNameImage			= (uiImageGO != nullptr) ? (C_UI_Image*)uiImageGO->GetComponent<C_UI_Image>() : nullptr;
 
 	uiImageGO				= App->scene->GetGameObjectByName(dashImageName.c_str());
 	dashImage				= (uiImageGO != nullptr) ? (C_2DAnimator*)uiImageGO->GetComponent<C_2DAnimator>() : nullptr;
 
 	uiImageGO				= App->scene->GetGameObjectByName(creditsImageName.c_str());
 	creditsImage			= (uiImageGO != nullptr) ? (C_2DAnimator*)uiImageGO->GetComponent<C_2DAnimator>() : nullptr;
+
+	uiImageGO				= App->scene->GetGameObjectByName(beskarImageName.c_str());
+	beskarImage				= (uiImageGO != nullptr) ? (C_2DAnimator*)uiImageGO->GetComponent<C_2DAnimator>() : nullptr;
+
+	//Load HUD animations
+	if (primaryWeaponImage && weaponImage && weaponNameImage) 
+	{
+		//Charge the textures for the 2Danimations
+		blasterUse	 =  (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/textures/2DAnimations/UseWeapon4.png");
+		blasterChangeBlaster = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/textures/2DAnimations/ChangeWeapon.png");
+		blasterChangeSniper =  (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/textures/2DAnimations/ChangeWeapon01.png");
+		blasterChangeMiniGun = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/textures/2DAnimations/ChangeWeapon02.png");
+		blasterChangeShootGun =(R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/textures/2DAnimations/ChangeWeapon03.png");
+		blasterCharge = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/textures/2DAnimations/ChargeWeapon1.png");
+		sniperUse = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/textures/2DAnimations/UseWeapon5.png");
+		sniperChange  = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/textures/2DAnimations/ChangeWeapon04.png");
+		sniperCharge  = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/textures/2DAnimations/ChargeWeapon2.png");
+		shotgunUse	 =  (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/textures/2DAnimations/UseWeapon7.png");
+		shotgunChange = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/textures/2DAnimations/ChangeWeapon10.png");
+		shotgunCharge = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/textures/2DAnimations/ChargeWeapon4.png");
+		minigunUse	 =  (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/textures/2DAnimations/UseWeapon6.png");
+		minigunChange = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/textures/2DAnimations/ChangeWeapon07.png");
+		minigunCharge = (R_Texture*)App->resourceManager->GetResourceFromLibrary("Assets/textures/2DAnimations/ChargeWeapon3.png");
+
+		switch (currentWeapon->type)
+		{
+		case WeaponType::BLASTER:
+			primaryWeaponImage->GetAnimationSprites("UseWeapon4", 1, blasterUse);
+			primaryWeaponImage->GetAnimationSprites("ChargeWeapon1", 3, blasterCharge);
+			weaponImage->SetTextureCoordinates(-3130, -1190, 665, 245);
+			weaponNameImage->SetTextureCoordinates(1671, -140, 507, 78);
+			if (secondaryWeapon->weaponModel == nullptr)
+				primaryWeaponImage->GetAnimationSprites("ChangeWeapon", 2, blasterChangeBlaster);
+			else
+			{
+				switch (secondaryWeapon->type)
+				{
+				case WeaponType::MINIGUN:
+					primaryWeaponImage->GetAnimationSprites("ChangeWeapon02", 2, blasterChangeMiniGun);
+					break;
+				case WeaponType::SNIPER:
+					primaryWeaponImage->GetAnimationSprites("ChangeWeapon01", 2, blasterChangeSniper);
+					break;
+				case WeaponType::SHOTGUN:
+					primaryWeaponImage->GetAnimationSprites("ChangeWeapon03", 2, blasterChangeShootGun);
+					break;
+				default:
+					primaryWeaponImage->GetAnimationSprites("ChangeWeapon", 2, blasterChangeBlaster);
+					break;
+				}
+			}
+			break;
+		case WeaponType::MINIGUN:
+			primaryWeaponImage->GetAnimationSprites("UseWeapon6", 1, minigunUse);
+			primaryWeaponImage->GetAnimationSprites("ChangeWeapon07", 2, minigunChange);
+			primaryWeaponImage->GetAnimationSprites("ChargeWeapon3", 3, minigunCharge);
+			weaponImage->SetTextureCoordinates(-1799, -1190, 665, 245);
+			weaponNameImage->SetTextureCoordinates(2685, -140, 507, 78);
+			break;
+		case WeaponType::SNIPER:
+			primaryWeaponImage->GetAnimationSprites("UseWeapon5", 1, sniperUse);
+			primaryWeaponImage->GetAnimationSprites("ChangeWeapon04", 2, sniperChange);
+			primaryWeaponImage->GetAnimationSprites("ChargeWeapon2", 3, sniperCharge);
+			weaponImage->SetTextureCoordinates(-2465, -1190, 665, 245);
+			weaponNameImage->SetTextureCoordinates(2178, -140, 507, 78);
+			break;
+		case WeaponType::SHOTGUN:
+			primaryWeaponImage->GetAnimationSprites("UseWeapon7", 1, shotgunUse);
+			primaryWeaponImage->GetAnimationSprites("ChangeWeapon10", 2, shotgunChange);
+			primaryWeaponImage->GetAnimationSprites("ChargeWeapon4", 3, shotgunCharge);
+			weaponImage->SetTextureCoordinates(-1133, -1190, 665, 245);
+			weaponNameImage->SetTextureCoordinates(3192, -140, 507, 78);
+			break;
+		default:
+			break;
+		}
+	}
 }
 
 void Player::Behavior()
@@ -232,11 +301,12 @@ void Player::Behavior()
 	if (!allowInput)
 		return;
 
-	ManageInteractions();
-	
-	//LOG("[%d]::[%d]::[%d]", (int)moveState, (int)aimState, (int)currentInteraction);
+	usingKeyboard		= App->input->KeyboardReceivedInputs();
+	usingGameController = App->input->GameControllerReceivedInputs();
 
-	if (currentInteraction == InteractionType::NONE)
+	ManageInteractions();
+
+	if (currentInteraction == InteractionType::NONE)																			// All inputs will be ignored while the player is interacting.
 	{
 		ManageMovement();
 
@@ -249,7 +319,9 @@ void Player::Behavior()
 			doDieCutscene = false;
 		}
 		else
+		{
 			doDieCutscene = true;
+		}
 	}
 }
 
@@ -274,6 +346,38 @@ void Player::CleanUp()
 		delete savedItems.begin()->second;
 		savedItems.erase(savedItems.begin());
 	}
+
+	//Free the textures for the 2Danimations
+	if (blasterUse)
+		App->resourceManager->FreeResource(blasterUse->GetUID());
+	if (blasterChangeBlaster)
+		App->resourceManager->FreeResource(blasterChangeBlaster->GetUID());
+	if (blasterChangeSniper)
+		App->resourceManager->FreeResource(blasterChangeSniper->GetUID());
+	if (blasterChangeMiniGun)
+		App->resourceManager->FreeResource(blasterChangeMiniGun->GetUID());
+	if (blasterChangeShootGun)
+		App->resourceManager->FreeResource(blasterChangeShootGun->GetUID());
+	if (blasterCharge)
+		App->resourceManager->FreeResource(blasterCharge->GetUID());
+	if (sniperUse)
+		App->resourceManager->FreeResource(sniperUse->GetUID());
+	if (sniperChange)
+		App->resourceManager->FreeResource(sniperChange->GetUID());
+	if (sniperCharge)
+		App->resourceManager->FreeResource(sniperCharge->GetUID());
+	if (shotgunUse)
+		App->resourceManager->FreeResource(shotgunUse->GetUID());
+	if (blasterUse)
+		App->resourceManager->FreeResource(shotgunChange->GetUID());
+	if (shotgunCharge)
+		App->resourceManager->FreeResource(shotgunCharge->GetUID());
+	if (minigunUse)
+		App->resourceManager->FreeResource(minigunUse->GetUID());
+	if (minigunChange)
+		App->resourceManager->FreeResource(minigunChange->GetUID());
+	if (minigunCharge)
+		App->resourceManager->FreeResource(minigunCharge->GetUID());
 }
 
 void Player::EntityPause()
@@ -296,8 +400,8 @@ void Player::EntityResume()
 
 void Player::SaveState(ParsonNode& playerNode)
 {
-	playerNode.SetInteger("Currency", currency);
-	playerNode.SetInteger("Hub Currency", hubCurrency);
+	playerNode.SetInteger("Currency", credits);
+	playerNode.SetInteger("Hub Currency", beskar);
 
 	playerNode.SetNumber("Health", health);
 
@@ -309,7 +413,13 @@ void Player::SaveState(ParsonNode& playerNode)
 		ParsonNode node = effectsArray.SetNode("Effect");
 		node.SetInteger("Type", (int)effects[i]->Type());
 		node.SetNumber("Duration", (double)effects[i]->RemainingDuration());
+		node.SetNumber("Power", effects[i]->Power());
+		node.SetNumber("Chance", effects[i]->Chance());
+		node.SetNumber("DirectionX", effects[i]->Direction().x);
+		node.SetNumber("DirectionY", effects[i]->Direction().y);
+		node.SetNumber("DirectionZ", effects[i]->Direction().z);
 		node.SetBool("Permanent", effects[i]->Permanent());
+		node.SetBool("Start", effects[i]->start);
 	}
 
 	playerNode.SetInteger("Equiped Gun", (int)equipedGun.uid);
@@ -337,8 +447,8 @@ void Player::SaveState(ParsonNode& playerNode)
 
 void Player::LoadState(ParsonNode& playerNode)
 {
-	currency = playerNode.GetInteger("Currency");
-	hubCurrency = playerNode.GetInteger("Hub Currency");
+	credits = playerNode.GetInteger("Currency");
+	beskar = playerNode.GetInteger("Hub Currency");
 
 	health = (float)playerNode.GetNumber("Health");
 
@@ -351,19 +461,30 @@ void Player::LoadState(ParsonNode& playerNode)
 		ParsonNode node = effectsArray.GetNode(i);
 		EffectType type = (EffectType)node.GetInteger("Type");
 		float duration = (float)node.GetNumber("Duration");
+		float power = (float)node.GetNumber("Power");
+		float chance = (float)node.GetNumber("Chance");
+		float3 direction;
+		direction.x = (float)node.GetNumber("DirectionX");
+		direction.y = (float)node.GetNumber("DirectionY");
+		direction.z = (float)node.GetNumber("DirectionZ");
 		bool permanent = node.GetBool("Permanent");
+		bool start = node.GetBool("Start");
 
-		AddEffect(type, duration, permanent);
+		AddEffect(type, duration, permanent, power, chance, direction, start);
 	}
 
 	if (skeleton != nullptr)
 		for (uint i = 0; i < skeleton->childs.size(); ++i)
 		{
 			std::string name = skeleton->childs[i]->GetName();
-			if (name == "Hand")
+			if (name == "RightHand")
 			{
 				rightHand = skeleton->childs[i];
 				break;
+			}
+			if (name == "LeftHand")
+			{
+				leftHand = skeleton->childs[i];
 			}
 		}
 
@@ -376,7 +497,7 @@ void Player::LoadState(ParsonNode& playerNode)
 		{
 			blasterWeapon->type = WeaponType::BLASTER;
 
-			blasterWeapon->SetOwnership(type, rightHand, handName);
+			blasterWeapon->SetOwnership(type, rightHand, rightHandName.c_str());
 			blasterWeapon->ammo = playerNode.GetInteger("Blaster Ammo");
 		}
 	}
@@ -391,14 +512,17 @@ void Player::LoadState(ParsonNode& playerNode)
 	if (secondaryGunGameObject != nullptr)
 	{
 		equipedGun.uid = uid;
+
 		secondaryWeapon = (Weapon*)GetObjectScript(secondaryGunGameObject, ObjectType::WEAPON);
 
 		if (secondaryWeapon != nullptr)
 		{
-			secondaryWeapon->SetOwnership(type, rightHand, handName);
+			if (secondaryWeapon->type == WeaponType::MINIGUN)
+				secondaryWeapon->SetOwnership(type, leftHand, leftHandName.c_str());
+			else
+				secondaryWeapon->SetOwnership(type, rightHand, rightHandName.c_str());
+
 			int savedAmmo = playerNode.GetInteger("Equiped Gun Ammo");
-			if (savedAmmo > secondaryWeapon->MaxAmmo())
-				savedAmmo = secondaryWeapon->MaxAmmo();
 			secondaryWeapon->ammo = savedAmmo;
 		}
 	}
@@ -459,9 +583,9 @@ void Player::LoadState(ParsonNode& playerNode)
 
 void Player::Reset()
 {
-	currency = 0;
+	credits = 0;
 
-	health = maxHealth;
+	health = MaxHealth();
 
 	while (effects.size())
 	{
@@ -488,6 +612,52 @@ void Player::Reset()
 	}
 
 	usingSecondaryGun = false;
+
+	GameObject* object = App->scene->GetGameObjectByName(gameManager.c_str());
+	if (object != nullptr)
+	{
+		GameManager* manager = (GameManager*)object->GetScript("GameManager");
+		if (manager != nullptr)
+		{
+			std::vector<ItemData*> hubItems = manager->GetHubItemPool();
+			if (manager->armorLvl)
+			{
+				ItemData* const itemData = Item::FindItem(hubItems, "Durasteel Reinforcement", (ItemRarity)manager->armorLvl);
+				if (itemData != nullptr)
+				{
+					Item::CreateItem(itemData)->PickUp(this);
+					AddItem(itemData); // yes you have to manually add the item after picking it up, I KNOW... its kinda wack
+				}
+			}
+			if (manager->bootsLvl)
+			{
+				ItemData* const itemData = Item::FindItem(hubItems, "Propulsed Boots", (ItemRarity)manager->bootsLvl);
+				if (itemData != nullptr)
+				{
+					Item::CreateItem(itemData)->PickUp(this);
+					AddItem(itemData);
+				}
+			}
+			if (manager->ticketLvl)
+			{
+				ItemData* const itemData = Item::FindItem(hubItems, "Premium Ticket", (ItemRarity)manager->ticketLvl);
+				if (itemData != nullptr)
+				{
+					Item::CreateItem(itemData)->PickUp(this);
+					AddItem(itemData);
+				}
+			}
+			if (manager->bottleLvl)
+			{
+				ItemData* const itemData = Item::FindItem(hubItems, "Refrigeration Liquid", (ItemRarity)manager->bottleLvl);
+				if (itemData != nullptr)
+				{
+					Item::CreateItem(itemData)->PickUp(this);
+					AddItem(itemData);
+				}
+			}
+		}
+	}
 }
 
 void Player::EnableInput()
@@ -501,21 +671,30 @@ void Player::DisableInput()
 }
 
 void Player::TakeDamage(float damage)
-{
+{	
+	if (currentInteraction != InteractionType::NONE && currentInteraction != InteractionType::SIGNAL_GROGU)
+		return;
+
+	if (health <= 0.0f)
+		return;
+
 	if (!invincibilityTimer.IsActive())
 	{
 		float damageDealt = 0.0f;
 		if(Defense())
-		 damageDealt = damage / Defense();
+		 damageDealt = 1.0f; // heehee
+		
 		health -= damageDealt;
 
 		if (health < 0.0f)
 			health = 0.0f;
-		invincibilityTimer.Start();
 
+		invincibilityTimer.Start();
 		hitTimer.Start();
+		
 		if (GetParticles("Hit") != nullptr)
 			GetParticles("Hit")->ResumeSpawn();
+		
 		if (material != nullptr)
 		{
 			material->SetAlternateColour(Color(1, 0, 0, 1));
@@ -534,6 +713,7 @@ void Player::EquipWeapon(Prefab weapon)
 	{
 		if (secondaryWeapon->weaponModel != nullptr)
 			secondaryWeapon->weaponModel->SetIsActive(false);
+
 		secondaryWeapon = nullptr;
 	}
 	if (secondaryGunGameObject != nullptr)
@@ -542,18 +722,88 @@ void Player::EquipWeapon(Prefab weapon)
 		secondaryGunGameObject = nullptr;
 	}
 
-	secondaryGunGameObject = App->resourceManager->LoadPrefab(weapon.uid, App->scene->GetSceneRoot());
-	equipedGun = weapon;
+	secondaryGunGameObject	= App->resourceManager->LoadPrefab(weapon.uid, App->scene->GetSceneRoot());
+	equipedGun				= weapon;
 	if (secondaryGunGameObject != nullptr)
 	{
 		secondaryWeapon = (Weapon*)GetObjectScript(secondaryGunGameObject, ObjectType::WEAPON);
 
-		if (secondaryWeapon != nullptr)
+		switch (secondaryWeapon->type)
 		{
-			secondaryWeapon->SetOwnership(type, rightHand, handName);
+		case WeaponType::MINIGUN:
+			secondaryWeapon->SetOwnership(type, leftHand, leftHandName.c_str());
 			currentWeapon = secondaryWeapon;
+			primaryWeaponImage->GetAnimationSprites("UseWeapon6", 1, minigunUse);
+			primaryWeaponImage->GetAnimationSprites("ChangeWeapon07", 2, minigunChange);
+			primaryWeaponImage->GetAnimationSprites("ChargeWeapon3", 3, minigunCharge);
+			weaponImage->SetTextureCoordinates(-1799, -1190, 665, 245);
+			weaponNameImage->SetTextureCoordinates(2685, -140, 507, 78);
+			break;
+		case WeaponType::SNIPER:
+			secondaryWeapon->SetOwnership(type, rightHand, rightHandName.c_str());
+			currentWeapon = secondaryWeapon;
+			primaryWeaponImage->GetAnimationSprites("UseWeapon5", 1, sniperUse);
+			primaryWeaponImage->GetAnimationSprites("ChangeWeapon04", 2, sniperChange);
+			primaryWeaponImage->GetAnimationSprites("ChargeWeapon2", 3, sniperCharge);
+			weaponImage->SetTextureCoordinates(-2465, -1190, 665, 245);
+			weaponNameImage->SetTextureCoordinates(2178, -140, 507, 78);
+			break;
+		case WeaponType::SHOTGUN:
+			secondaryWeapon->SetOwnership(type, rightHand, rightHandName.c_str());
+			currentWeapon = secondaryWeapon;
+			primaryWeaponImage->GetAnimationSprites("UseWeapon7", 1, shotgunUse);
+			primaryWeaponImage->GetAnimationSprites("ChangeWeapon10", 2, shotgunChange);
+			primaryWeaponImage->GetAnimationSprites("ChargeWeapon4", 3, shotgunCharge);
+			weaponImage->SetTextureCoordinates(-1133, -1190, 665, 245);
+			weaponNameImage->SetTextureCoordinates(3192, -140, 507, 78);
+			break;
+		default:
+			secondaryWeapon->SetOwnership(type, rightHand, rightHandName.c_str());
+			currentWeapon = secondaryWeapon;
+			break;
 		}
+		//if (secondaryWeapon != nullptr)
+		//{
+		//	if (secondaryWeapon->type == WeaponType::MINIGUN)
+		//	{
+		//		secondaryWeapon->SetOwnership(type, leftHand, leftHandName.c_str());
+		//		currentWeapon = secondaryWeapon;
+		//	}
+		//	else
+		//	{
+		//		secondaryWeapon->SetOwnership(type, rightHand, rightHandName.c_str());
+		//		currentWeapon = secondaryWeapon;
+		//	}
+		//}
 	}
+}
+
+void Player::GiveCredits(int _credits)
+{
+	credits += _credits;
+	//play HUD credits animation
+	creditsImage->PlayAnimation(false, 1);
+}
+
+void Player::GiveBeskar(int _beskar)
+{
+	beskar += _beskar;
+	//play HUD beskar animation
+	beskarImage->PlayAnimation(false, 1);
+}
+
+void Player::SubtractCredits(int _credits)
+{
+	credits -= _credits;
+	//play HUD credits animation
+	creditsImage->PlayAnimation(false, 1);
+}
+
+void Player::SubtractBeskar(int _beskar)
+{
+	beskar -= _beskar;
+	//play HUD credits animation
+	beskarImage->PlayAnimation(false, 1);
 }
 
 void Player::SetPlayerInteraction(InteractionType type, float duration)
@@ -565,15 +815,30 @@ void Player::SetPlayerInteraction(InteractionType type, float duration)
 	{
 		interactionTimer.Stop();
 		interactionDuration = 0.0f;
+
+		if (dashTimer.IsActive())																				// In case the interaction was set while the player was dashing.
+			moveState = PlayerState::DASH;
+
+		if (currentWeapon != nullptr)
+		{
+			if (currentWeapon->weaponModel != nullptr)
+				currentWeapon->weaponModel->SetIsActive(true);
+		}
+
 		return;
 	}
 
-	moveState = PlayerState::IDLE;
+	moveState	= PlayerState::IDLE;
+	aimState	= AimState::IDLE;
 	
-	if (rigidBody != nullptr)
+	if (rigidBody != nullptr)																					// Making sure that the player will remain still while interacting.
 		rigidBody->StopInertia();
 
-	aimState = AimState::IDLE;
+	if (currentWeapon != nullptr)
+	{
+		if (currentWeapon->weaponModel != nullptr)
+			currentWeapon->weaponModel->SetIsActive(false);
+	}
 
 	switch (currentInteraction)
 	{
@@ -585,31 +850,51 @@ void Player::SetPlayerInteraction(InteractionType type, float duration)
 	}
 }
 
+void Player::ForceManageInvincibility()
+{
+	ManageInvincibility();
+}
+
 void Player::AnimatePlayer()
 {	
 	if (animator == nullptr)
 		return;
-
-	static bool fromPreview = false;
 	
-	AnimatorTrack* preview = animator->GetTrackAsPtr("Preview");
+	AnimatorTrack* preview		= animator->GetTrackAsPtr("Preview");
+	AnimationInfo* torsoInfo	= GetAimStateAnimation();
+	AnimationInfo* legsInfo		= GetMoveStateAnimation();
 
-	if (GetEntityState() != EntityState::NONE || aimState == AimState::IDLE)											// TAKE INTO ACCOUNT STUN AND KNOCKBACK + LOOK INTO DASH PROBLEMS 
+	//LOG("CURRENT:	{ %s }::{ %u }",	(currentAnimation != nullptr) ? currentAnimation->name.c_str() : "NONE", preview->GetTrackState());
+	//LOG("TORSO:	  { %s }::{ %u }",		(torsoInfo != nullptr) ? torsoInfo->name.c_str() : "NONE", torsoTrack->GetTrackState());
+	//LOG("LEGS:	   { %s }::{ %u }",		(legsInfo != nullptr) ? legsInfo->name.c_str() : "NONE", legsTrack->GetTrackState());
+
+	if (GetEntityState() != EntityState::NONE || moveState == PlayerState::DASH || aimState == AimState::IDLE || torsoInfo == nullptr || legsInfo == nullptr)
 	{	
-		fromPreview = true;
-		
 		if (torsoTrack != nullptr)
 		{
 			if (torsoTrack->GetTrackState() != TrackState::STOP)
 				torsoTrack->Stop();
+
+			torsoTrack->FreeCurrentClip();
+			torsoTrack->FreeBlendingClip();
 		}
 			
 		if (legsTrack != nullptr)
 		{
 			if (legsTrack->GetTrackState() != TrackState::STOP)
 				legsTrack->Stop();
+
+			legsTrack->FreeCurrentClip();
+			legsTrack->FreeBlendingClip();
 		}
 		
+		if (moveState == PlayerState::DASH)																							// Last minute fix, if it works it works.
+		{
+			currentAnimation = &dashAnimation;
+			preview->FreeCurrentClip();
+			preview->FreeBlendingClip();
+		}
+
 		AnimatorClip* previewClip = preview->GetCurrentClip();
 
 		if ((previewClip == nullptr) || (previewClip->GetName() != currentAnimation->name))											// If no clip playing or animation/clip changed
@@ -622,62 +907,41 @@ void Player::AnimatePlayer()
 	}
 	else
 	{	
-		//LOG("DIRECTIONS: [%d]::[%d]::[%s]::[%s]", aimDirection, moveDirection, GetAimStateAnimation()->name.c_str(), GetLegsAnimation()->name.c_str());
-		
-		AnimationInfo* torsoInfo	= GetAimStateAnimation();
-		AnimationInfo* legsInfo		= GetMoveStateAnimation();
-		if (torsoInfo == nullptr || legsInfo == nullptr)
+		if (torsoTrack == nullptr || legsTrack == nullptr)
 		{
-			//LOG("DEFAULTING AIMING TO PREVIEW");
-			
-			fromPreview = true;
-
-			AnimatorClip* previewClip = preview->GetCurrentClip();
-
-			if ((previewClip == nullptr) || (previewClip->GetName() != currentAnimation->name))										// If no clip playing or animation/clip changed
-				animator->PlayClip(currentAnimation->track.c_str(), currentAnimation->name.c_str(), currentAnimation->blendTime);
+			LOG("[WARNING] Player Script: torsoTrack or legsTrack was nullptr!");
+			return;
 		}
-		else
-		{	
-			if (fromPreview)																										// Way to reset the hip right before it stops being used.
-			{
-				fromPreview = false;
 
-				AnimatorClip* previewClip = preview->GetCurrentClip();
-
-				if ((previewClip == nullptr) || (previewClip->GetName() != torsoInfo->name))										// If no clip playing or animation/clip changed
-					animator->PlayClip(preview->GetName(), torsoInfo->name.c_str(), torsoInfo->blendTime);
-
-				/*if (hip != nullptr)
-					hip->transform->Rotate()*/
-
-				return;
-			}
+		(hip != nullptr) ? hip->transform->SetLocalRotation(float3::zero) : LOG("OOGA BOOGA NO HIPAROOGA");			// Resetting the hip position.
 			
-			if (torsoTrack == nullptr || legsTrack == nullptr)
-			{
-				LOG("[WARNING] Player Script: torsoTrack or legsTrack was nullptr!");
-				return;
-			}
+		AnimatorClip* torsoClip = torsoTrack->GetCurrentClip();
+		AnimatorClip* legsClip	= legsTrack->GetCurrentClip();
+		AnimatorClip* bLegsClip	= legsTrack->GetBlendingClip();
 
-			AnimatorClip* torsoClip = torsoTrack->GetCurrentClip();
-			AnimatorClip* legsClip = legsTrack->GetCurrentClip();
-
-			if (preview->GetTrackState() != TrackState::STOP)
-				preview->Stop();
-
-			if ((torsoClip == nullptr) || (torsoClip->GetName() != torsoInfo->name))
-				animator->PlayClip(torsoTrack->GetName(), torsoInfo->name.c_str(), torsoInfo->blendTime);
-
-			if ((legsClip == nullptr) || (legsClip->GetName() != legsInfo->name))
-				animator->PlayClip(legsTrack->GetName(), legsInfo->name.c_str(), legsInfo->blendTime);
-
-			if (torsoTrack->GetTrackState() == TrackState::STOP)
-				torsoTrack->Play();
-
-			if (legsTrack->GetTrackState() == TrackState::STOP)
-				legsTrack->Play();
+		if (preview != nullptr)
+		{
+			preview->Stop();
+			preview->FreeCurrentClip();
+			preview->FreeBlendingClip();
 		}
+
+		if ((torsoClip == nullptr) || overrideShootAnimation || (torsoClip->GetName() != torsoInfo->name))
+		{
+			animator->PlayClip(torsoTrack->GetName(), torsoInfo->name.c_str(), torsoInfo->blendTime);
+
+			if (overrideShootAnimation)
+				overrideShootAnimation = false;
+		}
+
+		if ((legsClip == nullptr) || (legsClip->GetName() != legsInfo->name))
+			animator->PlayClip(legsTrack->GetName(), legsInfo->name.c_str(), legsInfo->blendTime);
+
+		if (torsoTrack->GetTrackState() == TrackState::STOP)
+			torsoTrack->Play();
+
+		if (legsTrack->GetTrackState() == TrackState::STOP)
+			legsTrack->Play();
 	}
 }
 
@@ -704,13 +968,34 @@ AnimationInfo* Player::GetLegsAnimation()
 
 	if (aimInput.IsZero())
 	{
-		if (currentWeapon == nullptr)
-			return &runForwardsLightAnimation;
-
-		return (currentWeapon->type != WeaponType::MINIGUN) ? &runForwardsLightAnimation : &runForwardsHeavyAnimation;
+		return GetWeaponRunAnimation();
 	}
 
-	return legsMatrix[(int)aimDirection][(int)moveDirection];
+	AnimationInfo* legsAnimation = legsMatrix[(int)aimDirection][(int)moveDirection];
+	if (legsAnimation == &runForwardsAnimation)
+	{
+		legsAnimation = GetWeaponRunAnimation(true);
+	}
+
+	return legsAnimation;
+}
+
+AnimationInfo* Player::GetWeaponRunAnimation(bool forceRunForward)
+{
+	if (currentWeapon == nullptr || forceRunForward)
+		return &runForwardsAnimation;
+	
+	switch (currentWeapon->type)
+	{
+	case WeaponType::BLASTER:	{ return &runBlasterAnimation; }	break;
+	case WeaponType::SNIPER:	{ return &runSniperAnimation; }		break;
+	case WeaponType::SHOTGUN:	{ return &runShotgunAnimation; }	break;
+	case WeaponType::MINIGUN:	{ return &runMinigunAnimation; }	break;
+	}
+
+	LOG("[ERROR] Player Script: Could not get Weapon Run Animation! Error: Unknown Weapon Type.");
+
+	return &runForwardsAnimation;
 }
 
 AnimationInfo* Player::GetAimStateAnimation()
@@ -834,7 +1119,7 @@ void Player::AddItem(ItemData* item)
 {
 	for (uint i = 0; i < items.size(); ++i)
 	{
-		if (items[i].first == usingSecondaryGun && items[i].second->name == item->name && items[i].second->rarity <= item->rarity)
+		if (items[i].second->name == item->name && items[i].second->rarity <= item->rarity)
 		{
 			items[i].second = item;
 			ApplyItems();
@@ -847,10 +1132,11 @@ void Player::AddItem(ItemData* item)
 
 void Player::ApplyItems()
 {
-	if (currentWeapon == nullptr)
-		return;
+	if (blasterWeapon != nullptr)
+		blasterWeapon->RefreshPerks(true);
+	if (secondaryWeapon != nullptr)
+		secondaryWeapon->RefreshPerks(true);
 
-	currentWeapon->RefreshPerks(true);
 	Item* item = nullptr;
 	for (uint i = 0; i < items.size(); ++i)
 	{
@@ -871,72 +1157,65 @@ void Player::ManageInteractions()
 {
 	GatherInteractionInputs();
 
-	if (currentInteraction != InteractionType::NONE && !interactionTimer.IsActive())					// If there is an interaction and the timer is not active.
+	if (currentInteraction == InteractionType::TALK)															// If the interaction is TALK, then it'll be ended through the dialog system.
+		return;
+
+	if (currentInteraction != InteractionType::NONE && !interactionTimer.IsActive())							// If there is an interaction and the timer is not active.
 	{
 		interactionTimer.Start();
 	}
-	else if (currentInteraction == InteractionType::NONE && interactionTimer.IsActive())				// If there is no interaction and the timer is active.
+	else if (currentInteraction == InteractionType::NONE && interactionTimer.IsActive())						// If there is no interaction and the timer is active.
 	{
 		interactionTimer.Stop();
 		interactionDuration = 0.0f;
 	}
 
-	if (currentInteraction != InteractionType::TALK)													// If the interaction is TALK, then it will be ended when the dialog system says so.
+	if (interactionTimer.ReadSec() > interactionDuration)
 	{
-		if (interactionTimer.ReadSec() > interactionDuration)
-		{
-			interactionTimer.Stop();
-			SetPlayerInteraction(InteractionType::NONE);
-		}
+		interactionTimer.Stop();
+		SetPlayerInteraction(InteractionType::NONE);
 	}
-
-	/*switch (currentInteraction)
-	{
-	case InteractionType::NONE:				{}					break;
-	case InteractionType::USE:				{ Use(); }			break;
-	case InteractionType::BUY:				{ Buy(); }			break;
-	case InteractionType::TALK:				{ Talk(); }			break;
-	case InteractionType::OPEN_CHEST:		{ OpenChest(); }	break;
-	case InteractionType::SIGNAL_GROGU:		{ SignalGrogu(); }	break;
-	}*/
 }
 
 void Player::ManageMovement()
 {	
+	if (dieAfterStun == 2)
+	{
+		dieAfterStun = 3;
+		moveState = PlayerState::DEAD_IN;
+		deathTimer.Resume();
+	}
 	if (moveState != PlayerState::DEAD && moveState != PlayerState::DEAD_OUT)
 	{
 		if (health <= 0.0f)
 		{
-			moveState = PlayerState::DEAD_IN;
-			aimState = AimState::IDLE;
+			moveState	= PlayerState::DEAD_IN;
+			aimState	= AimState::IDLE;
 		}
 		else
 		{
-			if (currentInteraction == InteractionType::NONE)
-			{
-				if (moveState != PlayerState::DASH)
-					GatherMoveInputs();
-			}
+			if (moveState != PlayerState::DASH)
+				GatherMoveInputs();
 		}
 	}
 
 	if (runParticles != nullptr)
 		runParticles->StopSpawn();
 
-	if (rigidBody == nullptr)														// Ending early in case there is no rigidBody associated with the player.
+	if (rigidBody == nullptr)																					// Ending early in case there is no rigidBody associated with the player.
 		return;
 
 	switch (moveState)
 	{
-	case PlayerState::IDLE:		{ MoveIdle(); } break;
-	case PlayerState::WALK:		{ Walk(); }		break;
-	case PlayerState::RUN:		{ Run(); }		break;
+	case PlayerState::IDLE:		{ MovementIdle(); } break;
+	case PlayerState::WALK:		{ Walk(); }			break;
+	case PlayerState::RUN:		{ Run(); }			break;
 
-	case PlayerState::DASH_IN:	{ DashIn(); }
-	case PlayerState::DASH:		{ Dash(); }		break;
+	case PlayerState::DASH_IN:	{ DashIn(); }																	// All "_IN" states will be used to Start their main counterparts.
+	case PlayerState::DASH:		{ Dash(); }			break;
 
 	case PlayerState::DEAD_IN:	{ DeadIn(); }
-	case PlayerState::DEAD:		{ Dead(); }		break;
+	case PlayerState::DEAD:		{ Dead(); }			break;
 	}
 }
 
@@ -976,6 +1255,15 @@ void Player::ManageInvincibility()
 		
 		if (mesh != nullptr)
 			mesh->SetIsActive(true);
+
+		if (jetpack != nullptr)
+			jetpack->SetIsActive(true);
+
+		if (currentWeapon != nullptr)
+		{
+			if (currentWeapon->weaponModel != nullptr)
+				currentWeapon->weaponModel->SetIsActive(true);
+		}
 	}
 	else if (!intermitentMeshTimer.IsActive())
 	{
@@ -984,13 +1272,18 @@ void Player::ManageInvincibility()
 		if (mesh != nullptr)
 			mesh->SetIsActive(!mesh->IsActive());
 
-		//LOG("start int timer");
+		if (jetpack != nullptr)
+			jetpack->SetIsActive(!jetpack->IsActive());
+
+		if (currentWeapon != nullptr)
+		{
+			if (currentWeapon->weaponModel != nullptr)
+				currentWeapon->weaponModel->SetIsActive(!currentWeapon->weaponModel->IsActive());
+		}
 	}
 	else if (intermitentMeshTimer.ReadSec() >= intermitentMesh)
 	{
 		intermitentMeshTimer.Stop();
-
-		//LOG("stop int timer");
 	}
 }
 
@@ -1036,7 +1329,7 @@ void Player::SignalGrogu()
 }
 
 // --- MOVEMENT STATE METHODS
-void Player::MoveIdle()
+void Player::MovementIdle()
 {
 	currentAnimation = &idleAnimation;
 
@@ -1044,26 +1337,25 @@ void Player::MoveIdle()
 		rigidBody->Set2DVelocity(float2::zero);
 }
 
-void Player::Interact()
-{
-
-}
-
 void Player::Walk()
 {
 	currentAnimation = &walkAnimation;
+	
 	Movement();
 
-	if (runParticles != nullptr)
+	if (!inHub && runParticles != nullptr)
 		runParticles->ResumeSpawn();
 }
 
 void Player::Run()
 {
-	currentAnimation = &runForwardsAnimation;
+	currentAnimation = GetWeaponRunAnimation();
+	
 	Movement();
 
-	if (runParticles != nullptr)
+	//currentAnimation->duration = 
+
+	if (!inHub && runParticles != nullptr)
 		runParticles->ResumeSpawn();
 
 }
@@ -1093,7 +1385,7 @@ void Player::Dash()
 {
 	ApplyDash();
 
-	if (dashTimer.ReadSec() >= DashDuration())				// When the dash duration ends start the cooldown and reset the move state
+	if (dashTimer.ReadSec() >= DashDuration() || health <= 0.0f)				// When the dash duration ends start the cooldown and reset the move state
 	{
 		dashTimer.Stop();
 		dashCooldownTimer.Start();
@@ -1115,6 +1407,14 @@ void Player::DeadIn()
 {
 	currentAnimation = &deathAnimation;
 
+	if (dying)
+	{
+		moveState = PlayerState::DEAD;
+		return;
+	}
+
+	dying = true;
+
 	if (deathAudio != nullptr)
 		deathAudio->PlayFx(deathAudio->GetEventId());
 
@@ -1128,6 +1428,9 @@ void Player::DeadIn()
 
 void Player::Dead()
 {
+	if (rigidBody != nullptr)
+		rigidBody->StopInertia();
+	
 	if (deathTimer.ReadSec() >= deathDuration)
 		moveState = PlayerState::DEAD_OUT;
 }
@@ -1135,75 +1438,132 @@ void Player::Dead()
 // --- AIM STATE METHODS
 void Player::AimIdle()
 {
-	/*if (idleAimPlane != nullptr)
-		idleAimPlane->SetIsActive(true);*/
-
-	if (aimingAimPlane != nullptr)
-		aimingAimPlane->SetIsActive(false);
+	//LOG("AIM IDLE");
+	
+	if (currentWeapon != nullptr)
+	{
+		currentWeapon->defPosition = currentWeapon->position;
+		currentWeapon->defRotation = currentWeapon->rotation;
+	}
 }
 
 void Player::OnGuard()
 {
+	//LOG("ON GUARD");
+	
 	aimState = AimState::IDLE;
 }
 
 void Player::Aiming()
 {
-	/*if (idleAimPlane != nullptr)
-		idleAimPlane->SetIsActive(false);*/
-
-	if (aimingAimPlane != nullptr)
-		aimingAimPlane->SetIsActive(true);
+	//LOG("AIMING");
+	
+	currentAnimation = GetAimAnimation();
+	
+	if (currentWeapon != nullptr)
+	{
+		currentWeapon->defPosition = currentWeapon->modifiedPosition;
+		currentWeapon->defRotation = currentWeapon->modifiedRotation;
+	}
 }
 
 void Player::ShootIn()
 {
-	currentAnimation	= GetShootAnimation();
-	aimState			= AimState::SHOOT;
+	//LOG("SHOOT IN");
+
+	currentAnimation = GetShootAnimation();
+	if (currentAnimation != nullptr)
+		currentAnimation->duration = currentWeapon->FireRate();
+
+	//animator->PlayClip("Preview", idleAnimation.name.c_str(), idleAnimation.blendTime);
+
+	overrideShootAnimation = true;
+
+	aimState = AimState::SHOOT;
+
 	primaryWeaponImage->PlayAnimation(false, 1);
 }
 
 void Player::Shoot()
 {
+	//LOG("SHOOT");
+	
 	if (currentWeapon == nullptr)
 		return;
 	
-	currentAnimation = GetShootAnimation();
+	//currentAnimation = GetShootAnimation();
 
 	switch (currentWeapon->Shoot(aimVector))
 	{
-	case ShootState::NO_FULLAUTO:		{ currentAnimation = nullptr; aimState = AimState::ON_GUARD; }		break;
+	case ShootState::NO_FULLAUTO:		{ currentAnimation = nullptr; aimState = AimState::IDLE; }			break;
 	case ShootState::WAITING_FOR_NEXT:	{ /* DO NOTHING */ }												break;
-	case ShootState::FIRED_PROJECTILE:	{ currentAnimation = nullptr; aimState = AimState::ON_GUARD; }		break;
-	case ShootState::RATE_FINISHED:		{ currentAnimation = nullptr; aimState = AimState::ON_GUARD; }		break;
+	case ShootState::FIRED_PROJECTILE:	
+	{ 
+		if (currentWeapon->type != WeaponType::MINIGUN)
+		{ 
+			currentAnimation = nullptr; 
+			aimState = AimState::IDLE;
+		}
+		else
+		{
+			currentWeapon->defPosition = currentWeapon->modifiedPosition;
+			currentWeapon->defRotation = currentWeapon->modifiedRotation;
+		}
+	}	break;
+	case ShootState::RATE_FINISHED:		{ currentAnimation = nullptr; aimState = AimState::IDLE; }			break;
 	case ShootState::NO_AMMO:			{ /*currentAnimation = nullptr;*/ aimState = AimState::RELOAD_IN; }	break;
 	}
 }
 
 void Player::ReloadIn()
 {
-	aimState = AimState::RELOAD;
-	primaryWeaponImage->PlayAnimation(false, 3);
+	//LOG("RELOAD IN");
+	if (currentWeapon->ammo < currentWeapon->MaxAmmo())
+	{
+		currentAnimation = GetReloadAnimation();
+		if (currentAnimation != nullptr)
+			currentAnimation->duration = currentWeapon->ReloadTime();
+
+		aimState = AimState::RELOAD;
+
+		primaryWeaponImage->SetAnimationStepTime(currentWeapon->ReloadTime() * 1000 / 35); // 35 is the amount of frames the reload 2D animation has
+		primaryWeaponImage->PlayAnimation(false, 3);
+	}
+	else
+		aimState = AimState::ON_GUARD;
 }
 
 void Player::Reload()
 {
+	//LOG("RELOAD");
+	
 	if (currentWeapon != nullptr && currentWeapon->Reload())	
 		aimState = AimState::ON_GUARD;
 }
 
 void Player::ChangeIn()
 {
+	//LOG("CHANGE IN");
+	
 	changeTimer.Start();
 	
+	currentAnimation = &changeWeaponAnimation;
+
 	if (changeWeaponAudio != nullptr)
 		changeWeaponAudio->PlayFx(changeWeaponAudio->GetEventId());
+
+	primaryWeaponImage->SetAnimationStepTime(ChangeTime() * 1000 / 12); // 18 is the amount of frames the reload 2D animation has
+	primaryWeaponImage->PlayAnimation(false, 2);
 
 	aimState = AimState::CHANGE;
 }
 
 void Player::Change()
 {
+	//LOG("CHANGE");
+	
+	//LOG("Change Weapon Time %.3f", ChangeTime());
+	
 	if (changeTimer.ReadSec() < ChangeTime())
 		return;
 	
@@ -1230,7 +1590,57 @@ void Player::Change()
 			secondaryWeapon->weaponModel->SetIsActive(false);
 	}
 
-	primaryWeaponImage->PlayAnimation(false, 2);
+	//setup the animations of the weapon on the hud
+	switch (currentWeapon->type)
+	{
+	case WeaponType::BLASTER:
+		primaryWeaponImage->GetAnimationSprites("UseWeapon4", 1, blasterUse);
+		primaryWeaponImage->GetAnimationSprites("ChargeWeapon1", 3, blasterCharge);
+		weaponImage->SetTextureCoordinates(-3130, -1190, 665, 245);
+		weaponNameImage->SetTextureCoordinates(1671, -140, 507, 78);
+		if (secondaryWeapon->weaponModel == nullptr)
+			primaryWeaponImage->GetAnimationSprites("ChangeWeapon", 2, blasterChangeBlaster);
+		else
+		{
+			switch (secondaryWeapon->type)
+			{
+			case WeaponType::MINIGUN:
+				primaryWeaponImage->GetAnimationSprites("ChangeWeapon02", 2, blasterChangeMiniGun);
+				break;
+			case WeaponType::SNIPER:
+				primaryWeaponImage->GetAnimationSprites("ChangeWeapon01", 2, blasterChangeSniper);
+				break;
+			case WeaponType::SHOTGUN:
+				primaryWeaponImage->GetAnimationSprites("ChangeWeapon03", 2, blasterChangeShootGun);
+				break;
+			default:
+				primaryWeaponImage->GetAnimationSprites("ChangeWeapon", 2, blasterChangeBlaster);
+				break;
+			}
+		}
+		break;
+	case WeaponType::MINIGUN:
+		primaryWeaponImage->GetAnimationSprites("UseWeapon6", 1, minigunUse);
+		primaryWeaponImage->GetAnimationSprites("ChangeWeapon07", 2, minigunChange);
+		primaryWeaponImage->GetAnimationSprites("ChargeWeapon3", 3, minigunCharge);
+		weaponImage->SetTextureCoordinates(-1799, -1190, 665, 245);
+		weaponNameImage->SetTextureCoordinates(2685, -140, 507, 78);
+		break;
+	case WeaponType::SNIPER:
+		primaryWeaponImage->GetAnimationSprites("UseWeapon5", 1, sniperUse);
+		primaryWeaponImage->GetAnimationSprites("ChangeWeapon04", 2, sniperChange);
+		primaryWeaponImage->GetAnimationSprites("ChargeWeapon2", 3, sniperCharge);
+		weaponImage->SetTextureCoordinates(-2465, -1190, 665, 245);
+		weaponNameImage->SetTextureCoordinates(2178, -140, 507, 78);
+		break;
+	case WeaponType::SHOTGUN:
+		primaryWeaponImage->GetAnimationSprites("UseWeapon7", 1, shotgunUse);
+		primaryWeaponImage->GetAnimationSprites("ChangeWeapon10", 2, shotgunChange);
+		primaryWeaponImage->GetAnimationSprites("ChargeWeapon4", 3, shotgunCharge);
+		weaponImage->SetTextureCoordinates(-1133, -1190, 665, 245);
+		weaponNameImage->SetTextureCoordinates(3192, -140, 507, 78);
+		break;
+	}
 
 	aimState = AimState::ON_GUARD;
 }
@@ -1238,27 +1648,19 @@ void Player::Change()
 void Player::GatherMoveInputs()
 {
 	// Controller movement
-	moveInput.x = (float)App->input->GetGameControllerAxisValue(0);
-	moveInput.y = (float)App->input->GetGameControllerAxisValue(1);
+	moveInput.x = (float)App->input->GetGameControllerAxisInput(LEFT_JOYSTICK_X_AXIS);														// Gets the axis input regardless of thresholds
+	moveInput.y = (float)App->input->GetGameControllerAxisInput(LEFT_JOYSTICK_Y_AXIS);														// and axis states. Careful with joystick noise.
 
-	// Keyboard movement
-	if (moveInput.IsZero())	// If there was no controller input
-	{
-		if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT) { moveInput.y = -MAX_INPUT; }
-		if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT) { moveInput.y = MAX_INPUT; }
-		if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT) { moveInput.x = MAX_INPUT; }
-		if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT) { moveInput.x = -MAX_INPUT; }
-	}
-
-	SetPlayerDirection();
+	//LOG("[Keyboard: %s]::[Controller: %s]", (usingKeyboard) ? "True" : "False", (usingGameController) ? "True" : "False");
+	//LOG("MOVE INPUT: { %.3f, %.3f }", moveInput.x, moveInput.y);
 
 	if (!dashCooldownTimer.IsActive())
 	{
-		if ((App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(0) == ButtonState::BUTTON_DOWN))
+		if ((App->input->GetKey(SDL_SCANCODE_LSHIFT) == KeyState::KEY_DOWN || App->input->GetGameControllerTrigger(LEFT_TRIGGER) == ButtonState::BUTTON_DOWN))
 		{
 			if (!dashTimer.IsActive())
+				LOG("DASHIN");
 				moveState = PlayerState::DASH_IN;
-				//moveState = PlayerState::DASH;
 
 			return;
 		}
@@ -1268,59 +1670,128 @@ void Player::GatherMoveInputs()
 		dashCooldownTimer.Stop();
 	}
 
-	if (!moveInput.IsZero())
+	if (usingKeyboard && !usingGameController)																								// If there was keyboard input and no GC input.
 	{	
-		bool overWalkThreshold = (moveInput.x > WALK_THRESHOLD) || (-moveInput.x > WALK_THRESHOLD) || (moveInput.y > WALK_THRESHOLD) || (-moveInput.y > WALK_THRESHOLD);
+		moveInput = float2::zero;
 		
-		moveState = (overWalkThreshold) ? PlayerState::RUN : PlayerState::WALK;
+		if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_REPEAT)	{ moveInput.y = -MAX_INPUT; }
+		if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_REPEAT)	{ moveInput.y = MAX_INPUT; }
+		if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_REPEAT)	{ moveInput.x = MAX_INPUT; }
+		if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_REPEAT)	{ moveInput.x = -MAX_INPUT; }
 
-		return;
+		if (abs(moveInput.x) >= MAX_INPUT || abs(moveInput.y) >= MAX_INPUT)
+		{
+			moveState = (App->input->GetKey(SDL_SCANCODE_LCTRL) != KeyState::KEY_REPEAT) ? PlayerState::RUN : PlayerState::WALK;
+		}
+		else
+		{
+			moveState = PlayerState::IDLE;
+		}
+	}
+	else if (usingGameController)																											// If there was controller input.
+	{	
+		if (abs(moveInput.x) > P_JOYSTICK_THRESHOLD || abs(moveInput.y) > P_JOYSTICK_THRESHOLD)
+		{
+			moveState = (abs(moveInput.x) > WALK_THRESHOLD || abs(moveInput.y) > WALK_THRESHOLD) ? PlayerState::RUN : PlayerState::WALK;
+		}
+		else
+		{
+			moveState = PlayerState::IDLE;
+		}
+	}
+	else
+	{
+		if (moveState != PlayerState::DASH && moveState != PlayerState::DEAD)
+			moveState = PlayerState::IDLE;
 	}
 
-	moveState = PlayerState::IDLE;
+	SetPlayerDirection();
 }
 
 void Player::GatherAimInputs()
 {
-	// Controller aim
-	aimInput.x = (float)App->input->GetGameControllerAxisValue(2);
-	aimInput.y = (float)App->input->GetGameControllerAxisValue(3);
+	//LOG("THE GATHERING");
 	
-	// Keyboard aim
-	if (aimInput.IsZero())	// If there was no controller input
+	// Controller aim
+	aimInput.x = (float)App->input->GetGameControllerAxisRaw(RIGHT_JOYSTICK_X_AXIS);							// x right joystick
+	aimInput.y = (float)App->input->GetGameControllerAxisRaw(RIGHT_JOYSTICK_Y_AXIS);							// y right joystick
+
+	aimInputThreshold.x = (float)App->input->GetGameControllerAxisValue(RIGHT_JOYSTICK_X_AXIS);					// x right joystick with threshhold
+	aimInputThreshold.y = (float)App->input->GetGameControllerAxisValue(RIGHT_JOYSTICK_Y_AXIS);					// y right joystick with threshhold
+
+	//LOG("AIM INPUT		--> [%.3f]::[%.3f]", aimInput.x, aimInput.y);
+	//LOG("AIM THRESHOLD	--> [%.3f]::[%.3f]", aimInputThreshold.x, aimInputThreshold.y);
+
+	if (aimState != AimState::IDLE && aimState != AimState::AIMING && aimState != AimState::ON_GUARD)			// If the player is in this states, ignore action inputs (shoot, reload, etc.)
 	{
+		if (usingKeyboard && !usingGameController)																// If there was keyboard input and no controller input
+		{
+			aimInput = float2::zero;																			// Re-setting the vector to clear any noise generated by the game controller.
+
+			if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT)	{ aimInput.y = -MAX_INPUT; }
+			if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT)	{ aimInput.y = MAX_INPUT; }
+			if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT)	{ aimInput.x = MAX_INPUT; }
+			if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT)	{ aimInput.x = -MAX_INPUT; }
+		}
+		
+		return;
+	}
+	
+	if (usingKeyboard && !usingGameController)																	// If there was keyboard input and no controller input
+	{	
+		aimInput = float2::zero;																				// Re-setting the vector to clear any noise generated by the game controller.
+
 		if (App->input->GetKey(SDL_SCANCODE_UP) == KeyState::KEY_REPEAT)	{ aimInput.y = -MAX_INPUT; }
 		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KeyState::KEY_REPEAT)	{ aimInput.y = MAX_INPUT; }
 		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KeyState::KEY_REPEAT)	{ aimInput.x = MAX_INPUT; }
 		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KeyState::KEY_REPEAT)	{ aimInput.x = -MAX_INPUT; }
+		
+		if (abs(aimInput.x) < MAX_INPUT && abs (aimInput.y) < MAX_INPUT)
+		{
+			aimState = AimState::IDLE;
+		}
+		else
+		{
+			if (aimState == AimState::IDLE)
+				aimState = AimState::AIMING;
+		}
+
+	}
+	else if (usingGameController)																				// If there was game controller input above the threshold.
+	{
+		if (abs(aimInputThreshold.x) <= AIM_THRESHOLD && abs(aimInputThreshold.y) <= AIM_THRESHOLD)
+		{
+			aimState = AimState::IDLE;
+		}
+		else
+		{
+			if (aimState == AimState::IDLE)
+				aimState = AimState::AIMING;
+		}
+	}
+	else
+	{
+		aimState = AimState::IDLE;
 	}
 
-	SetAimDirection();
-
-	if (aimState != AimState::IDLE && aimState != AimState::AIMING && aimState != AimState::ON_GUARD) // If the player is not on this states, ignore action inputs (shoot, reload, etc.)
-		return;
-
-	if (App->input->GetKey(SDL_SCANCODE_F) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(1) == ButtonState::BUTTON_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_E) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(SDL_CONTROLLER_BUTTON_Y) == ButtonState::BUTTON_DOWN)
 	{
 		aimState = AimState::CHANGE_IN;
-		//aimState = AimState::CHANGE;
 		return;
 	}
 
-	if ((App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(2) == ButtonState::BUTTON_DOWN))
-	{
-		aimState = AimState::RELOAD_IN;
-		//aimState = AimState::RELOAD;
-		return;
-	}
+	if (currentWeapon != nullptr && currentWeapon->ammo < currentWeapon->MaxAmmo())
+		if ((App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(SDL_CONTROLLER_BUTTON_X) == ButtonState::BUTTON_DOWN))
+		{
+			aimState = AimState::RELOAD_IN;
+			return;
+		}
 
-	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_REPEAT || App->input->GetGameControllerTrigger(1) == ButtonState::BUTTON_REPEAT)
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KeyState::KEY_REPEAT || App->input->GetGameControllerTrigger(RIGHT_TRIGGER) == ButtonState::BUTTON_REPEAT)
 	{
 		aimState = AimState::SHOOT_IN;
 		return;
 	}
-
-	aimState = AimState::IDLE;
 }
 
 void Player::GatherInteractionInputs()
@@ -1331,25 +1802,23 @@ void Player::GatherInteractionInputs()
 		return;
 	}
 	
-	if (currentInteraction == InteractionType::NONE)
+	if (currentInteraction == InteractionType::NONE)																					// For debug purposes.
 	{
-		if (App->input->GetKey(SDL_SCANCODE_G) == KeyState::KEY_DOWN || App->input->GetGameControllerButton(SDL_CONTROLLER_BUTTON_LEFTSHOULDER) == ButtonState::BUTTON_DOWN)
-		{
-			SetPlayerInteraction(InteractionType::SIGNAL_GROGU);
+		if (App->input->GetKey(SDL_SCANCODE_RCTRL) == KeyState::KEY_REPEAT)
+		{	
+			if (App->input->GetKey(SDL_SCANCODE_W) == KeyState::KEY_DOWN) { SetPlayerInteraction(InteractionType::TALK); }
+			if (App->input->GetKey(SDL_SCANCODE_A) == KeyState::KEY_DOWN) { SetPlayerInteraction(InteractionType::USE); }
+			if (App->input->GetKey(SDL_SCANCODE_S) == KeyState::KEY_DOWN) { SetPlayerInteraction(InteractionType::OPEN_CHEST); }
+			if (App->input->GetKey(SDL_SCANCODE_D) == KeyState::KEY_DOWN) { SetPlayerInteraction(InteractionType::SIGNAL_GROGU); }
 		}
-
-		/*if (App->input->GetKey(SDL_SCANCODE_E) == KeyState::KEY_DOWN)
-		{
-			SetPlayerInteraction(InteractionType::USE);
-		}
-
-		if (App->input->GetKey(SDL_SCANCODE_R) == KeyState::KEY_DOWN)
-		{
-			SetPlayerInteraction(InteractionType::OPEN_CHEST);
-		}*/
+	}
+	else
+	{
+		if (rigidBody != nullptr)
+			rigidBody->StopInertia();
 	}
 	
-	if (currentInteraction == InteractionType::TALK)
+	if (currentInteraction == InteractionType::TALK)																					// Bring the controller TALK finisher here too.
 	{
 		if (App->input->GetKey(SDL_SCANCODE_BACKSPACE) == KeyState::KEY_DOWN)
 		{
@@ -1361,7 +1830,7 @@ void Player::GatherInteractionInputs()
 void Player::SetPlayerDirection()
 {
 	if (moveInput.IsZero())
-	{
+	{	
 		moveDirection = MoveDirection::NONE;
 		return;
 	}
@@ -1381,7 +1850,7 @@ void Player::SetPlayerDirection()
 
 void Player::SetAimDirection()
 {
-	if (aimInput.IsZero())
+	if (aimState == AimState::IDLE)
 	{
 		aimDirection = AimDirection::NONE;
 		return;
@@ -1402,8 +1871,7 @@ void Player::SetAimDirection()
 
 void Player::Movement()
 {
-	moveVector = moveInput;
-
+	moveVector	= moveInput;																		// This method will only be called if moveState == PlayerState::WALK || PlayerState::RUN.
 	float speed = Speed();
 
 	if (moveState == PlayerState::WALK)
@@ -1417,22 +1885,42 @@ void Player::Movement()
 }
 
 void Player::Aim()
-{	
-	if (aimState == AimState::IDLE && !aimInput.IsZero())
-	{
-		aimState = AimState::AIMING;
-	}
-	if (aimState == AimState::AIMING && aimInput.IsZero())
-	{
-		aimState = AimState::IDLE;
-	}
-
-	aimVector = (aimInput.IsZero() || moveState == PlayerState::DASH) ? moveVector : aimInput;
-
-	float rad = aimVector.AimedAngle();
+{
+	//LOG("AIM");
 	
+	SetAimDirection();
+	
+	float2 oldAim = aimVector;
+
+	if (aimState == AimState::IDLE || moveState == PlayerState::DASH)												// AimState::IDLE means not aiming
+	{	
+		aimVector = (!moveVector.IsZero()) ? moveVector : oldAim;
+	}
+	else
+	{
+		aimVector = (abs(aimInput.x) < AIM_THRESHOLD && abs( aimInput.y) < AIM_THRESHOLD) ? moveVector : aimInput;
+
+		//if (abs(aimInput.x) < AIM_THRESHOLD && abs(aimInput.y) < AIM_THRESHOLD)
+		//	LOG("USING MOVE VECTOR: moveVector --> { %.3f, %.3f } || aimInput --> { %.3f, %.3f }", moveVector.x, moveVector.y, aimInput.x, aimInput.y);
+	}
+
+	if (abs(aimInput.x) < WALK_THRESHOLD && abs(aimInput.y) < WALK_THRESHOLD)										// Only works with this specific threshold. If it works it works. bruh moment
+	{
+		if (aimingAimPlane != nullptr && !inHub)
+			aimingAimPlane->SetIsActive(false);
+	}
+	else
+	{
+		if (aimingAimPlane != nullptr && !inHub)
+			aimingAimPlane->SetIsActive(true);
+	}
+
+	//LOG("AIM VECTOR: [{ %.3f, %.3f }]::[%.3f]", aimVector.x, aimVector.y, aimVector.AimedAngle() * RADTODEG);
+
+	//gameObject->transform->SetLocalRotation(float3(0.0f, 0.0f, 0.0f));
+
 	if (skeleton != nullptr)
-		skeleton->transform->SetLocalRotation(float3(0, -rad + DegToRad(90), 0));
+		skeleton->transform->SetLocalRotation(float3(0, -(aimVector.AimedAngle()) + DegToRad(90), 0));
 }
 
 void Player::ApplyDash()

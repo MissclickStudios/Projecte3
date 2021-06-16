@@ -1,7 +1,3 @@
-#include <algorithm>
-#include <chrono>
-#include <random>
-
 #include "FileSystemDefinitions.h"
 #include "JSONParser.h"
 #include "Log.h"
@@ -13,10 +9,15 @@
 #include "M_ResourceManager.h"
 #include "M_Scene.h"
 #include "M_Input.h"
+#include "M_Audio.h"
 
 #include "GameObject.h"
 
+#include "C_AudioSource.h"
 #include "C_Transform.h"
+#include "C_UI_Text.h"
+#include "C_AudioSource.h"
+#include "C_RigidBody.h"
 
 #include "GameManager.h"
 #include "DialogManager.h"
@@ -43,10 +44,12 @@ GameManager::~GameManager()
 
 void GameManager::Awake()
 {
-	/*level.AddFixedRoom("Start",1 ,1);
-	level.AddFixedRoom("Boss",1 ,15);*/
+	if (App->scene->creditsMainMenu)
+	{
+		HandleBackgroundMusic();
+		return;
+	}
 
-	//Load de la primera scene?
 	//Check files exist (Maybe in another place)
 	if (enabled) 
 	{
@@ -60,6 +63,7 @@ void GameManager::Awake()
 			CoreCrossDllHelpers::CoreReleaseBuffer(&buffer);
 			currentLevel = jsonState.GetInteger("currentLevel");
 			roomNum = jsonState.GetInteger("roomNum");
+			cameraShake = jsonState.GetBool("cameraShake");
 			level1.clear();
 			//LEVEL2
 			level1Ruins.clear();
@@ -76,9 +80,13 @@ void GameManager::Awake()
 			{
 				level1Ruins.emplace_back(levelArray2.GetString(i));
 			}
+			//itemsArmorer
+			LoadArmorerItemLvl(jsonState);
 
 			//Load story & dialogs
 			storyDialogState.Load(&jsonState);
+
+			runStats.Load(&jsonState);
 
 			//TODO:Spawn player and everything on the level
 			GameObject* playerSpawn = App->scene->GetGameObjectByName(SpawnPointName.c_str());
@@ -88,8 +96,11 @@ void GameManager::Awake()
 				playerGameObject = App->scene->InstantiatePrefab(playerPrefab.uid, App->scene->GetSceneRoot(), spawnPoint,Quat::identity);
 			}
 
-			if(storyDialogState.defeatedIG11FirstTime && playerGameObject!= nullptr)
-				groguGameObject = App->scene->InstantiatePrefab(groguPrefab.uid, App->scene->GetSceneRoot(), playerGameObject->transform->GetLocalPosition(), Quat::identity);
+			if (storyDialogState.defeatedIG11FirstTime && playerGameObject != nullptr)
+			{
+				groguGameObject = App->scene->InstantiatePrefab(groguPrefab.uid, App->scene->GetSceneRoot(), playerSpawn->transform->GetLocalPosition(), Quat::identity, playerSpawn->transform->GetWorldPosition());
+
+			}
 
 			if (playerSpawn != nullptr && groguGameObject != nullptr && storyDialogState.defeatedIG11FirstTime)
 			{
@@ -98,44 +109,16 @@ void GameManager::Awake()
 				groguGameObject->transform->SetLocalPosition(spawnPoint);
 			}
 
-			
-
 			backtrackTimer.Start();
 			if (backtrack.size() != 0)
 				backtrack.clear();
 
-			// Clear the vector if it has data
-			while (chestItemPool.size())
-			{
-				delete* chestItemPool.begin();
-				chestItemPool.erase(chestItemPool.begin());
-			}
-			//Load Json state
-			char* itemBuffer = nullptr;
-			App->fileSystem->Load("ChestItemPool.json", &itemBuffer);
-			ParsonNode itemFile(itemBuffer);
-			//release Json File
-			CoreCrossDllHelpers::CoreReleaseBuffer(&itemBuffer);
-			ParsonArray itemArray = itemFile.GetArray("Items");
-			for (uint i = 0; i < itemArray.size; ++i)
-			{
-				ParsonNode itemNode = itemArray.GetNode(i);
-				if (!itemNode.NodeIsValid())
-					break;
-
-				std::string name = itemNode.GetString("Name");
-				std::string description = itemNode.GetString("Description");
-				int price = itemNode.GetInteger("Price");
-				ItemRarity rarity = (ItemRarity)itemNode.GetInteger("Rarity");
-				int minimum = itemNode.GetInteger("Min");
-				int maximum = itemNode.GetInteger("Max");
-				float power = itemNode.GetNumber("Power");
-				float duration = itemNode.GetInteger("Duration");
-				float chance = itemNode.GetInteger("Chance");
-				std::string texturePath = itemNode.GetString("Texture Path");
-				chestItemPool.emplace_back(new ItemData(name, description, price, rarity, power, duration, chance, minimum, maximum, texturePath));
-			}
+			LoadItemPool(chestItemPool, "ChestItemPool.json");
+			LoadItemPool(shopItemPool, "ShopItemPool.json");
+			LoadItemPool(hubItemPool, "HubItemPool.json");
 		}
+
+		HandleBackgroundMusic();
 	}
 
 	GameObject* tmp = App->scene->GetGameObjectByName("DialogCanvas"); 
@@ -154,6 +137,9 @@ void GameManager::Awake()
 
 void GameManager::Start()
 {
+	if (App->scene->creditsMainMenu)
+		return;
+
 	//find all enemies
 	std::vector<GameObject*>* objects = App->scene->GetGameObjects();
 	for (auto go = objects->begin(); go != objects->end(); ++go)
@@ -187,13 +173,25 @@ void GameManager::Start()
 	if(cameraGameObject != nullptr)
 		cameraScript = (CameraMovement*)cameraGameObject->GetScript("CameraMovement");
 
-	
+	if (strcmp(App->scene->GetCurrentScene(), levelNames.winScene.c_str()) == 0 || strcmp(App->scene->GetCurrentScene(), levelNames.loseScene.c_str()) == 0) //Win screen
+	{
+		SetUpWinScreen();
+	}
+
+	if (strcmp(App->scene->GetCurrentScene(), levelNames.winScene.c_str()) == 0 || strcmp(App->scene->GetCurrentScene(), levelNames.loseScene.c_str()) == 0 || 
+		strcmp(App->scene->GetCurrentScene(), "Credits") == 0) //Lock mando (He is flying in the scene)
+	{
+		playerScript->DisableInput(); //Pause mando so he doesn't produce any sound or movement (Silence him o_o)
+		playerScript->gameObject->GetComponent<C_RigidBody>()->MakeStatic();
+	}
+
+	if (strcmp(App->scene->GetCurrentScene(), levelNames.l1Initial.c_str()) == 0) //Initial screen
+		runStats.runTime = 0.f;
 
 	//Start Dialogs based on scene & Advance Story
 	if (dialogManager != nullptr)
 	{
-		
-		if (strcmp(App->scene->GetCurrentScene(),"bossL1" ) == 0 )
+		if (strcmp(App->scene->GetCurrentScene(),levelNames.l1Boss.c_str()) == 0 )
 		{
 			if(!storyDialogState.defeatedIG11FirstTime)
 				dialogManager->StartDialog("1st Conversation IG-11");
@@ -202,16 +200,16 @@ void GameManager::Start()
 			return;
 		}
 
-		if (strcmp(App->scene->GetCurrentScene(), "Boss_Ruins") == 0)
+		if (strcmp(App->scene->GetCurrentScene(), levelNames.ruinsBoss.c_str()) == 0)
 		{
 			if (!storyDialogState.defeatedIG12FirstTime)
-				dialogManager->StartDialog("1st Conversation IG-11");
+				dialogManager->StartDialog("1st Conversation with IG - 12");
 			else
-				dialogManager->StartDialog("Pool Conversation IG-11");
+				dialogManager->StartDialog("Pool Conversation IG-12");
 			return;
 		}
 
-		if (strcmp(App->scene->GetCurrentScene(), "HUB") == 0)
+		if (strcmp(App->scene->GetCurrentScene(), levelNames.hub.c_str()) == 0)
 		{
 			if (!storyDialogState.firstTimeHub)
 			{
@@ -220,23 +218,60 @@ void GameManager::Start()
 			}
 			else
 				dialogManager->StartDialog("Pool Conversation Cantine Death");
+
+			//Add attempt
+			runStats.attempt++;
+
 			return;
 		}
 		
 		//dialogManager->StartDialog("GroguHello");
+	}	
+
+	clearedRoomAudio = new C_AudioSource(gameObject);
+
+	if (clearedRoomAudio != nullptr)
+	{
+		clearedRoomAudio->SetEvent("room_cleared");
 	}
-		
+
+	//Secondary weapon
+	if (playerScript != nullptr)
+	{
+		WeaponType weaponType = playerScript->GetSecondaryWeapon()->type;
+
+		switch (weaponType)
+		{
+		case WeaponType::MINIGUN:
+			runStats.weaponUsed = "Minigun";
+			break;
+		case WeaponType::SHOTGUN:
+			runStats.weaponUsed = "Shotgun";
+			break;
+		case WeaponType::SNIPER:
+			runStats.weaponUsed = "Sniper";
+			break;
+		}
+	}
+
+	//kills stats
+	runStats.runKills += enemies.size();
 }
 
 void GameManager::Update()
 {
-	if(!instantiatedSandstorm)
-		if (strcmp(App->scene->GetCurrentScene(), "HUB") != 0 && strcmp(App->scene->GetCurrentScene(), "LoseScreen") != 0 && strcmp(App->scene->GetCurrentScene(), "WinScreen") != 0)
+	if(!instantiatedSandstorm) //Instantiate sandstorm
+		if (strcmp(App->scene->GetCurrentScene(), levelNames.hub.c_str()) != 0 && strcmp(App->scene->GetCurrentScene(), levelNames.loseScene.c_str()) != 0 
+			&& strcmp(App->scene->GetCurrentScene(), "Credits") != 0 && strcmp(App->scene->GetCurrentScene(), "MainMenu") != 0
+			&& strcmp(App->scene->GetCurrentScene(), levelNames.winScene.c_str()) != 0)
 		{
-			App->scene->InstantiatePrefab(mistPlane1.uid, App->scene->GetSceneRoot(), mistPlane1Position, Quat::identity);
-			App->scene->InstantiatePrefab(mistPlane2.uid, App->scene->GetSceneRoot(), mistPlane2Position, Quat::identity);
+			App->scene->InstantiatePrefab(mistPlane1.uid, gameObject, mistPlane1Position, Quat::identity);
+			App->scene->InstantiatePrefab(mistPlane2.uid, gameObject, mistPlane2Position, Quat::identity);
 			instantiatedSandstorm = true;
 		}
+
+	//if(groguGameObject != nullptr)
+		//LOG("Grogu Pos: x %d, y %d, z %d", groguGameObject->transform->GetLocalPosition().x, groguGameObject->transform->GetLocalPosition().y, groguGameObject->transform->GetLocalPosition().z);
 
 	// --- Handle Camera cutscene
 	if (dialogManager != nullptr)
@@ -264,8 +299,18 @@ void GameManager::Update()
 
 	GateUpdate(); //Checks if gate should be unlocked
 
-	//S'ha de fer alguna manera de avisar l'scene que volem canviar de scene pero no fer-ho imediatament ??? -> si
+	if(!paused)
+		runStats.runTime += MC_Time::Game::GetDT();
+
+	UpdateLeaveBoss();
+
+	//S'ha de fer alguna manera de avisar l'scene que volem canviar de scene pero no fer-ho imediatament ??? -> si (wtf is this (Pau))
 	//--
+}
+
+void GameManager::CleanUp()
+{
+	RELEASE(clearedRoomAudio);
 }
 
 void GameManager::OnCollisionEnter(GameObject* object)
@@ -321,44 +366,49 @@ void GameManager::GenerateNewRun(bool fromMenu)
 			GenerateLevel(); //Nomes quan li donem a new game desde el main menu
 
 			//TODO: Not HardCode the fixed rooms
-			//TODO: inspector support adding fixed room
-			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "HUB.json").c_str()))
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + levelNames.hub + ".json").c_str()))
 				//AddFixedRoom("InitialL1", 1, 1);
-				level1.insert(level1.begin(), (std::string(ASSETS_SCENES_PATH) + "HUB.json"));
+				level1.insert(level1.begin(), (std::string(ASSETS_SCENES_PATH) + levelNames.hub + ".json"));
 			//LEVEL2
 			//if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "InitialL2.json").c_str()))
 			//	AddFixedRoom("InitialL2", 2, 1);
-			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "InitialL1.json").c_str()))
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + levelNames.l1Initial + ".json").c_str()))
 				//AddFixedRoom("InitialL1", 1, 1);
-				level1.insert(level1.begin() + 1, (std::string(ASSETS_SCENES_PATH) + "InitialL1.json"));
+				level1.insert(level1.begin() + 1, (std::string(ASSETS_SCENES_PATH) + levelNames.l1Initial + ".json"));
 			//LEVEL2
 			//if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "InitialL2.json").c_str()))
 			//	AddFixedRoom("InitialL2", 2, 1);
 
-			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "ShopL1.json").c_str()))
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + levelNames.l1Shop + ".json").c_str()))
 				//AddFixedRoom("ShopL1", 1, 4);
-				level1.insert(level1.begin() + 6, (std::string(ASSETS_SCENES_PATH) + "ShopL1.json"));
+				level1.insert(level1.begin() + 6, (std::string(ASSETS_SCENES_PATH) + levelNames.l1Shop + ".json"));
 			//LEVEL2
-			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "Shop_Ruins.json").c_str()))
-				level1Ruins.insert(level1Ruins.begin() + 3, (std::string(ASSETS_SCENES_PATH) + "Shop_Ruins.json"));
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + levelNames.ruinsShop + ".json").c_str()))
+				level1Ruins.insert(level1Ruins.begin() + 3, (std::string(ASSETS_SCENES_PATH) + levelNames.ruinsShop + ".json"));
 
-			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "BossL1.json").c_str()))
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + levelNames.l1Boss + ".json").c_str()))
 				//AddFixedRoom("BossL1", 1, 10);
-				level1.push_back((std::string(ASSETS_SCENES_PATH) + "BossL1.json"));
+				level1.push_back((std::string(ASSETS_SCENES_PATH) + levelNames.l1Boss + ".json"));
+			//Second Shop
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + levelNames.ruinsShop + ".json").c_str()))
+				level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + levelNames.ruinsShop + ".json"));
 			//LEVEL2
-			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "Boss_Ruins.json").c_str()))
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + levelNames.ruinsBoss + ".json").c_str()))
 				//AddFixedRoom("BossL2", 2, 10);
-				level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + "Boss_Ruins.json"));
+				level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + levelNames.ruinsBoss + ".json"));
 			//LEVEL2
-			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "WinScene.json").c_str()))
-				level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + "WinScene.json"));
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + levelNames.winScene + ".json").c_str()))
+				level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + levelNames.winScene + ".json"));
+
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "Credits.json").c_str()))
+				level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + "Credits.json"));
 		}
 		else
 		{
 			//Remove fixed before randomizing
 			for (int i = 0; i < level1.size(); ++i)
 			{
-				if (strstr(level1[i].c_str(), "HUB.json") || strstr(level1[i].c_str(), "InitialL1") || strstr(level1[i].c_str(), "ShopL1") || strstr(level1[i].c_str(), "BossL1"))
+				if (strstr(level1[i].c_str(), (levelNames.hub + ".json").c_str()) || strstr(level1[i].c_str(), (levelNames.l1Initial + ".json").c_str()) || strstr(level1[i].c_str(), (levelNames.l1Shop + ".json").c_str()) || strstr(level1[i].c_str(), (levelNames.l1Boss + ".json").c_str()))
 				{
 					level1.erase(level1.begin() + i);
 					--i;
@@ -366,7 +416,7 @@ void GameManager::GenerateNewRun(bool fromMenu)
 			}
 			for (int i = 0; i < level1Ruins.size(); ++i)
 			{
-				if (strstr(level1Ruins[i].c_str(), "Shop_Ruins") || strstr(level1Ruins[i].c_str(), "Boss_Ruins") || strstr(level1Ruins[i].c_str(), "WinScene"))
+				if (strstr(level1Ruins[i].c_str(), (levelNames.ruinsShop + ".json").c_str()) || strstr(level1Ruins[i].c_str(), (levelNames.ruinsBoss + ".json").c_str()) || strstr(level1Ruins[i].c_str(), (levelNames.winScene + ".json").c_str()) || strstr(level1Ruins[i].c_str(), "Credits.json"))
 				{
 					level1Ruins.erase(level1Ruins.begin() + i);
 					--i;
@@ -377,70 +427,139 @@ void GameManager::GenerateNewRun(bool fromMenu)
 			GenerateLevel();
 
 			//add fixed again
-			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "HUB.json").c_str()))
-				level1.insert(level1.begin(), (std::string(ASSETS_SCENES_PATH) + "HUB.json"));
-			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "InitialL1.json").c_str()))
-				level1.insert(level1.begin() + 1, (std::string(ASSETS_SCENES_PATH) + "InitialL1.json"));
-			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "ShopL1.json").c_str()))
-				level1.insert(level1.begin() + 6, (std::string(ASSETS_SCENES_PATH) + "ShopL1.json"));
-			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "BossL1.json").c_str()))
-				level1.push_back((std::string(ASSETS_SCENES_PATH) + "BossL1.json"));
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + levelNames.hub + ".json").c_str()))
+				level1.insert(level1.begin(), (std::string(ASSETS_SCENES_PATH) + levelNames.hub + ".json"));
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + levelNames.l1Initial + ".json").c_str()))
+				level1.insert(level1.begin() + 1, (std::string(ASSETS_SCENES_PATH) + levelNames.l1Initial + ".json"));
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + levelNames.l1Shop + ".json").c_str()))
+				level1.insert(level1.begin() + 6, (std::string(ASSETS_SCENES_PATH) + levelNames.l1Shop + ".json"));
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + levelNames.l1Boss + ".json").c_str()))
+				level1.push_back((std::string(ASSETS_SCENES_PATH) + levelNames.l1Boss + ".json"));
 
-			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "Shop_Ruins.json").c_str()))
-				level1Ruins.insert(level1Ruins.begin() + 3, (std::string(ASSETS_SCENES_PATH) + "Shop_Ruins.json"));
-			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "Boss_Ruins.json").c_str()))
-				level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + "Boss_Ruins.json"));
-			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "WinScene.json").c_str()))
-				level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + "WinScene.json"));
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + levelNames.ruinsShop + ".json").c_str()))
+				level1Ruins.insert(level1Ruins.begin() + 3, (std::string(ASSETS_SCENES_PATH) + levelNames.ruinsShop + ".json"));
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + levelNames.ruinsShop + ".json").c_str()))
+				level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + levelNames.ruinsShop + ".json"));
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + levelNames.ruinsBoss + ".json").c_str()))
+				level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + levelNames.ruinsBoss + ".json"));
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + levelNames.winScene + ".json").c_str()))
+				level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + levelNames.winScene + ".json"));
+			if (App->fileSystem->Exists((std::string(ASSETS_SCENES_PATH) + "Credits.json").c_str()))
+				level1Ruins.push_back((std::string(ASSETS_SCENES_PATH) + "Credits.json"));
 		}
 
 		SaveManagerState();
 	}
 }
 
+void GameManager::SaveArmorerItemLvl(ParsonNode& node)
+{
+	ParsonNode items = node.SetNode("ArmorerItemLvl");
+	items.SetInteger("armorLvl", armorLvl);
+	items.SetInteger("bootsLvl", bootsLvl);
+	items.SetInteger("ticketLvl", ticketLvl);
+	items.SetInteger("bottleLvl", bottleLvl);
+}
+
+void GameManager::LoadArmorerItemLvl(ParsonNode& node)
+{
+	ParsonNode items = node.GetNode("ArmorerItemLvl");
+	if (items.NodeIsValid()) 
+	{
+		armorLvl = items.GetInteger("armorLvl");
+		bootsLvl = items.GetInteger("bootsLvl");
+		ticketLvl = items.GetInteger("ticketLvl");
+		bottleLvl = items.GetInteger("bottleLvl");
+	}
+}
+
 void GameManager::GenerateLevel()
 {
-	// get a time-based seed
-	unsigned seed = std::chrono::system_clock::now()
-		.time_since_epoch()
-		.count();
 	if (l1Easy >= 0 && l1Easy < level1.size() && l1Intermediate > l1Easy && l1Intermediate < level1.size()) 
 	{
-		shuffle(level1.begin(), level1.begin() + l1Easy, std::default_random_engine(seed));
-		shuffle(level1.begin() + l1Easy + 1, level1.begin() + l1Intermediate, std::default_random_engine(seed));
-		shuffle(level1.begin() + l1Intermediate + 1, level1.end(), std::default_random_engine(seed));
+		for (int i = 0; i < l1Easy; ++i)
+		{
+			if (Random::LCG::GetBoundedRandomUint(0, 1) == 1) 
+			{
+				std::string tmp = level1[i];
+				level1[i] = level1[i + 1];
+				level1[i + 1] = tmp;
+			}		
+		}
+		for (int i = l1Easy + 1; i < l1Intermediate; ++i)
+		{
+			if (Random::LCG::GetBoundedRandomUint(0, 1) == 1)
+			{
+				std::string tmp = level1[i];
+				level1[i] = level1[i + 1];
+				level1[i + 1] = tmp;
+			}
+		}
+		for (int i = l1Intermediate + 1; i < level1.size()-1; ++i)
+		{
+			if (Random::LCG::GetBoundedRandomUint(0, 1) == 1)
+			{
+				std::string tmp = level1[i];
+				level1[i] = level1[i + 1];
+				level1[i + 1] = tmp;
+			}
+		}
 	}
 	else
-		shuffle(level1.begin(), level1.end(), std::default_random_engine(seed));
+	{
+		for (int i = 0; i < level1.size() - 1; ++i)
+		{
+			if (Random::LCG::GetBoundedRandomUint(0, 1) == 1)
+			{
+				std::string tmp = level1[i];
+				level1[i] = level1[i + 1];
+				level1[i + 1] = tmp;
+			}
+		}
+	}
 	
-	//LEVEL2
-	seed = std::chrono::system_clock::now()
-		.time_since_epoch()
-		.count();
 	if (RuinsEasy >= 0 && RuinsEasy < level1Ruins.size() && RuinsIntermediate > RuinsEasy && RuinsIntermediate < level1Ruins.size()) 
 	{
-		shuffle(level1Ruins.begin(), level1Ruins.begin() + RuinsEasy, std::default_random_engine(seed));
-		shuffle(level1Ruins.begin() + RuinsEasy + 1, level1Ruins.begin() + RuinsIntermediate, std::default_random_engine(seed));
-		shuffle(level1Ruins.begin() + RuinsIntermediate + 1, level1Ruins.end(), std::default_random_engine(seed));
+		for (int i = 0; i < RuinsEasy; ++i)
+		{
+			if (Random::LCG::GetBoundedRandomUint(0, 1) == 1)
+			{
+				std::string tmp = level1Ruins[i];
+				level1Ruins[i] = level1Ruins[i + 1];
+				level1Ruins[i + 1] = tmp;
+			}
+		}
+		for (int i = RuinsEasy + 1; i < RuinsIntermediate; ++i)
+		{
+			if (Random::LCG::GetBoundedRandomUint(0, 1) == 1)
+			{
+				std::string tmp = level1Ruins[i];
+				level1Ruins[i] = level1Ruins[i + 1];
+				level1Ruins[i + 1] = tmp;
+			}
+		}
+		for (int i = RuinsIntermediate + 1; i < level1Ruins.size() - 1; ++i)
+		{
+			if (Random::LCG::GetBoundedRandomUint(0, 1) == 1)
+			{
+				std::string tmp = level1Ruins[i];
+				level1Ruins[i] = level1Ruins[i + 1];
+				level1Ruins[i + 1] = tmp;
+			}
+		}
 	}
 	else
-		shuffle(level1Ruins.begin(), level1Ruins.end(), std::default_random_engine(seed));
-
-	//Fisher-Yates shuffle
-	/*int size = level1.size();
-	for (int i = 0; i < size - 1; ++i) 
 	{
-		int j = i + rand() % (size - i);
-		std::swap(level1[i], level1[j]);
+		for (int i = 0; i < level1Ruins.size() - 1; ++i)
+		{
+			if (Random::LCG::GetBoundedRandomUint(0, 1))
+			{
+				std::string tmp = level1Ruins[i];
+				level1Ruins[i] = level1Ruins[i + 1];
+				level1Ruins[i + 1] = tmp;
+			}
+		}
 	}
-	size = level2.size();
-	for (int i = 0; i < size - 1; ++i)
-	{
-		int j = i + rand() % (size - i);
-		std::swap(level2[i], level2[j]);
-	}*/
-	//std::random_shuffle(level1.begin(), level1.end());
-	//std::random_shuffle(level2.begin(), level2.end());
 }
 
 void GameManager::GoNextRoom()
@@ -453,6 +572,8 @@ void GameManager::GoNextRoom()
 			{
 				if (roomNum < level1.size() - 1)
 				{
+					if (roomNum == 0 && playerScript != nullptr) // this ensures mando starts the run with full health... it's not THAT bad
+						playerScript->GiveHeal(999999.0f);
 					++roomNum;
 					SaveManagerState();
 					App->scene->ScriptChangeScene(level1[roomNum]);
@@ -487,6 +608,8 @@ void GameManager::GoNextRoom()
 				}
 			}
 		}
+
+		
 	}
 }
 
@@ -566,6 +689,7 @@ void GameManager::Continue()
 		CoreCrossDllHelpers::CoreReleaseBuffer(&buffer);
 		currentLevel = jsonState.GetInteger("currentLevel");
 		roomNum = jsonState.GetInteger("roomNum");
+		cameraShake = jsonState.GetBool("cameraShake");
 		level1.clear();
 		//LEVEL2
 		level1Ruins.clear();
@@ -582,9 +706,14 @@ void GameManager::Continue()
 		{
 			level1Ruins.emplace_back(levelArray2.GetString(i));
 		}
+
+		//itemsArmorer
+		LoadArmorerItemLvl(jsonState);
+
 		//Story
 		storyDialogState.Load(&jsonState);
 
+		runStats.Load(&jsonState);
 
 		//TODO:Spawn player and everything on the level
 		if (currentLevel == 1)
@@ -610,6 +739,46 @@ void GameManager::ReturnToMainMenu()
 {
 	std::string menuPath = ASSETS_SCENES_PATH + mainMenuScene + ".json";
 	App->scene->ScriptChangeScene(menuPath.c_str());
+}
+
+void GameManager::Pause()
+{
+	paused = true;
+	std::vector<GameObject*>* objects = App->scene->GetGameObjects();
+	for (auto go = objects->begin(); go != objects->end(); ++go)
+	{
+		for (uint i = 0; i < (*go)->components.size(); ++i)
+			if ((*go)->components[i]->GetType() == ComponentType::SCRIPT)
+			{
+				C_Script* com = (C_Script*)(*go)->components[i];
+				if (com != nullptr)
+				{
+					void* script = com->GetScriptData();
+					if (script != nullptr)
+						((Script*)script)->OnPause();
+				}
+			}
+	}
+}
+
+void GameManager::Resume()
+{
+	paused = false;
+	std::vector<GameObject*>* objects = App->scene->GetGameObjects();
+	for (auto go = objects->begin(); go != objects->end(); ++go)
+	{
+		for (uint i = 0; i < (*go)->components.size(); ++i)
+			if ((*go)->components[i]->GetType() == ComponentType::SCRIPT)
+			{
+				C_Script* com = (C_Script*)(*go)->components[i];
+				if (com != nullptr)
+				{
+					void* script = com->GetScriptData();
+					if (script != nullptr)
+						((Script*)script)->OnResume();
+				}
+			}
+	}
 }
 
 void GameManager::AddFixedRoom(std::string name, int level, int position)
@@ -694,7 +863,7 @@ void GameManager::AddFixedRoom(std::string name, int level, int position)
 
 void GameManager::HandleRoomGeneration()
 {
-	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_REPEAT)
+	if (App->input->GetKey(SDL_SCANCODE_LCTRL) == KeyState::KEY_REPEAT)																// ATTENTION: Could collide with other LCTRL uses.
 	{
 		if (App->input->GetKey(SDL_SCANCODE_KP_6) == KeyState::KEY_DOWN)
 		{
@@ -711,7 +880,6 @@ void GameManager::HandleRoomGeneration()
 			else if (currentLevel == 2)
 			{
 				(roomNum < level2.size() - 1) ? GoNextRoom() : LOG("[SCENE] Level Generator: End of the Game Reached!");
-<<<<<<< Updated upstream
 			}*/
 
 		}
@@ -740,6 +908,7 @@ void GameManager::SaveManagerState()
 	//release Json File
 	jsonState.SetInteger("currentLevel",currentLevel);
 	jsonState.SetInteger("roomNum",roomNum);
+	jsonState.SetBool("cameraShake", cameraShake);
 	ParsonArray levelArray = jsonState.SetArray("level1");
 	for (int i = 0; i < level1.size(); ++i)
 	{
@@ -757,7 +926,17 @@ void GameManager::SaveManagerState()
 		playerScript->SaveState(playerNode);
 	}
 
+	//itemsArmorer
+	SaveArmorerItemLvl(jsonState);
+
 	storyDialogState.Save(&jsonState);
+
+	if (strcmp(App->scene->GetCurrentScene(), levelNames.hub.c_str()) == 0) //Reset run time to 0 when starting run
+		runStats.runTime = 0;
+
+	runStats.runKills += enemies.size();
+
+	runStats.Save(&jsonState);
 
 	char* buffer = nullptr;
 	jsonState.SerializeToFile(saveFileName, &buffer);
@@ -834,46 +1013,166 @@ void GameManager::GateUpdate()
 					lastEnemyDead = (*enemy).second;
 				}
 			}
+
 			if (alive > 0)
 				return;
 
 			gate->Unlock();
 
-			uint num = Random::LCG::GetBoundedRandomUint(0, 100);
-			if (num <= chestSpawnChance && chestPrefab.uid != NULL)
+			if(clearedRoomAudio != nullptr)
+				clearedRoomAudio->PlayFx("room_cleared");
+
+			DropChest();
+		}
+}
+
+void GameManager::DropChest()
+{
+	awaitingChestDrop = false;
+	uint num = Random::LCG::GetBoundedRandomUint(0, 100);
+	if (num <= chestSpawnChance && chestPrefab.uid != NULL)
+	{
+		GameObject* chest = App->resourceManager->LoadPrefab(chestPrefab.uid, App->scene->GetSceneRoot());
+		if (chest != nullptr && lastEnemyDead != nullptr)
+		{
+			float3 position = lastEnemyDead->transform->GetWorldPosition();
+			position.y += 10.0f;
+			chest->transform->SetWorldPosition(position);
+
+			float2 playerPosition, chestPosition;
+			playerPosition.x = playerGameObject->transform->GetWorldPosition().x;
+			playerPosition.y = playerGameObject->transform->GetWorldPosition().z;
+			chestPosition.x = chest->transform->GetWorldPosition().x;
+			chestPosition.y = chest->transform->GetWorldPosition().z;
+
+			float2 direction = playerPosition - chestPosition;
+			if (!direction.IsZero())
+				direction.Normalize();
+			float rad = direction.AimedAngle();
+			chest->transform->SetLocalRotation(float3(DegToRad(Random::LCG::GetBoundedRandomFloat(0.0f, 10.0f)), -rad, DegToRad(Random::LCG::GetBoundedRandomFloat(0.0f, 10.0f))));
+
+			chest->GetComponent<C_RigidBody>()->TransformMovesRigidBody(false);
+		}
+		droppedChest = true;
+	}
+}
+
+void GameManager::HandleBackgroundMusic()
+{
+	if (App->scene->GetCurrentScene() == levelNames.hub)
+	{
+		App->audio->aSourceBackgroundMusic->StopFx(App->audio->aSourceBackgroundMusic->GetEventId());
+		App->audio->aSourceBackgroundMusic->SetEvent("canteen_music", true);
+	}
+	else if ((App->scene->GetCurrentScene() == levelNames.l1Boss) || (App->scene->GetCurrentScene() == levelNames.ruinsBoss))
+	{
+		App->audio->aSourceBackgroundMusic->StopFx(App->audio->aSourceBackgroundMusic->GetEventId());
+		App->audio->aSourceBackgroundMusic->SetEvent("boss_music", true);
+	}
+	else if (App->scene->GetCurrentScene() == mainMenuScene)
+	{
+		App->audio->aSourceBackgroundMusic->StopFx(App->audio->aSourceBackgroundMusic->GetEventId());
+		App->audio->aSourceBackgroundMusic->SetEvent("menu_music", true);
+	}
+	else if ((App->scene->GetCurrentScene() == levelNames.winScene) || (App->scene->GetCurrentScene() == levelNames.loseScene) || strcmp(App->scene->GetCurrentScene(),"Credits")==0)
+	{
+		if (App->audio->aSourceBackgroundMusic->GetEventName() != "credit_music")
+		{
+			App->audio->aSourceBackgroundMusic->StopFx(App->audio->aSourceBackgroundMusic->GetEventId());
+			App->audio->aSourceBackgroundMusic->SetEvent("credit_music", true);
+		}
+	}
+	else
+	{
+		if (App->audio->aSourceBackgroundMusic->GetEventName() != "rooms_music")
+		{
+			App->audio->aSourceBackgroundMusic->StopFx(App->audio->aSourceBackgroundMusic->GetEventId());
+			App->audio->aSourceBackgroundMusic->SetEvent("rooms_music", true);
+		}
+
+	}
+}
+
+void GameManager::PickedItemUp()
+{
+	//start timer to go to next scene
+	pickedItemUp = true;
+	LOG("Picked Item Up");
+}
+
+void GameManager::UpdateLeaveBoss()
+{
+	if (killedBoss && !tooBad && !awaitingChestDrop)
+		if (droppedChest)
+		{
+			if (pickedItemUp)
+				wantToLeaveBoss = true;
+		}
+		else
+			wantToLeaveBoss = true;
+
+	if(dialogManager != nullptr)
+		if (wantToLeaveBoss &&  dialogManager->GetDialogState() == DialogState::NO_DIALOG)
+		{
+			leaveBossTimer += MC_Time::Game::GetDT();
+
+			if (leaveBossTimer >= leaveBossDelay)
 			{
-				GameObject* chest = App->resourceManager->LoadPrefab(chestPrefab.uid, App->scene->GetSceneRoot());
-				if (chest != nullptr && lastEnemyDead != nullptr)
-				{
-					float3 position = lastEnemyDead->transform->GetWorldPosition();
-					chest->transform->SetWorldPosition(position);
-
-					float2 playerPosition, chestPosition;
-					playerPosition.x = playerGameObject->transform->GetWorldPosition().x;
-					playerPosition.y = playerGameObject->transform->GetWorldPosition().z;
-					chestPosition.x = chest->transform->GetWorldPosition().x;
-					chestPosition.y = chest->transform->GetWorldPosition().z;
-
-					float2 direction = playerPosition - chestPosition;
-					if (!direction.IsZero())
-						direction.Normalize();
-					float rad = direction.AimedAngle();
-					chest->transform->SetLocalRotation(float3(0, -rad, 0));
-				}
+				GoNextRoom();
+				wantToLeaveBoss = false;
+				tooBad = true;
 			}
 		}
 }
 
-void GameManager::KilledIG11()
+void GameManager::LoadItemPool(std::vector<ItemData*>& pool, std::string path)
 {
-	
-	LOG("Killed IG11");
-	if (!storyDialogState.defeatedIG11FirstTime)
+	// Clear the vector if it has data
+	while (pool.size())
 	{
-		storyDialogState.defeatedIG11FirstTime = true;
-		groguGameObject = App->scene->InstantiatePrefab(groguPrefab.uid, App->scene->GetSceneRoot(), float3::zero, Quat::identity);
-		dialogManager->StartDialog("1st Conversation Grogu");
+		delete* pool.begin();
+		pool.erase(pool.begin());
 	}
+	//Load Json state
+	char* itemBuffer = nullptr;
+	App->fileSystem->Load(path.c_str(), &itemBuffer);
+	ParsonNode itemFile(itemBuffer);
+	//release Json File
+	CoreCrossDllHelpers::CoreReleaseBuffer(&itemBuffer);
+	ParsonArray itemArray = itemFile.GetArray("Items");
+	for (uint i = 0; i < itemArray.size; ++i)
+	{
+		ParsonNode itemNode = itemArray.GetNode(i);
+		if (!itemNode.NodeIsValid())
+			break;
+
+		std::string name = itemNode.GetString("Name");
+		std::string description = itemNode.GetString("Description");
+		int price = itemNode.GetInteger("Price");
+		ItemRarity rarity = (ItemRarity)itemNode.GetInteger("Rarity");
+		int minimum = itemNode.GetInteger("Min");
+		int maximum = itemNode.GetInteger("Max");
+		float power = itemNode.GetNumber("Power");
+		float duration = itemNode.GetNumber("Duration");
+		float chance = itemNode.GetInteger("Chance");
+		std::string texturePath = itemNode.GetString("Texture Path");
+		pool.emplace_back(new ItemData(name, description, price, rarity, power, duration, chance, minimum, maximum, texturePath));
+	}
+}
+
+void GameManager::KilledIG11(int bossNum)
+{
+	if (bossNum == 0)
+	{
+		LOG("Killed IG11");
+		if (!storyDialogState.defeatedIG11FirstTime)
+		{
+			storyDialogState.defeatedIG11FirstTime = true;
+			groguGameObject = App->scene->InstantiatePrefab(groguPrefab.uid, App->scene->GetSceneRoot(), float3::zero, Quat::identity);
+			dialogManager->StartDialog("1st Conversation Grogu");
+		}
+	}
+	killedBoss = true;
 }
 
 void GameManager::TalkedToArmorer()
@@ -894,6 +1193,76 @@ void GameManager::BoughtFromArmorer()
 {
 	LOG("Bought from armorer");
 	dialogManager->StartDialog("Pool Conversation Armorer Bought");
+}
+
+void GameManager::SetUpWinScreen()
+{
+	GameObject* tmp = App->scene->GetGameObjectByName("AttemptText");
+	if(tmp != nullptr)
+		tmp->GetComponent<C_UI_Text>()->SetText(std::to_string(runStats.attempt).c_str());
+
+	tmp = App->scene->GetGameObjectByName("KillsText");
+	if (tmp != nullptr)
+		tmp->GetComponent<C_UI_Text>()->SetText(std::to_string(runStats.runKills).c_str());
+
+	tmp = App->scene->GetGameObjectByName("TimeText");
+	if (tmp != nullptr)
+	{
+		std::string timeString = "";
+
+		int hours, minutes, seconds = 0;
+		int time = runStats.runTime;
+		LOG("Total time in seconds: %d",time);
+		hours = time / 3600;
+		LOG("Total hours: %d", hours);
+		time = time % 3600;
+		LOG("Time after hours: %d", time);
+
+		minutes = time / 60;
+		LOG("Total minutes: %d", minutes);
+		
+		time = time % 60;
+		LOG("Time after minutes: %d", time);
+
+		seconds = time;
+		LOG("Total seconds: %d", seconds);
+
+		timeString = std::to_string(hours) + ":";
+		timeString += std::to_string(minutes) + ":";
+		
+		if(seconds != 0)
+			timeString += std::to_string(seconds);
+		else
+			timeString += "00";
+
+		tmp->GetComponent<C_UI_Text>()->SetText(timeString.c_str());
+	}
+		
+
+	tmp = App->scene->GetGameObjectByName("WeaponText");
+	if (tmp != nullptr)
+		tmp->GetComponent<C_UI_Text>()->SetText(runStats.weaponUsed.c_str());
+
+
+}
+
+void GameManager::ResetArmorerItemsLvl()
+{
+	armorLvl = 0;
+	bootsLvl = 0;
+	ticketLvl = 0;
+	bottleLvl = 0;
+
+	//Load Json state
+	char* buffer = nullptr;
+	App->fileSystem->Load(saveFileName, &buffer);
+	ParsonNode jsonState(buffer);
+	//release Json File
+	CoreCrossDllHelpers::CoreReleaseBuffer(&buffer); buffer = nullptr;
+	SaveArmorerItemLvl(jsonState);
+
+	jsonState.SerializeToFile(saveFileName, &buffer);
+	CoreCrossDllHelpers::CoreReleaseBuffer(&buffer);
 }
 
 GameManager* CreateGameManager() {
@@ -925,20 +1294,49 @@ GameManager* CreateGameManager() {
 
 void StoryDialogData::Save(ParsonNode *node)
 {
-	node->SetBool("visitedHUB", visitedHUB);
-	node->SetBool("defeatedIG11FirstTime", defeatedIG11FirstTime);
-	node->SetBool("defeatedIG12FirstTime", defeatedIG12FirstTime);
-	node->SetBool("talkedToArmorer", talkedToArmorer);
-	node->SetBool("firstTimeHub", firstTimeHub);
-	node->SetBool("talkedToGrogu", talkedToGrogu);
+	ParsonNode storyNode = node->SetNode("StoryDialog");
+	storyNode.SetBool("visitedHUB", visitedHUB);
+	storyNode.SetBool("defeatedIG11FirstTime", defeatedIG11FirstTime);
+	storyNode.SetBool("defeatedIG12FirstTime", defeatedIG12FirstTime);
+	storyNode.SetBool("talkedToArmorer", talkedToArmorer);
+	storyNode.SetBool("firstTimeHub", firstTimeHub);
+	storyNode.SetBool("talkedToGrogu", talkedToGrogu);
 }
 
 void StoryDialogData::Load(ParsonNode *node)
 {
-	visitedHUB = node->GetBool("visitedHUB");
-	defeatedIG11FirstTime = node->GetBool("defeatedIG11FirstTime");
-	defeatedIG12FirstTime = node->GetBool("defeatedIG12FirstTime");
-	talkedToArmorer = node->GetBool("talkedToArmorer");
-	firstTimeHub = node->GetBool("firstTimeHub");
-	talkedToGrogu = node->GetBool("talkedToGrogu");
+	ParsonNode storyNode = node->GetNode("StoryDialog");
+	visitedHUB = storyNode.GetBool("visitedHUB");
+	defeatedIG11FirstTime = storyNode.GetBool("defeatedIG11FirstTime");
+	defeatedIG12FirstTime = storyNode.GetBool("defeatedIG12FirstTime");
+	talkedToArmorer = storyNode.GetBool("talkedToArmorer");
+	firstTimeHub = storyNode.GetBool("firstTimeHub");
+	talkedToGrogu = storyNode.GetBool("talkedToGrogu");
+}
+
+void RunStats::Save(ParsonNode* node)
+{
+	ParsonNode runStateNode = node->SetNode("RunStats");
+	runStateNode.SetInteger("attempt", attempt);
+	runStateNode.SetInteger("runKills", runKills);
+	runStateNode.SetNumber("runTime", runTime);
+	runStateNode.SetNumber("runPrecision", runPrecision);
+	runStateNode.SetString("weaponUsed", weaponUsed.c_str());
+}
+
+void RunStats::Load(ParsonNode* node)
+{
+	ParsonNode runStateNode = node->GetNode("RunStats");
+	attempt = runStateNode.GetInteger("attempt");
+	runKills = runStateNode.GetInteger("runKills");
+	runTime = runStateNode.GetNumber("runTime");
+	runPrecision = runStateNode.GetNumber("runPrecision");
+	weaponUsed = runStateNode.GetString("weaponUsed");
+}
+
+void RunStats::ResetRun()
+{
+	runKills = 0;
+	runTime = 0.f;
+	runPrecision = 0;
 }
