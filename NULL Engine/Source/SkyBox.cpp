@@ -118,8 +118,8 @@ void Skybox::RenderSkybox()
 	glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxTexId);
 
 	glBindBuffer(GL_ARRAY_BUFFER, skyboxId);
-	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+	glEnableVertexAttribArray(0);
 
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 
@@ -133,7 +133,7 @@ void Skybox::RenderSkybox()
 
 void Skybox::CleanUp()
 {
-	glDeleteVertexArrays(1, &skyboxId);
+	//glDeleteVertexArrays(1, &skyboxId);
 	glDeleteBuffers(1, &skyboxId);
 	//glDeleteTextures(1, &skyboxTexId);
 }
