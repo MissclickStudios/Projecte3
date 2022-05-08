@@ -175,6 +175,7 @@ public:
 	void			InitEngineIcons();
 
 	void			InitFramebuffers();
+	void			ResizeFramebuffers();
 	void			LoadDebugTexture();
 	void			FreeBuffers();
 
