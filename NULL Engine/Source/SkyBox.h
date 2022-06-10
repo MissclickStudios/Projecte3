@@ -20,8 +20,8 @@ public:
 
 public:
 	uint		skyboxTexId = 0; 
-	uint		skyboxVBO = 0;
-	uint		skyboxVAO = 0;
+	//uint		skyboxVBO = 0;
+	//uint		skyboxVAO = 0;
 	uint		skyboxId = 0;
 	uint32		skyboxProgramId = 0;
 

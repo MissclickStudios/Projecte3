@@ -35,7 +35,7 @@ bool R_Mesh::CleanUp()
 	App->renderer->DeleteFromMeshRenderers(this);
 
 	// --- Delete Buffers
-	glDeleteBuffers(1, (GLuint*)&VAO);
+	glDeleteVertexArrays(1, (GLuint*)&VAO);
 	glDeleteBuffers(1, (GLuint*)&VBO);
 	glDeleteBuffers(1, (GLuint*)&NBO);
 	glDeleteBuffers(1, (GLuint*)&TBO);

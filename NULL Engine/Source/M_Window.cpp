@@ -3,6 +3,7 @@
 #include "Log.h"
 #include "JSONParser.h"
 #include "M_Window.h"
+#include "M_Renderer3D.h"
 
 #include "MemoryManager.h"
 
@@ -400,6 +401,7 @@ void M_Window::SetFullscreenDesktop(bool setTo)
 				LOG("[STATUS] Window has been resized to { %u, %u }", SCREEN_WIDTH, SCREEN_HEIGHT);
 			}
 		}
+		App->renderer->OnResize();
 	}
 }
 

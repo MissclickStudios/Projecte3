@@ -152,6 +152,8 @@ bool M_Renderer3D::Start()
 		renderCanvas = false;
 	}
 
+	InitFramebuffers();
+
 	return true;
 }
 
@@ -484,7 +486,7 @@ void M_Renderer3D::OnResize()
 
 	RecalculateProjectionMatrix();
 
-	InitFramebuffers();
+	ResizeFramebuffers();
 }
 
 void M_Renderer3D::RecalculateProjectionMatrix()
@@ -569,6 +571,18 @@ void M_Renderer3D::InitFramebuffers()
 
 	// --- UNBINDING THE FRAMEBUFFER ---
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void M_Renderer3D::ResizeFramebuffers()
+{
+	glBindTexture(GL_TEXTURE_2D, sceneRenderTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, App->window->GetWidth(), App->window->GetHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	glBindTexture(GL_TEXTURE_2D, depthBufferTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, App->window->GetWidth(), App->window->GetHeight(), 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, App->window->GetWidth(), App->window->GetHeight());
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 }
 
 void M_Renderer3D::LoadDebugTexture()
