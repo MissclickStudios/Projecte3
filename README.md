@@ -1,2 +1,2 @@
 # Projecte3
-Repository created for the our Rogue-lite game for project III
+Repository created to hold the custom game engine for the our Rogue-lite game for project III
