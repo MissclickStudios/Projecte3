@@ -36,12 +36,8 @@ struct MISSCLICK_API InspectorScriptData {
 		TEXT
 	};
 
-	InspectorScriptData(const std::string& variableName, const DataType& variableType, void* ptr, const ShowMode& mode) {
-		this->variableName = variableName;
-		this->variableType = variableType;
-		this->ptr = ptr;
-		this->showAs = mode;
-	}
+	InspectorScriptData(const std::string& variableName, const DataType& variableType, void* ptr, const ShowMode& mode):
+	variableName(variableName), variableType(variableType), showAs(mode), ptr(ptr){}
 
 	std::string variableName;
 	DataType variableType;
