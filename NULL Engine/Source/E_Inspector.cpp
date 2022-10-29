@@ -1292,7 +1292,7 @@ void E_Inspector::DrawUITextComponent(C_UI_Text* text)
 }
 void E_Inspector::ScriptSelectCombo(C_Script*& cScript, const char* previewValue, bool swapForCurrent) 
 {
-	const std::map<std::string, std::string> scripts = ((M_EngineScriptManager*)EngineApp->scriptManager)->GetAviableScripts();
+	const std::map<std::string, std::string>& scripts = ((M_EngineScriptManager*)EngineApp->scriptManager)->GetAviableScripts();
 
 	std::string label = "##"; label += previewValue + cScript->GetDataName();
 	if (ImGui::BeginCombo(label.c_str(), previewValue, ImGuiComboFlags_PopupAlignLeft))
@@ -1528,7 +1528,7 @@ void E_Inspector::DrawScriptComponent(C_Script* cScript)
 			}
 			case InspectorScriptData::DataType::ENUM:
 			{
-				const std::map<std::string, std::map<int,std::string>> enumsMap = ((M_EngineScriptManager*)EngineApp->scriptManager)->GetInspectorEnums();
+				const std::map<std::string, std::map<int,std::string>>& enumsMap = ((M_EngineScriptManager*)EngineApp->scriptManager)->GetInspectorEnums();
 				const std::map<int, std::string>& enumMap = enumsMap.at((*variable).enumName);
 
 				std::string selected = enumMap.at(*(int*)(*variable).ptr);
